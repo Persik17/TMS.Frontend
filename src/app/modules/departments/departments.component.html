@@ -1,0 +1,6 @@
+<div style="padding: 20px;">
+  <h2>Departments</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); grid-gap: 20px;">
+      <app-department-card *ngFor="let department of departments" [department]="department"></app-department-card>
+  </div>
+</div>
