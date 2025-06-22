@@ -1,16 +1,25 @@
 <div class="center-container">
   <mat-card class="auth-card">
     <h2>Вход</h2>
-    <form>
+    <form (submit)="$event.preventDefault()">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Телефон</mat-label>
-        <input matInput type="tel" required placeholder="+7..." />
+        <mat-label>Email</mat-label>
+        <input matInput type="email" required placeholder="you@example.com" autocomplete="email" />
+        <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Пароль</mat-label>
-        <input matInput type="password" required placeholder="Пароль" />
+        <input matInput type="password" required placeholder="Пароль" autocomplete="current-password" />
+        <mat-icon matSuffix>lock</mat-icon>
       </mat-form-field>
       <button mat-raised-button color="primary" class="full-width" type="submit">Войти</button>
+      <div class="alternative">
+        <span>или</span>
+      </div>
+      <button mat-stroked-button color="accent" class="full-width telegram-btn" type="button">
+        <mat-icon svgIcon="telegram"></mat-icon>
+        Войти через Telegram
+      </button>
     </form>
     <div class="register-link">
       Нет аккаунта? <a routerLink="/register">Регистрация</a>

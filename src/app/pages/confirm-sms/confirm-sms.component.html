@@ -1,21 +1,19 @@
 <div class="center-container">
   <mat-card class="auth-card">
-    <h2>Подтверждение</h2>
-    <p class="info-text">
-      Мы отправили SMS с кодом на ваш телефон.<br>
-      Введите код для завершения регистрации.
-    </p>
-    <form>
+    <h2>Подтверждение Email</h2>
+    <ng-container *ngIf="email && verificationId; else errorBlock">
+      <p>
+        На почту <b>{{ email }}</b> отправлен код подтверждения.<br>
+        (verificationId: <code>{{ verificationId }}</code>)
+      </p>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Код из SMS</mat-label>
-        <input matInput maxlength="6" required placeholder="----" autocomplete="one-time-code" />
-        <mat-icon matSuffix>sms</mat-icon>
+        <mat-label>Код подтверждения</mat-label>
+        <input matInput type="text" />
       </mat-form-field>
-      <button mat-raised-button color="primary" class="full-width" type="submit">Подтвердить</button>
-      <div class="resend">
-        Не получили код?
-        <button mat-button color="accent" type="button">Отправить ещё раз</button>
-      </div>
-    </form>
+      <button mat-raised-button color="primary" class="full-width">Подтвердить</button>
+    </ng-container>
+    <ng-template #errorBlock>
+      <p style="color: #c00;">Нет данных для подтверждения. Пожалуйста, зарегистрируйтесь заново.</p>
+    </ng-template>
   </mat-card>
 </div>
