@@ -1,0 +1,19 @@
+@import '../auth-shared.scss';
+
+.info-text {
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.2rem;
+  font-size: 1.07rem;
+}
+
+.resend {
+  text-align: right;
+  margin-top: 0.5rem;
+  button {
+    padding-left: 0;
+    min-width: 0;
+    font-size: 0.97rem;
+    font-weight: 500;
+  }
+}

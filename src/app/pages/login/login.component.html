@@ -1,0 +1,19 @@
+<div class="center-container">
+  <mat-card class="auth-card">
+    <h2>Вход</h2>
+    <form>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Телефон</mat-label>
+        <input matInput type="tel" required placeholder="+7..." />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Пароль</mat-label>
+        <input matInput type="password" required placeholder="Пароль" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" class="full-width" type="submit">Войти</button>
+    </form>
+    <div class="register-link">
+      Нет аккаунта? <a routerLink="/register">Регистрация</a>
+    </div>
+  </mat-card>
+</div>
