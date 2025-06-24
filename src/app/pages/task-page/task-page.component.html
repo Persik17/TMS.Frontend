@@ -1,0 +1,266 @@
+<div class="task-page-root" *ngIf="!loading && task">
+  <div class="task-page-header">
+    <div>
+      <div class="task-page-title">{{ task?.name }}</div>
+      <div class="task-meta">
+        <span class="meta-label">Создана:</span>
+        <span class="meta-value">{{
+          task?.creationDate | date : "short"
+        }}</span>
+        <span class="meta-label">Обновлена:</span>
+        <span class="meta-value">{{ task?.updateDate | date : "short" }}</span>
+      </div>
+    </div>
+    <div class="task-page-actions">
+      <a
+        [href]="taskUrl"
+        target="_blank"
+        rel="noopener"
+        class="icon-btn"
+        title="Открыть в новой вкладке"
+      >
+        <span class="material-icons">open_in_new</span>
+      </a>
+      <button class="icon-btn" (click)="copyLink()" title="Скопировать ссылку">
+        <span class="material-icons">link</span>
+      </button>
+      <button class="icon-btn" (click)="backToBoard()" title="Назад к доске">
+        <span class="material-icons">arrow_back</span>
+      </button>
+    </div>
+  </div>
+  <div class="task-tabs">
+    <button [class.active]="activeTab === 'main'" (click)="setTab('main')">
+      Основное
+    </button>
+    <button
+      [class.active]="activeTab === 'history'"
+      (click)="setTab('history')"
+    >
+      История
+    </button>
+    <button [class.active]="activeTab === 'files'" (click)="setTab('files')">
+      Файлы
+    </button>
+  </div>
+  <div class="task-page-main">
+    <div *ngIf="activeTab === 'main'" class="task-page-info">
+      <div class="info-row">
+        <span class="info-title">Описание:</span>
+        <span class="info-description">
+          <ng-container *ngIf="editingField !== 'description'; else editDesc">
+            <div [innerHTML]="task?.description"></div>
+            <button
+              class="edit-btn"
+              (click)="startEdit('description', task?.description)"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editDesc>
+            <quill-editor
+              [(ngModel)]="editValue"
+              [modules]="quillModules"
+              (ngModelChange)="onEditValueChange($event)"
+              (onBlur)="saveEdit('description')"
+              [style.height.px]="160"
+              autofocus
+            ></quill-editor>
+          </ng-template>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-title">Исполнитель:</span>
+        <span>
+          <ng-container
+            *ngIf="editingField !== 'assigneeId'; else editAssignee"
+          >
+            {{ task?.assigneeId }}
+            <button
+              class="edit-btn"
+              (click)="startEdit('assigneeId', task?.assigneeId)"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editAssignee>
+            <input
+              [(ngModel)]="editValue"
+              (blur)="saveEdit('assigneeId')"
+              (keydown.enter)="saveEdit('assigneeId')"
+              (keydown.esc)="cancelEdit()"
+              autofocus
+            />
+          </ng-template>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-title">Даты:</span>
+        <span>
+          <ng-container *ngIf="editingField !== 'dates'; else editDates">
+            {{ task?.startDate | date : "short" }} –
+            {{ task?.endDate | date : "short" }}
+            <button
+              class="edit-btn"
+              (click)="
+                startEdit('dates', {
+                  start: task?.startDate,
+                  end: task?.endDate
+                })
+              "
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editDates>
+            <input
+              type="datetime-local"
+              [(ngModel)]="editValue.start"
+              (blur)="saveEdit('dates')"
+              (keydown.enter)="saveEdit('dates')"
+              (keydown.esc)="cancelEdit()"
+              autofocus
+            />
+            <span>–</span>
+            <input
+              type="datetime-local"
+              [(ngModel)]="editValue.end"
+              (blur)="saveEdit('dates')"
+              (keydown.enter)="saveEdit('dates')"
+              (keydown.esc)="cancelEdit()"
+            />
+          </ng-template>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-title">Story Points:</span>
+        <span>
+          <ng-container *ngIf="editingField !== 'storyPoints'; else editSP">
+            {{ task?.storyPoints }}
+            <button
+              class="edit-btn"
+              (click)="startEdit('storyPoints', task?.storyPoints)"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editSP>
+            <input
+              type="number"
+              [(ngModel)]="editValue"
+              (blur)="saveEdit('storyPoints')"
+              (keydown.enter)="saveEdit('storyPoints')"
+              (keydown.esc)="cancelEdit()"
+              autofocus
+            />
+          </ng-template>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-title">Приоритет:</span>
+        <span>
+          <ng-container *ngIf="editingField !== 'priority'; else editPriority">
+            {{ task?.priority }}
+            <button
+              class="edit-btn"
+              (click)="startEdit('priority', task?.priority)"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editPriority>
+            <input
+              type="number"
+              [(ngModel)]="editValue"
+              (blur)="saveEdit('priority')"
+              (keydown.enter)="saveEdit('priority')"
+              (keydown.esc)="cancelEdit()"
+              autofocus
+            />
+          </ng-template>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-title">Серьёзность:</span>
+        <span>
+          <ng-container *ngIf="editingField !== 'severity'; else editSeverity">
+            {{ task?.severity }}
+            <button
+              class="edit-btn"
+              (click)="startEdit('severity', task?.severity)"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          </ng-container>
+          <ng-template #editSeverity>
+            <input
+              type="number"
+              [(ngModel)]="editValue"
+              (blur)="saveEdit('severity')"
+              (keydown.enter)="saveEdit('severity')"
+              (keydown.esc)="cancelEdit()"
+              autofocus
+            />
+          </ng-template>
+        </span>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'history'" class="task-history">
+      <div *ngFor="let record of changeHistory" class="history-record">
+        <span class="history-date">{{ record.date | date : "short" }}</span>
+        <span class="history-user">{{ record.user }}</span>
+        <span class="history-text">{{ record.text }}</span>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'files'" class="task-files">
+      <div *ngFor="let file of attachedFiles" class="file-row">
+        <span class="file-icon material-icons">attach_file</span>
+        <a [href]="file.url" target="_blank">{{ file.name }}</a>
+        <span class="file-size">{{ file.size }}</span>
+        <span class="file-date">{{ file.date }}</span>
+      </div>
+      <div class="file-upload">
+        <input type="file" id="fileUpload" hidden />
+        <label for="fileUpload" class="upload-btn">
+          <span class="material-icons">cloud_upload</span> Прикрепить файл
+        </label>
+      </div>
+    </div>
+    <div class="task-page-comments">
+      <div class="comments-title">Комментарии</div>
+      <div *ngFor="let comment of comments" class="comment-card">
+        <img
+          *ngIf="comment.user?.avatarUrl"
+          class="avatar"
+          [src]="comment.user.avatarUrl"
+          [alt]="comment.user.name"
+        />
+        <div>
+          <div class="comment-meta">
+            <span class="author">{{
+              comment.user?.name || comment.userId
+            }}</span>
+            <span class="date">{{
+              comment.creationDate | date : "short"
+            }}</span>
+          </div>
+          <div class="text">{{ comment.text }}</div>
+        </div>
+      </div>
+      <div class="add-comment">
+        <textarea
+          [(ngModel)]="newCommentText"
+          placeholder="Добавить комментарий..."
+          rows="2"
+        ></textarea>
+        <button
+          (click)="addComment()"
+          [disabled]="addingComment || !newCommentText.trim()"
+        >
+          <span class="material-icons">send</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loading" class="loading-label">Загрузка...</div>

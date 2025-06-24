@@ -1,0 +1,29 @@
+<header class="main-header">
+  <div class="header-left">
+    <span class="logo">TMS</span>
+  </div>
+  <div class="header-right">
+    <div class="profile-menu-container" [class.open]="menuOpen">
+      <img
+        class="profile-avatar"
+        [src]="user.avatarUrl"
+        alt="Avatar"
+        (click)="toggleMenu($event)"
+      />
+      <div class="profile-dropdown" *ngIf="menuOpen">
+        <a class="profile-menu-item" routerLink="/profile">
+          <span class="material-icons">person</span>
+          Мой профиль
+        </a>
+        <a class="profile-menu-item" routerLink="/plan">
+          <span class="material-icons">auto_awesome</span>
+          Ваша подписка
+        </a>
+        <button class="profile-menu-item logout-btn" (click)="logout()">
+          <span class="material-icons">logout</span>
+          Выйти
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

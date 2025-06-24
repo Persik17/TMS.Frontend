@@ -1,28 +1,51 @@
 <div class="center-container">
   <mat-card class="auth-card">
     <h2>Вход</h2>
-    <form (submit)="$event.preventDefault()">
+    <form (submit)="onLogin(); $event.preventDefault()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" required placeholder="you@example.com" autocomplete="email" />
+        <input
+          matInput
+          type="email"
+          required
+          placeholder="you@example.com"
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="email"
+        />
         <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Пароль</mat-label>
-        <input matInput type="password" required placeholder="Пароль" autocomplete="current-password" />
+        <input
+          matInput
+          type="password"
+          required
+          placeholder="Пароль"
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="current-password"
+        />
         <mat-icon matSuffix>lock</mat-icon>
       </mat-form-field>
-      <button mat-raised-button color="primary" class="full-width" type="submit">Войти</button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="full-width"
+        type="submit"
+        [disabled]="loading"
+      >
+        Войти
+      </button>
       <div class="alternative">
         <span>или</span>
       </div>
-      <button mat-stroked-button color="accent" class="full-width telegram-btn" type="button">
-        <mat-icon svgIcon="telegram"></mat-icon>
-        Войти через Telegram
-      </button>
+      <!-- Telegram Login Widget -->
+      <div id="telegram-login-widget"></div>
     </form>
     <div class="register-link">
       Нет аккаунта? <a routerLink="/register">Регистрация</a>
     </div>
+    <div *ngIf="error" class="error-message">{{ error }}</div>
   </mat-card>
 </div>

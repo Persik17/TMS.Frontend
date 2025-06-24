@@ -1,0 +1,13 @@
+<aside class="sidebar">
+  <a routerLink="/company" routerLinkActive="active">Компания</a>
+  <a routerLink="/boards" routerLinkActive="active">Доски</a>
+  <div *ngIf="isBoardPage">
+    <a
+      *ngIf="isBoardPage"
+      [routerLink]="['/boards', boardId, 'dashboard-settings']"
+      routerLinkActive="active"
+    >
+      Настройки дашборда
+    </a>
+  </div>
+</aside>

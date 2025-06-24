@@ -1,0 +1,113 @@
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(90deg, #1976d2 0%, #2196f3 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px #0001;
+  z-index: 200;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+.header-left .logo {
+  color: #fff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e3eafc;
+  box-shadow: 0 1px 4px #1976d20a;
+  transition: box-shadow 0.15s;
+}
+
+.profile-avatar:hover {
+  box-shadow: 0 4px 16px #1976d218;
+}
+
+.profile-dropdown {
+  background: #fff;
+  color: #222;
+  position: absolute;
+  top: 120%;
+  right: 0;
+  min-width: 215px;
+  border-radius: 14px;
+  box-shadow: 0 6px 32px #1565c014, 0 2px 8px #0002;
+  padding: 1.1em 0.9em 0.6em 0.9em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2em;
+  z-index: 50;
+  animation: fadeInMenu 0.16s;
+}
+
+@keyframes fadeInMenu {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.profile-username {
+  font-size: 1.09em;
+  color: #2a3458;
+  font-weight: 600;
+  padding: 0.1em 0.2em 0.3em 0.2em;
+  border-radius: 6px;
+  margin-bottom: 0.2em;
+  text-align: center;
+}
+
+.profile-dropdown hr {
+  border: none;
+  border-top: 1px solid #e3eafc;
+  margin: 0.4em 0 0.5em 0;
+}
+
+.profile-menu-item {
+  color: #1976d2;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  font-size: 1.01em;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 0.48em 0.6em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.profile-menu-item:hover {
+  background: #e3eafc;
+  color: #1976d2;
+}
+
+.logout-btn {
+  color: #d32f2f;
+}
+
+.logout-btn:hover {
+  background: #fdeaea;
+  color: #c62828;
+}
+

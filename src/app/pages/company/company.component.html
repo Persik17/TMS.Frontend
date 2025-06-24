@@ -1,0 +1,17 @@
+<div *ngIf="company; else loading">
+  <h2>{{ company.name }}</h2>
+  <img *ngIf="company.logo" [src]="company.logo" alt="Logo"
+       style="max-height: 64px; max-width: 160px; margin-bottom: 1rem;">
+  <p><b>ИНН:</b> {{ company.inn }}</p>
+  <p><b>ОГРН:</b> {{ company.ogrn }}</p>
+  <p><b>Адрес:</b> {{ company.address }}</p>
+  <p><b>Сайт:</b> <a [href]="company.website" target="_blank">{{ company.website }}</a></p>
+  <p><b>Отрасль:</b> {{ company.industry }}</p>
+  <p><b>Описание:</b> {{ company.description }}</p>
+  <p><b>Email:</b> {{ company.contactEmail }}</p>
+  <p><b>Телефон:</b> {{ company.contactPhone }}</p>
+  <p><b>Активна:</b> {{ company.isActive }}</p>
+</div>
+<ng-template #loading>
+  <p>Загрузка данных компании...</p>
+</ng-template>

@@ -1,0 +1,43 @@
+<div class="boards-page">
+  <h2>Доски</h2>
+
+  <div class="filters">
+    <input
+      [(ngModel)]="filterName"
+      placeholder="Поиск по названию"
+      type="text"
+    />
+    <input
+      [(ngModel)]="filterOwner"
+      placeholder="Поиск по владельцу"
+      type="text"
+    />
+    <select [(ngModel)]="filterPrivacy">
+      <option value="">Все приватности</option>
+      <option value="private">Приватная</option>
+      <option value="public">Публичная</option>
+    </select>
+  </div>
+
+  <div class="boards-list">
+    <div
+      class="board-card"
+      *ngFor="let board of filteredBoards"
+      (click)="goToBoard(board.id)"
+    >
+      <div class="board-title">{{ board.name }}</div>
+      <div class="board-meta">
+        <span>Владелец: {{ board.owner }}</span>
+        <span class="privacy" [ngClass]="board.privacy">
+          {{ board.privacy === "private" ? "Приватная" : "Публичная" }}
+        </span>
+      </div>
+      <div class="board-actions">
+        <button disabled>Открыть (заглушка)</button>
+      </div>
+    </div>
+    <div *ngIf="filteredBoards.length === 0" class="no-boards">
+      Доски не найдены по выбранным фильтрам.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="dashboard-settings">
+  <h2>Настройки дашборда</h2>
+  <nav class="tabs">
+    <button [class.active]="tab === 'info'" (click)="tab = 'info'">
+      <span class="tab-icon">ℹ️</span> Общие сведения
+    </button>
+    <button [class.active]="tab === 'users'" (click)="tab = 'users'">
+      <span class="tab-icon">👥</span> Пользователи
+    </button>
+  </nav>
+  <section *ngIf="tab === 'info'" class="section">
+    <h3>Общие сведения по доске</h3>
+    <div class="fields-grid">
+      <div class="field">
+        <label>Название:</label>
+        <span>{{ board.name }}</span>
+      </div>
+      <div class="field">
+        <label>Описание:</label>
+        <span>{{ board.description }}</span>
+      </div>
+      <div class="field">
+        <label>Отдел:</label>
+        <span>{{ board.department }}</span>
+      </div>
+      <div class="field">
+        <label>Тип доски:</label>
+        <span>{{ board.boardType }}</span>
+      </div>
+      <div class="field">
+        <label>Приватная:</label>
+        <span>{{ board.isPrivate ? "Да" : "Нет" }}</span>
+      </div>
+    </div>
+  </section>
+  <section *ngIf="tab === 'users'" class="section users-section">
+    <h3>Пользователи</h3>
+    <div class="users-header">
+      <button class="add-user-btn" (click)="addUser()">
+        <span>+ Добавить пользователя</span>
+      </button>
+    </div>
+    <div class="users-list">
+      <div class="user-row" *ngFor="let user of users">
+        <div class="user-info">
+          <div class="user-avatar">
+            {{ user.name[0] }}
+          </div>
+          <div>
+            <div class="user-name">{{ user.name }}</div>
+            <div class="user-email">{{ user.email }}</div>
+          </div>
+        </div>
+        <div class="user-role">
+          <ng-container *ngIf="editingUser !== user; else roleEdit">
+            {{ user.role }}
+            <button
+              class="edit-role-btn"
+              (click)="startEditRole(user)"
+              title="Редактировать роль"
+            >
+              ✎
+            </button>
+          </ng-container>
+          <ng-template #roleEdit>
+            <select
+              class="role-select"
+              [(ngModel)]="user.role"
+              (change)="saveRoleEdit()"
+            >
+              <option value="Редактор">Редактор</option>
+              <option value="Просмотр">Просмотр</option>
+              <option value="Администратор">Администратор</option>
+            </select>
+            <button
+              class="save-role-btn"
+              (click)="saveRoleEdit()"
+              title="Сохранить"
+            >
+              ✔
+            </button>
+            <button
+              class="cancel-role-btn"
+              (click)="cancelRoleEdit()"
+              title="Отмена"
+            >
+              ✖
+            </button>
+          </ng-template>
+        </div>
+        <button
+          class="remove-user-btn"
+          (click)="removeUser(user)"
+          title="Удалить"
+        >
+          ✕
+        </button>
+      </div>
+      <div *ngIf="users.length === 0" class="empty-users">
+        Нет пользователей
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,223 @@
+<div class="profile-settings-card">
+  <h2>Профиль пользователя</h2>
+  <nav class="settings-tabs">
+    <button [class.active]="tab === 'info'" (click)="tab = 'info'">
+      <span class="tab-icon">👤</span> Основное
+    </button>
+    <button [class.active]="tab === 'system'" (click)="tab = 'system'">
+      <span class="tab-icon">🖥️</span> Системные
+    </button>
+    <button [class.active]="tab === 'notif'" (click)="tab = 'notif'">
+      <span class="tab-icon">🔔</span> Оповещения
+    </button>
+    <button [class.active]="tab === 'security'" (click)="tab = 'security'">
+      <span class="tab-icon">🔒</span> Безопасность
+    </button>
+  </nav>
+
+  <!-- Основное -->
+  <section *ngIf="tab === 'info'" class="settings-section">
+    <h3>Основная информация</h3>
+    <form (ngSubmit)="saveProfile()" #profileForm="ngForm" autocomplete="off">
+      <div class="profile-info-grid">
+        <div class="profile-info-col">
+          <div class="info-row">
+            <span class="info-label">ФИО:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.fullName"
+              name="fullName"
+              required
+            />
+          </div>
+          <div class="info-row">
+            <span class="info-label">Язык:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.language"
+              name="language"
+            />
+          </div>
+          <div class="info-row">
+            <span class="info-label">Телефон:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.phone"
+              name="phone"
+            />
+          </div>
+          <div class="info-row">
+            <span class="info-label">Telegram ID:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.telegramId"
+              name="telegramId"
+            />
+          </div>
+        </div>
+        <div class="profile-info-col">
+          <div class="info-row">
+            <span class="info-label">Часовой пояс:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.timezone"
+              name="timezone"
+            />
+          </div>
+          <div class="info-row">
+            <span class="info-label">Статус:</span>
+            <input
+              class="info-value editable"
+              [(ngModel)]="user.status"
+              name="status"
+            />
+          </div>
+          <div class="info-row">
+            <span class="info-label">Дата регистрации:</span>
+            <span class="info-value">{{
+              user?.registrationDate | date : "medium"
+            }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Последний вход:</span>
+            <span class="info-value">{{
+              user?.lastLoginDate | date : "medium"
+            }}</span>
+          </div>
+        </div>
+      </div>
+      <button
+        class="primary-btn"
+        type="submit"
+        [disabled]="profileForm.invalid"
+      >
+        Сохранить изменения
+      </button>
+    </form>
+  </section>
+  <!-- Системные -->
+  <section *ngIf="tab === 'system'" class="settings-section">
+    <h3>Системные настройки</h3>
+    <div class="settings-fields">
+      <div class="field">
+        <label>Тема:</label>
+        <select class="styled-select" [(ngModel)]="systemSettings.theme">
+          <option value="light">Светлая</option>
+          <option value="dark">Тёмная</option>
+          <option value="system">Системная</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Фон для досок:</label>
+        <label class="custom-file-upload">
+          <input
+            type="file"
+            (change)="onBoardBgChange($event)"
+            accept="image/*"
+          />
+          <span>Загрузить файл</span>
+        </label>
+        <span class="file-name" *ngIf="systemSettings.boardBgName">{{
+          systemSettings.boardBgName
+        }}</span>
+      </div>
+    </div>
+  </section>
+  <!-- Оповещения -->
+  <section *ngIf="tab === 'notif'" class="settings-section">
+    <h3>Оповещения</h3>
+    <div class="settings-fields">
+      <div *ngIf="user">
+        <div *ngIf="user.notificationSettings as notif">
+          <input
+            type="checkbox"
+            [(ngModel)]="notif.emailNotificationsEnabled"
+          />
+          Email
+          <input type="checkbox" [(ngModel)]="notif.pushNotificationsEnabled" />
+          Push
+          <input
+            type="checkbox"
+            [(ngModel)]="notif.telegramNotificationsEnabled"
+          />
+          Telegram
+        </div>
+      </div>
+      <button class="primary-btn" (click)="saveNotificationSettings()">
+        Сохранить
+      </button>
+    </div>
+  </section>
+  <!-- Безопасность -->
+  <section *ngIf="tab === 'security'" class="settings-section">
+    <h3>Смена Email и пароля</h3>
+    <form
+      (ngSubmit)="changeEmail()"
+      #emailForm="ngForm"
+      autocomplete="off"
+      class="security-form"
+    >
+      <div class="security-fields">
+        <label>
+          Новый email:
+          <input type="email" [(ngModel)]="newEmail" name="newEmail" required />
+        </label>
+        <button
+          class="primary-btn"
+          type="submit"
+          [disabled]="emailForm.invalid"
+        >
+          Изменить email
+        </button>
+      </div>
+    </form>
+    <form
+      (ngSubmit)="changePassword()"
+      #pwdForm="ngForm"
+      autocomplete="off"
+      class="security-form"
+    >
+      <div class="security-fields">
+        <label>
+          Новый пароль:
+          <input
+            type="password"
+            [(ngModel)]="newPassword"
+            name="newPassword"
+            required
+            minlength="6"
+          />
+        </label>
+        <label>
+          Повторите пароль:
+          <input
+            type="password"
+            [(ngModel)]="repeatPassword"
+            name="repeatPassword"
+            required
+            [pattern]="newPassword"
+          />
+        </label>
+        <button
+          class="primary-btn"
+          type="submit"
+          [disabled]="pwdForm.invalid || newPassword !== repeatPassword"
+        >
+          Сменить пароль
+        </button>
+      </div>
+    </form>
+    <div *ngIf="smsRequired" class="sms-confirm">
+      <label>
+        Введите код из SMS:
+        <input type="text" [(ngModel)]="smsCode" name="smsCode" maxlength="6" />
+      </label>
+      <button class="primary-btn" (click)="confirmSmsCode()">
+        Подтвердить
+      </button>
+    </div>
+    <div class="security-hint">
+      После смены email или пароля потребуется подтверждение через SMS код.
+    </div>
+  </section>
+</div>
