@@ -1,0 +1,31 @@
+<div class="search-wrapper">
+  <span class="search-icon material-icons">search</span>
+  <input
+    type="search"
+    [(ngModel)]="query"
+    (focus)="onSearch()"
+    (input)="onSearch()"
+    placeholder="Пользователь, доска, задача"
+    class="header-search"
+    autocomplete="off"
+  />
+  <ul *ngIf="showDropdown" class="search-results">
+    <li *ngIf="isLoading" class="search-loading">
+      <span class="spinner"></span> Поиск...
+    </li>
+    <ng-container *ngIf="!isLoading">
+      <li
+        *ngFor="let result of filteredResults"
+        (mousedown)="selectResult(result)"
+      >
+        <span *ngIf="result.type === 'user'">👤</span>
+        <span *ngIf="result.type === 'board'">📋</span>
+        <span *ngIf="result.type === 'task'">✅</span>
+        {{ result.name }}
+      </li>
+      <li *ngIf="filteredResults.length === 0" class="no-results">
+        Нет результатов
+      </li>
+    </ng-container>
+  </ul>
+</div>

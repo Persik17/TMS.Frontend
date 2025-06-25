@@ -1,8 +1,19 @@
 <header class="main-header">
   <div class="header-left">
-    <span class="logo">TMS</span>
+    <a class="company-link" routerLink="/boards">{{ companyName }}</a>
+    <span *ngIf="boardName" class="board-name">{{ boardName }}</span>
+    <span *ngIf="taskName" class="task-name">— {{ taskName }}</span>
+  </div>
+  <div class="header-center">
+    <app-global-search
+      class="header-search"
+      (select)="onGlobalSelect($event)"
+    ></app-global-search>
   </div>
   <div class="header-right">
+    <a class="profile-username-link" routerLink="/profile">
+      {{ user.username }}
+    </a>
     <div class="profile-menu-container" [class.open]="menuOpen">
       <img
         class="profile-avatar"

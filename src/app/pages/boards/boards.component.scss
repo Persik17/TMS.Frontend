@@ -24,6 +24,73 @@ h2 {
   min-width: 180px;
 }
 
+.boards-header {
+  margin-bottom: 1.2rem;
+}
+
+.create-board-btn {
+  padding: 0.55em 1.2em;
+  background: #e3f2fd;
+  color: #1976d2;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.06em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+.create-board-btn:hover {
+  background: #90caf9;
+  color: #0d47a1;
+}
+
+.create-board-form {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin-bottom: 1.5rem;
+}
+.create-board-input {
+  font-size: 1.04em;
+  border-radius: 6px;
+  border: 1px solid #b0bec5;
+  padding: 0.4em 1em;
+  min-width: 170px;
+}
+.create-board-form select {
+  font-size: 1.03em;
+  border-radius: 6px;
+  border: 1px solid #b0bec5;
+  padding: 0.35em 0.8em;
+}
+.add-btn {
+  background: #1976d2;
+  color: #fff;
+  border-radius: 6px;
+  border: none;
+  font-size: 1em;
+  padding: 0.4em 1.1em;
+  cursor: pointer;
+  margin-left: 0.5em;
+}
+.add-btn:disabled {
+  background: #b0bec5;
+  color: #fff;
+  cursor: not-allowed;
+}
+.cancel-btn {
+  background: #fbe9e7;
+  color: #ad1457;
+  border-radius: 6px;
+  border: none;
+  font-size: 1em;
+  padding: 0.4em 1.1em;
+  cursor: pointer;
+}
+.cancel-btn:hover {
+  background: #ffebee;
+}
+
 .boards-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

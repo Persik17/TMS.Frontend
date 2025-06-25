@@ -1,28 +1,126 @@
-import { Component, OnInit } from '@angular/core';
-import { CompanyService, CompanyViewModel } from '../../services/company.service';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+interface TariffSummary {
+  planName: string;
+  isTrial: boolean;
+  status: 'active' | 'expired' | 'pending';
+  period: string;
+  usersLimit: number;
+  boardsLimit: number;
+  tasksLimit: number;
+  currentUsers: number;
+  currentBoards: number;
+  currentTasks: number;
+  autoRenew: boolean;
+  renewalDate?: string;
+  pricePerPeriod: number;
+  currency: string;
+  features: string[];
+}
+
+interface BoardSummary {
+  name: string;
+  tasksTotal: number;
+  tasksDone: number;
+  tasksInProgress: number;
+}
+
+interface CeoSummary {
+  boards: BoardSummary[];
+  totalTasks: number;
+  totalDone: number;
+  totalInProgress: number;
+  leadBoard?: string;
+  mostActiveUser?: string;
+}
+
+interface CompanyViewModel {
+  name: string;
+  logo?: string;
+  inn: string;
+  ogrn: string;
+  address: string;
+  website?: string;
+  industry?: string;
+  description?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  isActive: boolean;
+  ceoSummary: CeoSummary;
+  tariffSummary: TariffSummary;
+}
 
 @Component({
   selector: 'app-company',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './company.component.html',
-  styleUrls: ['./company.component.scss']
+  styleUrls: ['./company.component.scss'],
 })
-export class CompanyComponent implements OnInit {
-  company: CompanyViewModel | null = null;
+export class CompanyComponent {
+  tab: 'info' | 'ceo' | 'tariff' = 'info';
 
-  constructor(
-    private companyService: CompanyService,
-    private route: ActivatedRoute
-  ) {}
+  company: CompanyViewModel = {
+    name: 'ООО Тестовая компания',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Logo_2013_Google.png/320px-Logo_2013_Google.png',
+    inn: '1234567890',
+    ogrn: '1027700132195',
+    address: 'г. Москва, ул. Примерная, д. 1',
+    website: 'https://test-company.ru',
+    industry: 'IT/Технологии',
+    description:
+      'Ведущий разработчик решений для управления командами и проектами.',
+    contactEmail: 'info@test-company.ru',
+    contactPhone: '+7 495 123-45-67',
+    isActive: true,
+    ceoSummary: {
+      boards: [
+        {
+          name: 'Проект Alpha',
+          tasksTotal: 42,
+          tasksDone: 30,
+          tasksInProgress: 12,
+        },
+        {
+          name: 'Маркетинг 2025',
+          tasksTotal: 18,
+          tasksDone: 15,
+          tasksInProgress: 3,
+        },
+        { name: 'HR и найм', tasksTotal: 9, tasksDone: 7, tasksInProgress: 2 },
+      ],
+      totalTasks: 69,
+      totalDone: 52,
+      totalInProgress: 17,
+      leadBoard: 'Проект Alpha',
+      mostActiveUser: 'alice',
+    },
+    tariffSummary: {
+      planName: 'Бизнес',
+      isTrial: false,
+      status: 'active',
+      period: '01.06.2025 – 01.07.2025',
+      usersLimit: 50,
+      boardsLimit: 20,
+      tasksLimit: 5000,
+      currentUsers: 23,
+      currentBoards: 6,
+      currentTasks: 412,
+      autoRenew: true,
+      renewalDate: '01.07.2025',
+      pricePerPeriod: 2990,
+      currency: '₽',
+      features: [
+        'Все основные функции',
+        'Расширенные отчёты',
+        'Приоритетная поддержка',
+        'Безлимит на задачи в рамках тарифа',
+      ],
+    },
+  };
 
-  ngOnInit() {
-    const companyId = this.route.snapshot.queryParamMap.get('id') ?? 'COMPANY_GUID';
-    this.companyService.getCompany(companyId).subscribe({
-      next: company => this.company = company,
-      error: () => this.company = null
-    });
+  setTab(tab: 'info' | 'ceo' | 'tariff') {
+    this.tab = tab;
   }
 }

@@ -1,0 +1,45 @@
+<div class="my-tasks-page">
+  <h1>Мои задачи</h1>
+  <div class="tasks-filter">
+    <input type="text" [(ngModel)]="filter.query" placeholder="Поиск по задачам, доскам..." />
+    <select [(ngModel)]="filter.status">
+      <option value="">Все статусы</option>
+      <option value="open">В работе</option>
+      <option value="done">Выполнено</option>
+    </select>
+    <select [(ngModel)]="filter.priority">
+      <option value="">Любой приоритет</option>
+      <option value="low">Низкий</option>
+      <option value="medium">Средний</option>
+      <option value="high">Высокий</option>
+    </select>
+  </div>
+  <div class="my-tasks-list">
+    <div *ngFor="let group of groupedTasks()">
+      <div class="board-group-header" (click)="toggleBoard(group.boardId)">
+        <mat-icon>{{ isBoardOpen(group.boardId) ? 'expand_less' : 'expand_more' }}</mat-icon>
+        <span>{{ group.boardName }}</span>
+        <span class="board-task-count">{{ group.tasks.length }}</span>
+      </div>
+      <div *ngIf="isBoardOpen(group.boardId)" class="board-tasks">
+        <div *ngFor="let task of group.tasks" class="task-card" (click)="goToTask(task)">
+          <div class="task-main">
+            <span class="task-title">{{ task.title }}</span>
+            <span class="task-priority" [ngClass]="task.priority">{{ priorityLabel(task.priority) }}</span>
+          </div>
+          <div class="task-info">
+            <span class="task-status" [ngClass]="task.status">{{ statusLabel(task.status) }}</span>
+            <span class="task-dates" *ngIf="task.dates">
+              {{ task.dates.start | date:'d.MM.yyyy' }} - {{ task.dates.end | date:'d.MM.yyyy' }}
+            </span>
+            <span class="task-sp">SP: {{ task.sp }}</span>
+          </div>
+        </div>
+        <div *ngIf="group.tasks.length === 0" class="no-tasks">Нет задач</div>
+      </div>
+    </div>
+    <div *ngIf="groupedTasks().length === 0" class="no-tasks-overall">
+      У вас нет назначенных задач.
+    </div>
+  </div>
+</div>

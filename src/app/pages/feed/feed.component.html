@@ -1,0 +1,49 @@
+<div class="feed-page">
+  <h1>Лента и новости</h1>
+  <button
+    class="mark-all-btn"
+    (click)="markAllAsRead()"
+    [disabled]="readIds.length === feed.length"
+  >
+    Отметить все как прочитанные
+  </button>
+  <div class="feed-grid">
+    <div
+      *ngFor="let item of feed"
+      class="feed-card"
+      [class.read]="isRead(item.id)"
+      (click)="openModal(item)"
+      tabindex="0"
+      role="button"
+      aria-pressed="false"
+    >
+      <div class="feed-date">{{ item.date | date : "d MMMM yyyy" }}</div>
+      <div class="feed-title">{{ item.title }}</div>
+      <div class="feed-content">
+        {{
+          item.content.length > 70
+            ? (item.content | slice : 0 : 70) + "..."
+            : item.content
+        }}
+      </div>
+      <span
+        *ngIf="!isRead(item.id)"
+        class="unread-dot"
+        title="Непрочитано"
+      ></span>
+    </div>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal-backdrop" *ngIf="modalOpen" (click)="closeModal()"></div>
+  <div class="modal" *ngIf="modalOpen">
+    <button class="modal-close" (click)="closeModal()" aria-label="Закрыть">
+      &times;
+    </button>
+    <div class="modal-date">
+      {{ selectedItem?.date | date : "d MMMM yyyy" }}
+    </div>
+    <div class="modal-title">{{ selectedItem?.title }}</div>
+    <div class="modal-content">{{ selectedItem?.content }}</div>
+  </div>
+</div>

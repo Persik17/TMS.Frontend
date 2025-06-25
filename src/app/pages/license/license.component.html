@@ -1,0 +1,33 @@
+<div class="license-page">
+  <h1>Лицензия и тарифы</h1>
+  <p class="license-info">
+    TMS предоставляет гибкие условия лицензирования для команд любого размера.
+    Выберите подходящий тариф для вашего бизнеса и получите доступ к современным
+    инструментам управления задачами и проектами.
+  </p>
+  <div class="tariffs-grid">
+    <div
+      *ngFor="let tariff of tariffs"
+      class="tariff-block"
+      [class.highlight]="tariff.highlight"
+    >
+      <div class="tariff-name">{{ tariff.name }}</div>
+      <div class="tariff-price">{{ tariff.price }}</div>
+      <div class="tariff-desc">{{ tariff.description }}</div>
+      <ul class="tariff-features">
+        <li *ngFor="let f of tariff.features">{{ f }}</li>
+      </ul>
+      <button
+        class="choose-btn"
+        [disabled]="tariff.name === 'Free'"
+        (click)="onChooseTariff(tariff)"
+      >
+        Выбрать
+      </button>
+    </div>
+  </div>
+  <div class="license-note">
+    <strong>Внимание!</strong> Оплата тарифов осуществляется на ежемесячной
+    основе. Все тарифы включают базовую техническую поддержку.
+  </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, NgZone } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,6 +30,7 @@ export class LoginComponent implements AfterViewInit {
   password = '';
   error: string | null = null;
   loading = false;
+  cookieConsentVisible = false;
 
   constructor(
     private auth: AuthService,
@@ -45,7 +46,10 @@ export class LoginComponent implements AfterViewInit {
         this.loading = false;
         if (res.success) {
           localStorage.setItem('token', res.token!);
-          this.router.navigate(['/dashboard']);
+          // Вместо dashboard редирект на sms подтверждение
+          this.router.navigate(['/confirm-sms'], {
+            state: { email: this.email },
+          });
         } else {
           this.error = res.error || 'Ошибка авторизации';
         }
@@ -58,24 +62,40 @@ export class LoginComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // Проверка согласия на cookies
+    const consent = localStorage.getItem('cookie_consent');
+    if (consent !== 'accepted') {
+      this.cookieConsentVisible = true;
+    }
+
+    // Telegram widget
     const script = document.createElement('script');
     script.src = 'https://telegram.org/js/telegram-widget.js?7';
     script.setAttribute('data-telegram-login', 'tms_notify_support_bot'); // без @
     script.setAttribute('data-size', 'large');
     script.setAttribute('data-userpic', 'true');
     script.setAttribute('data-request-access', 'write');
-    // укажите ваш backend для обработки Telegram auth:
     script.setAttribute(
       'data-auth-url',
       'http://127.0.0.1:5000/api/auth/telegram'
     );
     script.async = true;
 
-    // Очищаем контейнер и вставляем скрипт
     const container = document.getElementById('telegram-login-widget');
     if (container) {
       container.innerHTML = '';
       container.appendChild(script);
     }
+  }
+
+  acceptCookies() {
+    localStorage.setItem('cookie_consent', 'accepted');
+    this.cookieConsentVisible = false;
+  }
+
+  declineCookies() {
+    localStorage.setItem('cookie_consent', 'declined');
+    this.cookieConsentVisible = false;
+    // Можно добавить логику ограничения функционала
   }
 }

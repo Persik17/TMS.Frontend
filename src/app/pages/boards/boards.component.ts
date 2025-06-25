@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class BoardsComponent {
   constructor(private router: Router) {}
+
   boards: BoardStub[] = [
     { id: '1', name: 'Проект Alpha', owner: 'Иван Петров', privacy: 'private' },
     {
@@ -34,6 +35,12 @@ export class BoardsComponent {
   filterOwner = '';
   filterPrivacy: '' | 'private' | 'public' = '';
 
+  // For new board creation
+  creatingBoard = false;
+  newBoardName = '';
+  newBoardPrivacy: 'private' | 'public' = 'private';
+  newBoardOwner = 'Вы'; // Можно подставить из профиля
+
   get filteredBoards(): BoardStub[] {
     return this.boards.filter(
       (b) =>
@@ -47,5 +54,40 @@ export class BoardsComponent {
 
   goToBoard(id: string) {
     this.router.navigate(['/boards', id]);
+  }
+
+  showCreateBoardForm() {
+    this.creatingBoard = true;
+    this.newBoardName = '';
+    this.newBoardPrivacy = 'private';
+    setTimeout(() => {
+      const input = document.querySelector<HTMLInputElement>(
+        '.create-board-input'
+      );
+      input?.focus();
+    });
+  }
+
+  cancelCreateBoard() {
+    this.creatingBoard = false;
+    this.newBoardName = '';
+    this.newBoardPrivacy = 'private';
+  }
+
+  createBoard() {
+    const name = this.newBoardName.trim();
+    if (!name) return;
+    // Генерируем id на основе времени, можно заменить на uuid
+    const id = Date.now().toString();
+    this.boards.push({
+      id,
+      name,
+      owner: this.newBoardOwner,
+      privacy: this.newBoardPrivacy,
+    });
+    this.creatingBoard = false;
+    this.newBoardName = '';
+    this.newBoardPrivacy = 'private';
+    this.goToBoard(id);
   }
 }

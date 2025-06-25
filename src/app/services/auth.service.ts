@@ -14,10 +14,24 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string): Observable<AuthenticationResultViewModel> {
-    return this.http.post<AuthenticationResultViewModel>(
-      `${this.apiUrl}/login`,
+  login(
+    email: string,
+    password: string
+  ): Observable<{ success: boolean; token?: string; error?: string }> {
+    return this.http.post<{ success: boolean; token?: string; error?: string }>(
+      'https://localhost:7087/api/auth/login',
       { email, password }
+    );
+  }
+
+  // Подтверждение по смс
+  confirmSms(
+    verificationId: string,
+    code: string
+  ): Observable<{ success: boolean; token?: string; error?: string }> {
+    return this.http.post<{ success: boolean; token?: string; error?: string }>(
+      'https://localhost:7087/api/auth/confirm-sms',
+      { verificationId, code }
     );
   }
 }

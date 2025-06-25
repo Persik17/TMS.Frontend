@@ -5,27 +5,56 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-confirm-sms',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './confirm-sms.component.html',
-  styleUrls: ['./confirm-sms.component.scss']
+  styleUrls: ['./confirm-sms.component.scss'],
 })
 export class ConfirmSmsComponent {
   verificationId: string | null = null;
   email: string | null = null;
+  code: string = '';
+  error: string | null = null;
+  loading = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: AuthService) {
     const nav = this.router.getCurrentNavigation();
     this.verificationId = nav?.extras.state?.['verificationId'] || null;
     this.email = nav?.extras.state?.['email'] || null;
+  }
+
+  onConfirm() {
+    this.loading = true;
+    this.error = null;
+    // Для примера verificationId можно получить из email, если нет отдельной логики
+    this.auth
+      .confirmSms(this.verificationId || this.email || '', this.code)
+      .subscribe({
+        next: (res) => {
+          this.loading = false;
+          if (res.success) {
+            localStorage.setItem('token', res.token!);
+            this.router.navigate(['/post-login-redirect']);
+          } else {
+            this.error = res.error || 'Ошибка подтверждения';
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = err.error?.error || 'Ошибка соединения с сервером';
+        },
+      });
   }
 }

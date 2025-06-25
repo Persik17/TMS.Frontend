@@ -6,23 +6,103 @@
   height: 60px;
   background: linear-gradient(90deg, #1976d2 0%, #2196f3 100%);
   color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   box-shadow: 0 2px 8px #0001;
   z-index: 200;
   padding: 0 32px;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.header-left .logo {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  max-width: 32vw;
+  overflow: hidden;
+}
+
+.header-left .company-link {
   color: #fff;
+  font-size: 21px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  opacity: 0.95;
+  transition: opacity 0.18s;
+  white-space: nowrap;
+}
+.header-left .company-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.board-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  display: inline-block;
+}
+.task-name {
+  font-size: 17px;
+  font-weight: 400;
+  color: #e0e4ea;
+  opacity: 0.93;
+  margin-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+  display: inline-block;
+}
+
+/* Абсолютное центрирование поиска */
+.header-center {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+  width: 420px;
+  justify-content: center;
+  z-index: 201;
+}
+.header-search {
+  width: 100%;
+  pointer-events: auto;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.1rem;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.profile-username-link {
+  color: #fff;
+  font-weight: 500;
+  margin-right: 0.7rem;
+  font-size: 1.03em;
+  text-decoration: none;
+  opacity: 0.88;
+  transition: opacity 0.15s, text-decoration 0.15s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.profile-username-link:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
 
 .profile-avatar {
@@ -34,9 +114,12 @@
   box-shadow: 0 1px 4px #1976d20a;
   transition: box-shadow 0.15s;
 }
-
 .profile-avatar:hover {
   box-shadow: 0 4px 16px #1976d218;
+}
+
+.profile-menu-container {
+  position: relative;
 }
 
 .profile-dropdown {
@@ -111,3 +194,15 @@
   color: #c62828;
 }
 
+/* Адаптив для поиска и левой части */
+@media (max-width: 900px) {
+  .header-center {
+    width: 260px;
+  }
+  .header-search {
+    width: 100%;
+  }
+  .header-left {
+    max-width: 40vw;
+  }
+}

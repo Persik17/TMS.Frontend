@@ -1,4 +1,12 @@
-<div class="board-main-area">
+<div class="board-tabs">
+  <button [class.active]="tab === 'board'" (click)="tab = 'board'">
+    Доска
+  </button>
+  <button [class.active]="tab === 'burn'" (click)="tab = 'burn'">График</button>
+</div>
+
+<!-- Доска -->
+<div *ngIf="tab === 'board'" class="board-main-area">
   <div class="board-columns-outer">
     <div
       class="board-columns"
@@ -17,34 +25,6 @@
         (cdkDragEnded)="onColumnDragEnded()"
         [class.is-dragging]="isDraggingColumnId === col.id"
       >
-        <!-- Drag Preview: вся колонка -->
-        <ng-template cdkDragPreview>
-          <div
-            class="board-column board-column-drag-preview"
-            [style.background]="col.color"
-          >
-            <div class="board-column-header">
-              <span class="board-column-title">{{ col.title }}</span>
-              <span class="task-count">({{ col.tasks.length }})</span>
-            </div>
-            <div class="board-tasks-list">
-              <div class="task-card" *ngFor="let task of col.tasks">
-                <div class="task-card-content">
-                  <div class="task-header">
-                    <span class="task-title">{{ task.name }}</span>
-                  </div>
-                  <div class="task-desc">{{ task.description }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-        <!-- Drag Placeholder: пустая колонка -->
-        <ng-template cdkDragPlaceholder>
-          <div class="board-column board-column-placeholder"></div>
-        </ng-template>
-
-        <!-- Обычный контент колонки -->
         <div class="board-column-header" cdkDragHandle>
           <span class="board-column-title">
             {{ col.title }}
@@ -52,8 +32,9 @@
           </span>
           <button
             class="edit-col-btn"
-            (click)="startEditColumn(col)"
+            (click)="editColumn(col)"
             title="Редактировать столбец"
+            type="button"
           >
             <span class="material-icons">edit</span>
           </button>
@@ -61,6 +42,7 @@
             class="add-task-btn"
             (click)="toggleAddTask(col.id)"
             title="Добавить задачу"
+            type="button"
           >
             <span class="material-icons">add</span>
           </button>
@@ -113,7 +95,7 @@
             </div>
           </div>
           <div *ngIf="filteredTasks(col).length === 0" class="no-tasks">
-            Нет задач по фильтру
+            Нет задач
           </div>
         </div>
 
@@ -132,10 +114,10 @@
             [disabled]="!newTaskName.trim()"
             title="Добавить"
           >
-            <span class="material-icons">done</span>
+            +
           </button>
           <button class="cancel-btn" (click)="cancelAddTask()" title="Отмена">
-            <span class="material-icons">close</span>
+            ×
           </button>
         </div>
         <button
@@ -147,7 +129,6 @@
         </button>
       </div>
 
-      <!-- Кнопка и форма для новой колонки -->
       <div class="board-column board-column-add">
         <ng-container *ngIf="!addingColumn; else addColForm">
           <button
@@ -155,8 +136,7 @@
             (click)="showAddColumnForm()"
             title="Добавить столбец"
           >
-            <span class="material-icons">add</span>
-            <span>Добавить столбец</span>
+            + Добавить столбец
           </button>
         </ng-container>
         <ng-template #addColForm>
@@ -187,18 +167,22 @@
               type="submit"
               [disabled]="!newColumnTitle.trim()"
             >
-              <span class="material-icons">done</span>
+              +
             </button>
             <button
               class="cancel-btn"
               type="button"
               (click)="cancelAddColumn()"
             >
-              <span class="material-icons">close</span>
+              ×
             </button>
           </form>
         </ng-template>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="tab === 'burn'">
+  <app-board-analytics [columns]="columns"></app-board-analytics>
 </div>

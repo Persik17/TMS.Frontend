@@ -107,46 +107,152 @@
           <option value="system">Системная</option>
         </select>
       </div>
-      <div class="field">
+      <div class="field board-bg-field">
         <label>Фон для досок:</label>
-        <label class="custom-file-upload">
-          <input
-            type="file"
-            (change)="onBoardBgChange($event)"
-            accept="image/*"
-          />
-          <span>Загрузить файл</span>
-        </label>
-        <span class="file-name" *ngIf="systemSettings.boardBgName">{{
-          systemSettings.boardBgName
-        }}</span>
+        <div class="board-bg-preview" [ngStyle]="getBoardBgStyle()">
+          <ng-container
+            *ngIf="
+              systemSettings.boardBgType === 'custom' &&
+              systemSettings.boardBgUrl
+            "
+          >
+            <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
+          </ng-container>
+          <ng-container *ngIf="systemSettings.boardBgType === 'template'">
+            <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
+          </ng-container>
+          <ng-container *ngIf="systemSettings.boardBgType === 'color'">
+            <div
+              class="board-bg-color"
+              [style.background]="systemSettings.boardBgColor"
+            ></div>
+          </ng-container>
+        </div>
+        <button
+          type="button"
+          (click)="openBgModal()"
+          class="primary-btn select-bg-btn"
+        >
+          Выбрать фон
+        </button>
+        <div class="bg-file-name" *ngIf="systemSettings.boardBgName">
+          {{ systemSettings.boardBgName }}
+        </div>
+      </div>
+    </div>
+    <!-- Модальное окно выбора фона -->
+    <div class="bg-modal" *ngIf="bgModalOpen">
+      <div class="bg-modal-backdrop" (click)="closeBgModal()"></div>
+      <div class="bg-modal-content">
+        <h4>Выберите фон для досок</h4>
+        <div class="bg-templates">
+          <div
+            class="bg-template"
+            *ngFor="let tpl of bgTemplates"
+            [class.selected]="
+              systemSettings.boardBgUrl === tpl.url &&
+              systemSettings.boardBgType === 'template'
+            "
+            (click)="selectTemplateBg(tpl)"
+          >
+            <img [src]="tpl.url" [alt]="tpl.name" />
+          </div>
+        </div>
+        <div class="bg-colors">
+          <div
+            class="bg-color-sample"
+            *ngFor="let color of bgColors"
+            [style.background]="color"
+            [class.selected]="
+              systemSettings.boardBgColor === color &&
+              systemSettings.boardBgType === 'color'
+            "
+            (click)="selectColorBg(color)"
+          ></div>
+        </div>
+        <div class="bg-upload">
+          <label class="custom-file-upload">
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onBoardBgUpload($event)"
+            />
+            <span>Загрузить свой фон</span>
+          </label>
+        </div>
+        <button class="primary-btn" (click)="closeBgModal()">Готово</button>
       </div>
     </div>
   </section>
   <!-- Оповещения -->
   <section *ngIf="tab === 'notif'" class="settings-section">
     <h3>Оповещения</h3>
-    <div class="settings-fields">
-      <div *ngIf="user">
-        <div *ngIf="user.notificationSettings as notif">
-          <input
-            type="checkbox"
-            [(ngModel)]="notif.emailNotificationsEnabled"
-          />
-          Email
-          <input type="checkbox" [(ngModel)]="notif.pushNotificationsEnabled" />
-          Push
-          <input
-            type="checkbox"
-            [(ngModel)]="notif.telegramNotificationsEnabled"
-          />
-          Telegram
+    <div class="notification-hint">
+      <span class="hint-icon">ℹ️</span>
+      <div>
+        <b>SMS-подтверждения</b> отправляются по принципу приоритета:
+        <ol>
+          <li>
+            <b>Сначала</b> попытка отправить <span class="tg">Telegram</span>.
+          </li>
+          <li>Если не доставлено — <b>E-mail</b>.</li>
+          <li>Если и это не сработало — <b>SMS</b> на номер телефона.</li>
+        </ol>
+        <div class="hint-note">
+          <b>Обычные уведомления</b> (о событиях, напоминания и т.д.)
+          отправляются <b>одновременно</b> по всем каналам:
+          <span class="tg">Telegram</span>, <span class="mail">E-mail</span>,
+          <span class="sms">SMS</span>.
         </div>
       </div>
-      <button class="primary-btn" (click)="saveNotificationSettings()">
-        Сохранить
-      </button>
     </div>
+    <div class="notif-checkboxes-row">
+      <label
+        class="notif-checkbox"
+        [class.changed]="
+          user.notificationSettings.emailNotificationsEnabled !==
+          originalNotif.emailNotificationsEnabled
+        "
+      >
+        <input
+          type="checkbox"
+          [(ngModel)]="user.notificationSettings.emailNotificationsEnabled"
+        />
+        <span class="icon email"></span>
+        Email
+      </label>
+      <label
+        class="notif-checkbox"
+        [class.changed]="
+          user.notificationSettings.pushNotificationsEnabled !==
+          originalNotif.pushNotificationsEnabled
+        "
+      >
+        <input
+          type="checkbox"
+          [(ngModel)]="user.notificationSettings.pushNotificationsEnabled"
+        />
+        <span class="icon push"></span>
+        Push
+      </label>
+      <label
+        class="notif-checkbox"
+        [class.changed]="
+          user.notificationSettings.telegramNotificationsEnabled !==
+          originalNotif.telegramNotificationsEnabled
+        "
+      >
+        <input
+          type="checkbox"
+          [(ngModel)]="user.notificationSettings.telegramNotificationsEnabled"
+        />
+        <span class="icon telegram"></span>
+        Telegram
+      </label>
+    </div>
+    <button class="primary-btn" (click)="saveNotificationSettings()">
+      Сохранить
+    </button>
   </section>
   <!-- Безопасность -->
   <section *ngIf="tab === 'security'" class="settings-section">

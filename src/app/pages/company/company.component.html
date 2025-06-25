@@ -1,17 +1,151 @@
-<div *ngIf="company; else loading">
+<div class="company-tabs">
+  <button [class.active]="tab === 'info'" (click)="setTab('info')">
+    О компании
+  </button>
+  <button [class.active]="tab === 'ceo'" (click)="setTab('ceo')">
+    CEO-сводка
+  </button>
+  <button [class.active]="tab === 'tariff'" (click)="setTab('tariff')">
+    Подписка и тариф
+  </button>
+</div>
+
+<div *ngIf="tab === 'info'" class="company-info">
   <h2>{{ company.name }}</h2>
-  <img *ngIf="company.logo" [src]="company.logo" alt="Logo"
-       style="max-height: 64px; max-width: 160px; margin-bottom: 1rem;">
+  <img
+    *ngIf="company.logo"
+    [src]="company.logo"
+    alt="Logo"
+    style="max-height: 64px; max-width: 160px; margin-bottom: 1rem"
+  />
   <p><b>ИНН:</b> {{ company.inn }}</p>
   <p><b>ОГРН:</b> {{ company.ogrn }}</p>
   <p><b>Адрес:</b> {{ company.address }}</p>
-  <p><b>Сайт:</b> <a [href]="company.website" target="_blank">{{ company.website }}</a></p>
-  <p><b>Отрасль:</b> {{ company.industry }}</p>
-  <p><b>Описание:</b> {{ company.description }}</p>
-  <p><b>Email:</b> {{ company.contactEmail }}</p>
-  <p><b>Телефон:</b> {{ company.contactPhone }}</p>
-  <p><b>Активна:</b> {{ company.isActive }}</p>
+  <p *ngIf="company.website">
+    <b>Сайт:</b>
+    <a [href]="company.website" target="_blank">{{ company.website }}</a>
+  </p>
+  <p *ngIf="company.industry"><b>Отрасль:</b> {{ company.industry }}</p>
+  <p *ngIf="company.description"><b>Описание:</b> {{ company.description }}</p>
+  <p *ngIf="company.contactEmail"><b>Email:</b> {{ company.contactEmail }}</p>
+  <p *ngIf="company.contactPhone"><b>Телефон:</b> {{ company.contactPhone }}</p>
+  <p><b>Активна:</b> {{ company.isActive ? "Да" : "Нет" }}</p>
 </div>
-<ng-template #loading>
-  <p>Загрузка данных компании...</p>
-</ng-template>
+
+<div *ngIf="tab === 'ceo'" class="company-ceo-summary">
+  <h2>CEO-сводка</h2>
+  <div class="ceo-row">
+    <div>
+      <div class="ceo-metric">
+        <span class="ceo-metric-label">Всего задач</span>
+        <span class="ceo-metric-value">{{
+          company.ceoSummary.totalTasks
+        }}</span>
+      </div>
+      <div class="ceo-metric">
+        <span class="ceo-metric-label">Выполнено</span>
+        <span class="ceo-metric-value done">{{
+          company.ceoSummary.totalDone
+        }}</span>
+      </div>
+      <div class="ceo-metric">
+        <span class="ceo-metric-label">В работе</span>
+        <span class="ceo-metric-value inprogress">{{
+          company.ceoSummary.totalInProgress
+        }}</span>
+      </div>
+    </div>
+    <div>
+      <div class="ceo-metric">
+        <span class="ceo-metric-label">Лидирующая доска</span>
+        <span class="ceo-metric-value">{{ company.ceoSummary.leadBoard }}</span>
+      </div>
+      <div class="ceo-metric">
+        <span class="ceo-metric-label">Самый активный</span>
+        <span class="ceo-metric-value">{{
+          company.ceoSummary.mostActiveUser
+        }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="ceo-boards">
+    <h3>По доскам</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Доска</th>
+          <th>Всего</th>
+          <th>Выполнено</th>
+          <th>В работе</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let board of company.ceoSummary.boards">
+          <td>{{ board.name }}</td>
+          <td>{{ board.tasksTotal }}</td>
+          <td>{{ board.tasksDone }}</td>
+          <td>{{ board.tasksInProgress }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="tab === 'tariff'" class="company-tariff-summary">
+  <h2>Сводка по подписке</h2>
+  <div class="tariff-main">
+    <div>
+      <div class="tariff-name">
+        <b>Тариф:</b> {{ company.tariffSummary.planName }}
+        <span *ngIf="company.tariffSummary.isTrial" class="tariff-trial"
+          >(Пробный)</span
+        >
+      </div>
+      <div>
+        <b>Статус:</b>
+        <span [ngClass]="company.tariffSummary.status">
+          {{
+            company.tariffSummary.status === "active"
+              ? "Активен"
+              : company.tariffSummary.status === "expired"
+              ? "Завершён"
+              : "Ожидание"
+          }}
+        </span>
+      </div>
+      <div><b>Период:</b> {{ company.tariffSummary.period }}</div>
+      <div>
+        <b>Продление:</b>
+        {{ company.tariffSummary.autoRenew ? "Автоматически" : "Нет" }}
+        <span *ngIf="company.tariffSummary.renewalDate"
+          >({{ company.tariffSummary.renewalDate }})</span
+        >
+      </div>
+      <div>
+        <b>Стоимость:</b>
+        {{ company.tariffSummary.pricePerPeriod }}
+        {{ company.tariffSummary.currency }} / месяц
+      </div>
+    </div>
+    <div class="tariff-limits">
+      <div>
+        <b>Пользователи:</b> {{ company.tariffSummary.currentUsers }} /
+        {{ company.tariffSummary.usersLimit }}
+      </div>
+      <div>
+        <b>Доски:</b> {{ company.tariffSummary.currentBoards }} /
+        {{ company.tariffSummary.boardsLimit }}
+      </div>
+      <div>
+        <b>Задачи:</b> {{ company.tariffSummary.currentTasks }} /
+        {{ company.tariffSummary.tasksLimit }}
+      </div>
+    </div>
+  </div>
+  <div class="tariff-features">
+    <b>Возможности тарифа:</b>
+    <ul>
+      <li *ngFor="let f of company.tariffSummary.features">{{ f }}</li>
+    </ul>
+  </div>
+</div>

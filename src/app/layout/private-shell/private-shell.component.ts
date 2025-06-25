@@ -14,8 +14,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
       <app-sidebar></app-sidebar>
       <main class="private-main"><router-outlet></router-outlet></main>
     </div>
-    <app-footer></app-footer>
-  `,
+ы  `,
   styles: [`
     .layout {
       display: flex;

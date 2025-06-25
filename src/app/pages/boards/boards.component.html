@@ -19,6 +19,34 @@
     </select>
   </div>
 
+  <div class="boards-header">
+    <button class="create-board-btn" (click)="showCreateBoardForm()">
+      + Новая доска
+    </button>
+  </div>
+  <div class="create-board-form" *ngIf="creatingBoard">
+    <input
+      class="create-board-input"
+      [(ngModel)]="newBoardName"
+      placeholder="Название доски"
+      maxlength="40"
+      autofocus
+      (keydown.enter)="createBoard()"
+    />
+    <select [(ngModel)]="newBoardPrivacy">
+      <option value="private">Приватная</option>
+      <option value="public">Публичная</option>
+    </select>
+    <button
+      class="add-btn"
+      (click)="createBoard()"
+      [disabled]="!newBoardName.trim()"
+    >
+      Создать
+    </button>
+    <button class="cancel-btn" (click)="cancelCreateBoard()">Отмена</button>
+  </div>
+
   <div class="boards-list">
     <div
       class="board-card"

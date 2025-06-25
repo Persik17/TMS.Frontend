@@ -141,6 +141,7 @@
   border: none;
   transition: box-shadow 0.18s, transform 0.13s;
   cursor: pointer;
+  overflow: hidden;
 }
 .task-card:hover {
   box-shadow: 0 6px 24px rgba(33, 150, 243, 0.13),
@@ -154,6 +155,9 @@
   margin-right: 0.95rem;
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
+  background: #e3e3e3;
+  min-height: 70px;
+  flex-shrink: 0;
 }
 .task-card-content {
   flex: 1 1 0;
@@ -212,6 +216,12 @@
   align-items: center;
   gap: 0.3em;
 }
+.date-label .material-icons,
+.assignee .material-icons {
+  font-size: 1em;
+  margin-right: 0.18em;
+  vertical-align: middle;
+}
 .no-tasks {
   color: #888;
   padding: 1rem 0 0 0;
@@ -262,7 +272,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%; /* если нужно, или 100vh - высота видимой части */
+  height: 100%;
 }
 
 .board-columns-outer {
@@ -317,4 +327,108 @@
 
 .board-column.is-dragging {
   opacity: 0;
+}
+
+.edit-col-btn,
+.add-task-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 4px 7px;
+  border-radius: 4px;
+  color: #2196f3;
+  transition: background 0.13s, color 0.13s;
+  margin-left: 2px;
+}
+.edit-col-btn:hover,
+.add-task-btn:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+.board-column-header .material-icons {
+  font-size: 1.28em;
+  vertical-align: middle;
+}
+.board-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.board-tabs button {
+  border: none;
+  background: #f2f5fa;
+  color: #1976d2;
+  font-weight: 600;
+  font-size: 1.07em;
+  padding: 9px 32px 8px 32px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  letter-spacing: 0.1px;
+  box-shadow: 0 2px 8px #0000000a;
+  transition: background 0.13s, color 0.13s;
+}
+.board-tabs button.active,
+.board-tabs button:focus {
+  background: #1976d2;
+  color: #fff;
+  outline: none;
+}
+
+.board-tabs button:hover:not(.active) {
+  background: #e3eafc;
+  color: #003b7a;
+}
+.chart-area {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e0e4ea;
+  padding: 18px 12px 16px 12px;
+  margin-bottom: 28px;
+  max-width: 680px;
+  min-width: 320px;
+  min-height: 320px;
+  box-shadow: 0 2px 12px #0001;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-area canvas {
+  max-width: 600px !important;
+  max-height: 320px !important;
+  width: 100% !important;
+  height: 320px !important;
+  display: block;
+  margin: 0 auto;
+}
+.chart-type-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin-bottom: 14px;
+  font-size: 1.02em;
+  color: #1a237e;
+}
+
+.chart-type-filter label {
+  font-weight: 500;
+  color: #1a237e;
+  margin-right: 8px;
+  letter-spacing: 0.1px;
+}
+
+.chart-type-filter select {
+  border: 1px solid #b0bec5;
+  border-radius: 6px;
+  padding: 5px 14px 5px 10px;
+  font-size: 1em;
+  min-width: 128px;
+  background: #fff;
+  color: #1a237e;
 }

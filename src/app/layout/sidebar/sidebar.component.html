@@ -1,13 +1,62 @@
 <aside class="sidebar">
-  <a routerLink="/company" routerLinkActive="active">Компания</a>
-  <a routerLink="/boards" routerLinkActive="active">Доски</a>
-  <div *ngIf="isBoardPage">
-    <a
-      *ngIf="isBoardPage"
-      [routerLink]="['/boards', boardId, 'dashboard-settings']"
-      routerLinkActive="active"
-    >
-      Настройки дашборда
-    </a>
+  <div class="sidebar-content">
+    <a routerLink="/my-tasks" routerLinkActive="active">Мои задачи</a>
+    <a routerLink="/company" routerLinkActive="active">Компания</a>
+    <div class="sidebar-boards-block">
+      <a routerLink="/boards" routerLinkActive="active" class="boards-main-link"
+        >Доски</a
+      >
+      <div *ngIf="boards.length > 0" class="sidebar-boards-list">
+        <a
+          *ngFor="let board of shownBoards"
+          [routerLink]="['/boards', board.id]"
+          routerLinkActive="active"
+          [class.active-board]="boardId === board.id"
+          class="sidebar-board-link"
+        >
+          <mat-icon inline fontSize="16">dashboard</mat-icon>
+          {{ board.name }}
+        </a>
+        <a
+          *ngIf="hasMoreBoards"
+          routerLink="/boards"
+          class="sidebar-board-link sidebar-board-more"
+        >
+          ...
+        </a>
+      </div>
+    </div>
+    <div *ngIf="isBoardPage">
+      <a
+        [routerLink]="['/boards', boardId, 'dashboard-settings']"
+        routerLinkActive="active"
+      >
+        Настройки дашборда
+      </a>
+    </div>
+    <div class="sidebar-bottom">
+      <a routerLink="/feed" routerLinkActive="active" class="sidebar-feed-link">
+        <mat-icon>rss_feed</mat-icon>
+        Лента и новости
+        <span
+          *ngIf="hasUnreadFeed"
+          class="feed-unread-badge"
+          title="Есть новые новости"
+          >*</span
+        >
+      </a>
+      <a routerLink="/license" routerLinkActive="active">
+        <mat-icon>verified_user</mat-icon>
+        Лицензия и оплата
+      </a>
+      <a routerLink="/privacy" routerLinkActive="active">
+        <mat-icon>policy</mat-icon>
+        Политика
+      </a>
+      <a routerLink="/support" routerLinkActive="active">
+        <mat-icon>support_agent</mat-icon>
+        Поддержка
+      </a>
+    </div>
   </div>
 </aside>

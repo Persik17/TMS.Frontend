@@ -1,30 +1,45 @@
-body, html, app-root {
+body,
+html,
+app-root {
   width: 100%;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
-.main-layout {
-  display: flex;
-  height: calc(100vh - 60px);
-  margin-top: 60px; /* сдвиг вниз на высоту header */
-}
+
 app-header {
   width: 100%;
   z-index: 100;
   position: relative; /* Важно для z-index */
+  height: 60px; /* Фиксированная высота для расчётов */
+  display: block;
 }
-app-sidebar {
-  flex: 0 0 240px;
-  min-width: 200px;
-  max-width: 260px;
-  background: #f6f8fa;
-  border-right: 1px solid #e3eafc;
+
+app-footer {
+  width: 100%;
+  height: 48px; /* Фиксированная высота футера */
+  display: block;
+}
+
+.main-layout {
+  display: flex;
+  height: calc(100vh - 60px - 44px); // header (60px) + footer (44px)
+  margin-top: 60px; /* сдвиг вниз на высоту header */
+}
+
+app-sidebar, .main-content {
   height: 100%;
 }
-.main-content {
-  flex: 1 1 0;
-  min-width: 0;
-  background: #f9fbfd;
-  padding: 2rem 2.5rem 0 2.5rem;
-  height: 100%;
-  overflow-y: auto;
+
+app-footer,
+.footer {
+  background: #f2f5fa;
+  color: #888;
+  text-align: center;
+  line-height: 48px;
+  font-size: 15px;
+  border-top: 1px solid #e3eafc;
+  position: relative;
+  z-index: 5;
 }
