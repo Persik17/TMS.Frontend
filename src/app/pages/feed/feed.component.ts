@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-interface FeedItem {
-  id: number;
-  title: string;
-  content: string;
-  date: string;
-}
-
 @Component({
   selector: 'app-feed',
   standalone: true,

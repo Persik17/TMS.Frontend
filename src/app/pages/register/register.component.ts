@@ -20,10 +20,10 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
   email = '';
@@ -37,21 +37,20 @@ export class RegisterComponent {
     this.error = null;
     this.loading = true;
     this.reg.register(this.email, this.password).subscribe({
-      next: res => {
+      next: (res) => {
         this.loading = false;
         if (res.success && res.verificationId) {
-          // Переходим на confirm-sms, передаём verificationId и email через state
           this.router.navigate(['/confirm-sms'], {
-            state: { verificationId: res.verificationId, email: this.email }
+            state: { verificationId: res.verificationId, email: this.email },
           });
         } else {
           this.error = res.error || 'Ошибка регистрации';
         }
       },
-      error: err => {
+      error: (err) => {
         this.loading = false;
         this.error = err.error?.error || 'Ошибка соединения с сервером';
-      }
+      },
     });
   }
 }

@@ -1,9 +1,16 @@
 <div class="support-page">
   <h1>Поддержка</h1>
   <p class="support-description">
-    Если у вас возникла проблема, пожалуйста, опишите её максимально подробно и, по возможности, приложите скриншоты — это поможет нам быстрее решить ваш вопрос.
+    Если у вас возникла проблема, пожалуйста, опишите её максимально подробно и,
+    по возможности, приложите скриншоты — это поможет нам быстрее решить ваш
+    вопрос.
   </p>
-  <form (ngSubmit)="submitSupport()" #supportForm="ngForm" class="support-form">
+  <form
+    (ngSubmit)="submitSupport()"
+    #supportForm="ngForm"
+    class="support-form"
+    autocomplete="off"
+  >
     <div class="form-group">
       <label for="subject">Тема обращения</label>
       <input
@@ -14,6 +21,7 @@
         required
         maxlength="100"
         placeholder="Кратко о проблеме"
+        autocomplete="off"
       />
     </div>
     <div class="form-group">
@@ -38,13 +46,20 @@
         multiple
       />
       <div class="screenshots-preview" *ngIf="screenshots.length > 0">
-        <div class="screenshot-thumb" *ngFor="let file of screenshots; let i = index">
-          <img [src]="file.preview" [alt]="'Скриншот ' + (i+1)" />
-          <button type="button" (click)="removeScreenshot(i)" title="Удалить">×</button>
+        <div
+          class="screenshot-thumb"
+          *ngFor="let file of screenshots; let i = index"
+        >
+          <img [src]="file.preview" [alt]="'Скриншот ' + (i + 1)" />
+          <button type="button" (click)="removeScreenshot(i)" title="Удалить">
+            ×
+          </button>
         </div>
       </div>
     </div>
-    <button type="submit" [disabled]="supportForm.invalid">Отправить в поддержку</button>
+    <button type="submit" [disabled]="supportForm.invalid">
+      Отправить в поддержку
+    </button>
   </form>
   <div *ngIf="successMsg" class="support-success">
     {{ successMsg }}

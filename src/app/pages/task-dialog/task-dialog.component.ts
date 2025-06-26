@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BoardTask } from '../../models/board-column.model';
+import { BoardTask } from '../../models/board-task.model';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
 

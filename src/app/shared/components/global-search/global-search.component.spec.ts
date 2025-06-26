@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GlobalSearchComponent } from './global-search.component';
+import { GlobalSearchComponent } from '../../../pages/global-search/global-search.component';
 
 describe('GlobalSearchComponent', () => {
   let component: GlobalSearchComponent;

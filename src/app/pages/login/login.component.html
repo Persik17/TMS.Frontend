@@ -40,31 +40,12 @@
       <div class="alternative">
         <span>или</span>
       </div>
-      <div id="telegram-login-widget"></div>
+      <app-telegram-login-widget></app-telegram-login-widget>
     </form>
     <div class="register-link">
       Нет аккаунта? <a routerLink="/register">Регистрация</a>
     </div>
     <div *ngIf="error" class="error-message">{{ error }}</div>
   </mat-card>
-
-  <!-- Cookie consent banner -->
-  <div class="cookie-banner" *ngIf="cookieConsentVisible">
-    <div class="cookie-text">
-      Для корректной работы сайта мы используем cookie. Продолжая, вы
-      соглашаетесь с их использованием.
-    </div>
-    <div class="cookie-actions">
-      <button type="button" (click)="acceptCookies()" class="cookie-btn accept">
-        Согласен
-      </button>
-      <button
-        type="button"
-        (click)="declineCookies()"
-        class="cookie-btn decline"
-      >
-        Не согласен
-      </button>
-    </div>
-  </div>
+  <app-cookie-consent-banner></app-cookie-consent-banner>
 </div>

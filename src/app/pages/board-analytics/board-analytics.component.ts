@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { BoardChartConfig } from '../../models/chart.model';
 import { ChartData, ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
@@ -11,10 +12,14 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./board-analytics.component.scss'],
 })
 export class BoardAnalyticsComponent {
-  // данные можно получать через @Input, здесь пока моки:
-  @Input() columns: any[] = [];
+  @Input() columns: { title: string; color: string; tasks: any[] }[] = [];
 
-  // Velocity
+  chartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: { legend: { display: true } },
+    scales: { x: {}, y: { beginAtZero: true } },
+  };
+
   velocityData: ChartData<'bar'> = {
     labels: ['Спринт 1', 'Спринт 2', 'Спринт 3', 'Спринт 4'],
     datasets: [
@@ -26,7 +31,6 @@ export class BoardAnalyticsComponent {
     ],
   };
 
-  // BurnDown
   burndownData: ChartData<'line'> = {
     labels: ['01.06', '02.06', '03.06', '04.06', '05.06', '06.06', '07.06'],
     datasets: [
@@ -49,23 +53,26 @@ export class BoardAnalyticsComponent {
     ],
   };
 
-  // Кумулятивный поток (CFD)
   get cfdData(): ChartData<'bar'> {
-    const days = ['01.06', '02.06', '03.06', '04.06', '05.06', '06.06', '07.06'];
+    const days = [
+      '01.06',
+      '02.06',
+      '03.06',
+      '04.06',
+      '05.06',
+      '06.06',
+      '07.06',
+    ];
     return {
       labels: days,
-      datasets: this.columns.map((col, idx) => ({
+      datasets: this.columns.map((col) => ({
         label: col.title,
-        data: days.map((_, i) => Math.round(col.tasks.length * (i / (days.length - 1)))),
+        data: days.map((_, i) =>
+          Math.round(col.tasks.length * (i / (days.length - 1)))
+        ),
         backgroundColor: col.color,
         stack: 'stack-0',
       })),
     };
   }
-
-  chartOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    plugins: { legend: { display: true } },
-    scales: { x: {}, y: { beginAtZero: true } },
-  };
 }

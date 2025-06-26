@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-support',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './support.component.html',
   styleUrls: ['./support.component.scss'],
@@ -26,7 +27,6 @@ export class SupportComponent {
       };
       reader.readAsDataURL(file);
     });
-    // Сбросим input value, чтобы можно было выбрать те же файлы ещё раз при необходимости
     input.value = '';
   }
 
@@ -35,7 +35,6 @@ export class SupportComponent {
   }
 
   submitSupport() {
-    // TODO: здесь можно отправить данные на сервер
     this.successMsg =
       'Ваше обращение успешно отправлено! Мы свяжемся с вами по указанным контактам.';
     this.supportData = { subject: '', message: '' };

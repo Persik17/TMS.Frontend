@@ -1,25 +1,33 @@
-<mat-card class="sms-card">
-  <h2>Подтверждение по SMS</h2>
-  <form (ngSubmit)="onConfirm()" autocomplete="off">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Код из SMS</mat-label>
-      <input
-        matInput
-        type="text"
-        maxlength="8"
-        [(ngModel)]="code"
-        name="code"
-        required
-      />
-    </mat-form-field>
-    <button
-      mat-raised-button
-      color="primary"
-      class="full-width"
-      [disabled]="loading"
-    >
-      Подтвердить
-    </button>
-  </form>
-  <div *ngIf="error" class="error">{{ error }}</div>
-</mat-card>
+<div class="center-container">
+  <mat-card class="sms-card">
+    <h2>Подтверждение по SMS</h2>
+    <form (ngSubmit)="onConfirm()" autocomplete="off">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Код из SMS</mat-label>
+        <input
+          matInput
+          type="text"
+          maxlength="6"
+          minlength="4"
+          [(ngModel)]="code"
+          name="code"
+          required
+          autocomplete="one-time-code"
+          placeholder="Введите код"
+          pattern="^[0-9]*$"
+          (input)="onCodeInput($event)"
+        />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        class="full-width"
+        [disabled]="loading"
+        type="submit"
+      >
+        Подтвердить
+      </button>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
+    </form>
+  </mat-card>
+</div>

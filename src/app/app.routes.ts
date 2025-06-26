@@ -10,7 +10,7 @@ import { BoardsComponent } from './pages/boards/boards.component';
 import { BoardComponent } from './pages/board/board.component';
 import { TaskPageComponent } from './pages/task-page/task-page.component';
 import { DashboardSettingsComponent } from './pages/dashboard-settings/dashboard-settings.component';
-import { PostLoginRedirectComponent } from './pages/past-login-redirect/past-login-redirect.component';
+import { PostLoginRedirectComponent } from './pages/past-login-redirect/post-login-redirect.component';
 import { PrivacyComponent } from './pages/privacy/privacy.component';
 import { FeedComponent } from './pages/feed/feed.component';
 import { LicenseComponent } from './pages/license/license.component';

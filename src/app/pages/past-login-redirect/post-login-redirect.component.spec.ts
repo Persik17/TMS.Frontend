@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PastLoginRedirectComponent } from './past-login-redirect.component';
+import { PastLoginRedirectComponent } from './post-login-redirect.component';
 
 describe('PastLoginRedirectComponent', () => {
   let component: PastLoginRedirectComponent;

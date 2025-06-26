@@ -23,22 +23,6 @@ mat-form-field {
   margin-bottom: 1rem;
 }
 
-button.telegram-btn {
-  margin-top: 0.5rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-}
-
-#telegram-login-widget {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 0.5rem;
-}
-
 .alternative {
   text-align: center;
   margin: 0.7rem 0 0.2rem 0;
@@ -57,47 +41,6 @@ button.telegram-btn {
     font-weight: 500;
     &:hover {
       text-decoration: underline;
-    }
-  }
-}
-
-.cookie-banner {
-  position: fixed;
-  left: 50%;
-  bottom: 36px;
-  transform: translateX(-50%);
-  background: #fffbe7;
-  border: 1px solid #ffe082;
-  border-radius: 10px;
-  box-shadow: 0 2px 18px #0002;
-  padding: 18px 28px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  z-index: 2000;
-  .cookie-text {
-    color: #665c00;
-    font-size: 1.06em;
-  }
-  .cookie-actions {
-    display: flex;
-    gap: 10px;
-    .cookie-btn {
-      padding: 7px 22px;
-      border-radius: 7px;
-      border: none;
-      font-size: 1em;
-      cursor: pointer;
-      font-weight: 600;
-      &.accept {
-        background: #ffd600;
-        color: #222;
-      }
-      &.decline {
-        background: #fff;
-        color: #888;
-        border: 1px solid #ffd600;
-      }
     }
   }
 }

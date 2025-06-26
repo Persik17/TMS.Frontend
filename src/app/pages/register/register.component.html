@@ -4,16 +4,40 @@
     <form (ngSubmit)="onRegister()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" required [(ngModel)]="email" name="email" />
+        <input
+          matInput
+          type="email"
+          required
+          [(ngModel)]="email"
+          name="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+        />
         <mat-icon matSuffix>email</mat-icon>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Пароль</mat-label>
-        <input matInput type="password" required [(ngModel)]="password" name="password" />
+        <input
+          matInput
+          type="password"
+          required
+          [(ngModel)]="password"
+          name="password"
+          autocomplete="new-password"
+          placeholder="Пароль"
+        />
         <mat-icon matSuffix>lock</mat-icon>
       </mat-form-field>
-      <button mat-raised-button color="primary" class="full-width" [disabled]="loading" type="submit">Зарегистрироваться</button>
-      <div *ngIf="error" class="error" style="color:#c00; margin-top:1rem;">{{error}}</div>
+      <button
+        mat-raised-button
+        color="primary"
+        class="full-width"
+        [disabled]="loading"
+        type="submit"
+      >
+        Зарегистрироваться
+      </button>
+      <div *ngIf="error" class="error-message">{{ error }}</div>
     </form>
     <div class="register-link">
       Уже есть аккаунт? <a routerLink="/login">Войти</a>

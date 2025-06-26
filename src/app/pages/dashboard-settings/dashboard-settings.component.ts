@@ -2,31 +2,6 @@ import { Component, HostListener } from '@angular/core';
 import { NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-type UserStatus = 'Активный' | 'Приглашён';
-
-type AccessLevel = 'Нет' | 'Чтение' | 'Редактирование' | 'Администрирование';
-
-interface UserPermissions {
-  tasks: AccessLevel;
-  board: AccessLevel;
-  members: AccessLevel;
-}
-
-interface BoardUser {
-  id: number;
-  name: string;
-  email: string;
-  status: UserStatus;
-  permissions: UserPermissions;
-}
-
-interface PermissionsDiff {
-  userId: number;
-  before: UserPermissions;
-  after: UserPermissions;
-  changedFields: (keyof UserPermissions)[];
-}
-
 @Component({
   selector: 'app-dashboard-settings',
   standalone: true,

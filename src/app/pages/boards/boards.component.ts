@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BoardStub } from './board.model';
 import { Router } from '@angular/router';
+import { BoardStub } from '../../models/board.model';
 
 @Component({
   selector: 'app-boards',
@@ -35,7 +35,6 @@ export class BoardsComponent {
   filterOwner = '';
   filterPrivacy: '' | 'private' | 'public' = '';
 
-  // For new board creation
   creatingBoard = false;
   newBoardName = '';
   newBoardPrivacy: 'private' | 'public' = 'private';
@@ -77,7 +76,6 @@ export class BoardsComponent {
   createBoard() {
     const name = this.newBoardName.trim();
     if (!name) return;
-    // Генерируем id на основе времени, можно заменить на uuid
     const id = Date.now().toString();
     this.boards.push({
       id,

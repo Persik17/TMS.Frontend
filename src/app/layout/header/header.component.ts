@@ -2,7 +2,7 @@ import { Component, HostListener, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { GlobalSearchComponent } from '../../pages/global-search/global-search.component'; // замените путь при необходимости
+import { GlobalSearchComponent } from '../../shared/components/global-search/global-search.component'; // замените путь при необходимости
 
 @Component({
   selector: 'app-header',

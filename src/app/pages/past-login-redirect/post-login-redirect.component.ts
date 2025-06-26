@@ -5,7 +5,8 @@ import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-post-login-redirect',
   standalone: true,
-  template: '<div>Загрузка...</div>',
+  templateUrl: './post-login-redirect.component.html',
+  styleUrls: ['./post-login-redirect.component.scss'],
 })
 export class PostLoginRedirectComponent implements OnInit {
   constructor(private api: ApiService, private router: Router) {}
@@ -22,7 +23,9 @@ export class PostLoginRedirectComponent implements OnInit {
       }
       this.router.navigate([`/company/${company.id}/board/${board.id}`]);
     } catch (e) {
-      this.router.navigate(['/error'], { state: { message: 'Ошибка загрузки данных' } });
+      this.router.navigate(['/error'], {
+        state: { message: 'Ошибка загрузки данных' },
+      });
     }
   }
 }

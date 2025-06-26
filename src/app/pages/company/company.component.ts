@@ -1,56 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-interface TariffSummary {
-  planName: string;
-  isTrial: boolean;
-  status: 'active' | 'expired' | 'pending';
-  period: string;
-  usersLimit: number;
-  boardsLimit: number;
-  tasksLimit: number;
-  currentUsers: number;
-  currentBoards: number;
-  currentTasks: number;
-  autoRenew: boolean;
-  renewalDate?: string;
-  pricePerPeriod: number;
-  currency: string;
-  features: string[];
-}
-
-interface BoardSummary {
-  name: string;
-  tasksTotal: number;
-  tasksDone: number;
-  tasksInProgress: number;
-}
-
-interface CeoSummary {
-  boards: BoardSummary[];
-  totalTasks: number;
-  totalDone: number;
-  totalInProgress: number;
-  leadBoard?: string;
-  mostActiveUser?: string;
-}
-
-interface CompanyViewModel {
-  name: string;
-  logo?: string;
-  inn: string;
-  ogrn: string;
-  address: string;
-  website?: string;
-  industry?: string;
-  description?: string;
-  contactEmail?: string;
-  contactPhone?: string;
-  isActive: boolean;
-  ceoSummary: CeoSummary;
-  tariffSummary: TariffSummary;
-}
-
 @Component({
   selector: 'app-company',
   standalone: true,

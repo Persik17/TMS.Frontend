@@ -36,9 +36,12 @@ export class ConfirmSmsComponent {
   }
 
   onConfirm() {
-    this.loading = true;
     this.error = null;
-    // Для примера verificationId можно получить из email, если нет отдельной логики
+    if (!this.code.trim() || this.code.length < 4) {
+      this.error = 'Введите корректный код из SMS.';
+      return;
+    }
+    this.loading = true;
     this.auth
       .confirmSms(this.verificationId || this.email || '', this.code)
       .subscribe({
@@ -56,5 +59,11 @@ export class ConfirmSmsComponent {
           this.error = err.error?.error || 'Ошибка соединения с сервером';
         },
       });
+  }
+
+  onCodeInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/\D/g, '').slice(0, 6);
+    this.code = input.value;
   }
 }

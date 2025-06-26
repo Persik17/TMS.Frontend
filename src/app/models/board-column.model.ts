@@ -1,7 +1,4 @@
-import { Task } from './task.model';
-
-// Расширение Task для использования в доске (drag'n'drop, анимации)
-export type BoardTask = Task & { loading?: boolean };
+import { BoardTask } from './board-task.model';
 
 export interface BoardColumn {
   id: string;
