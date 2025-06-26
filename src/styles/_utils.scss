@@ -1,0 +1,55 @@
+.mt-1 {
+  margin-top: $spacing-xs;
+}
+.mt-2 {
+  margin-top: $spacing-sm;
+}
+.mt-3 {
+  margin-top: $spacing-md;
+}
+
+.text-center {
+  text-align: center;
+}
+.bold {
+  font-weight: bold;
+}
+
+.center-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.alternative {
+  text-align: center;
+  margin: 0.7rem 0 0.2rem 0;
+  color: $gray-alt;
+  font-size: 0.9rem;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 1.1rem;
+  font-size: 0.97rem;
+  color: $gray-dark;
+  a {
+    color: $primary-link;
+    text-decoration: none;
+    font-weight: 500;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
