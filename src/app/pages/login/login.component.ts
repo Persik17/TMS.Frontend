@@ -71,14 +71,17 @@ export class LoginComponent implements AfterViewInit {
     // Telegram widget
     const script = document.createElement('script');
     script.src = 'https://telegram.org/js/telegram-widget.js?7';
-    script.setAttribute('data-telegram-login', 'tms_notify_support_bot'); // без @
+    script.setAttribute('data-telegram-login', 'tms_notify_support_bot');
     script.setAttribute('data-size', 'large');
-    script.setAttribute('data-userpic', 'true');
-    script.setAttribute('data-request-access', 'write');
+    script.setAttribute('data-radius', '8');
     script.setAttribute(
       'data-auth-url',
-      'http://127.0.0.1:5000/api/auth/telegram'
+      'https://localhost:7087/api/auth/telegram'
     );
+    script.setAttribute('data-request-access', 'write');
+    script.setAttribute('data-userpic', 'true');
+    script.async = true;
+    document.getElementById('telegram-login-widget')?.appendChild(script);
     script.async = true;
 
     const container = document.getElementById('telegram-login-widget');
