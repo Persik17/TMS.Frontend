@@ -26,8 +26,7 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "node_modules/quill/dist/quill.snow.css",
               "src/styles.css"
-            ],
-            "inlineFonts": false
+            ]
           },
           "configurations": {
             "production": {
@@ -43,8 +42,7 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all",
-              "inlineFonts": false
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
