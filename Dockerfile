@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build -- --configuration=production --inline-fonts=false
+RUN ng build --configuration=production --inlineFonts=false
 
 RUN npm install -g serve
 
