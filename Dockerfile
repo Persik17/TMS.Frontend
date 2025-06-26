@@ -1,15 +1,23 @@
-# Stage 1: build Angular app
+# Stage 1: Build Angular app
 FROM node:20.19.0 as build
 
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm ci
+
 COPY . .
 RUN npx ng build --configuration=production
 
-# Stage 2: nginx serve static files
-FROM nginx:stable-alpine
+# Stage 2: Serve static build with serve
+FROM node:20.19.0-alpine
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-COPY --from=build /app/dist/tms-frontend/browser /usr/share/nginx/html
+RUN npm install -g serve
+
+COPY --from=build /app/dist/tms-frontend/browser ./
+
+EXPOSE 8080
+
+CMD ["serve", "-s", ".", "-l", "8080"]
