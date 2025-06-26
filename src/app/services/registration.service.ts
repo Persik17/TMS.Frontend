@@ -1,26 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface RegistrationResultViewModel {
-  success: boolean;
-  verificationId?: string;
-  expiration?: string;
-  error?: string;
-}
+import { RegistrationResultViewModel } from '../models/registration-result.model';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RegistrationService {
-  private readonly apiUrl = 'https://localhost:7087/api/register';
+  private readonly baseUrl = environment.registerApi;
 
   constructor(private http: HttpClient) {}
 
-  register(email: string, password: string): Observable<RegistrationResultViewModel> {
-    const data = {
+  register(
+    email: string,
+    password: string
+  ): Observable<RegistrationResultViewModel> {
+    const payload = {
       target: email,
       type: 1,
-      password: password
+      password,
     };
-    return this.http.post<RegistrationResultViewModel>(this.apiUrl, data);
+    return this.http.post<RegistrationResultViewModel>(this.baseUrl, payload);
   }
 }

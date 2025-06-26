@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Task } from '../models/task.model';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
+  private readonly baseUrl = `${environment.apiBaseUrl}/tasks`;
+
   private demoTask: Task = {
     id: '1',
     name: 'Сделать дизайн',
@@ -22,11 +25,12 @@ export class TaskService {
     columnId: 'todo',
     creationDate: '2025-06-19T15:00:00Z',
     updateDate: '2025-06-19T15:00:00Z',
-    deleteDate: null
+    deleteDate: null,
   };
 
+  // constructor(private http: HttpClient) {}
   getTask(boardId: string, taskId: string): Observable<Task> {
-    // Здесь должен быть реальный API-запрос
+    // return this.http.get<Task>(`${this.baseUrl}/${boardId}/${taskId}`);
     return of(this.demoTask);
   }
 }

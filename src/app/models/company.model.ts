@@ -1,4 +1,5 @@
 interface CompanyViewModel {
+  id: string;
   name: string;
   logo?: string;
   inn: string;

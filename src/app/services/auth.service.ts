@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 export interface AuthenticationResultViewModel {
   success: boolean;
@@ -8,29 +9,24 @@ export interface AuthenticationResultViewModel {
   error?: string;
 }
 
+export type AuthResult$ = Observable<AuthenticationResultViewModel>;
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly apiUrl = 'https://localhost:7087/api/login';
+  private readonly apiUrl = environment.authApi;
 
   constructor(private http: HttpClient) {}
 
-  login(
-    email: string,
-    password: string
-  ): Observable<{ success: boolean; token?: string; error?: string }> {
-    return this.http.post<{ success: boolean; token?: string; error?: string }>(
-      'https://localhost:7087/api/auth/login',
+  login(email: string, password: string): AuthResult$ {
+    return this.http.post<AuthenticationResultViewModel>(
+      `${this.apiUrl}/login`,
       { email, password }
     );
   }
 
-  // Подтверждение по смс
-  confirmSms(
-    verificationId: string,
-    code: string
-  ): Observable<{ success: boolean; token?: string; error?: string }> {
-    return this.http.post<{ success: boolean; token?: string; error?: string }>(
-      'https://localhost:7087/api/auth/confirm-sms',
+  confirmSms(verificationId: string, code: string): AuthResult$ {
+    return this.http.post<AuthenticationResultViewModel>(
+      `${this.apiUrl}/confirm-sms`,
       { verificationId, code }
     );
   }
