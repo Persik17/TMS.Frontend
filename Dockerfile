@@ -11,4 +11,4 @@ RUN npx ng build --configuration=production
 
 RUN npm install -g serve
 
-CMD ["serve", "-s", "dist/tms-frontend", "-l", "8080"]
+CMD ["serve", "-s", "dist/tms-frontend/browser", "-l", "8080"]

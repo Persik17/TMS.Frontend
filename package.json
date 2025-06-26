@@ -7,7 +7,9 @@
     "start:prod": "npx serve -s dist/tms-frontend",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build:ssr": "ng build && ng run tms-frontend:server",
+    "serve:ssr": "node dist/tms-frontend/server/main.js"
   },
   "private": true,
   "dependencies": {
