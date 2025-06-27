@@ -1,0 +1,122 @@
+// Общие стили для задач (карточка задачи, приоритеты, статусы, util)
+$task-card-bg: #fff;
+$task-card-border: #e0e4ea;
+$task-card-radius: 7px;
+$task-card-shadow-hover: 0 2px 10px 0 rgba(60, 80, 130, 0.07);
+$task-card-bg-hover: #f1f5ff;
+$task-card-border-hover: #1976d2;
+
+$task-title-color: #222;
+$task-priority-padding: 1px 9px;
+$task-priority-radius: 7px;
+$task-priority-low-bg: #f1f7fa;
+$task-priority-low-color: #1976d2;
+$task-priority-low-border: #cfe0fa;
+$task-priority-medium-bg: #fffbe2;
+$task-priority-medium-color: #a77000;
+$task-priority-medium-border: #ffe59a;
+$task-priority-high-bg: #ffeded;
+$task-priority-high-color: #d32f2f;
+$task-priority-high-border: #ffb2b2;
+
+$task-info-color: #666;
+$task-status-open: #1976d2;
+$task-status-done: #388e3c;
+$task-sp: #888;
+$task-no-tasks: #888;
+
+.task-card {
+  background: $task-card-bg;
+  border: 1px solid $task-card-border;
+  border-radius: $task-card-radius;
+  box-shadow: 0 2px 8px rgba(153, 167, 190, 0.1);
+  margin-bottom: 1.15rem;
+  min-height: 90px;
+  position: relative;
+  border: none;
+  transition: box-shadow 0.18s, transform 0.13s;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.task-card-priority {
+  width: 5px;
+  border-radius: 6px 0 0 6px;
+  margin-right: 0.95rem;
+  align-self: stretch;
+  &.low {
+    background: #43a047;
+  }
+  &.medium {
+    background: #ff9800;
+  }
+  &.high {
+    background: #d32f2f;
+  }
+}
+
+.task-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.task-title {
+  font-size: 1.03em;
+  color: $task-title-color;
+}
+
+.task-priority {
+  font-size: 0.92em;
+  font-weight: 500;
+  padding: $task-priority-padding;
+  border-radius: $task-priority-radius;
+  &.low {
+    background: $task-priority-low-bg;
+    color: $task-priority-low-color;
+    border: 1px solid $task-priority-low-border;
+  }
+  &.medium {
+    background: $task-priority-medium-bg;
+    color: $task-priority-medium-color;
+    border: 1px solid $task-priority-medium-border;
+  }
+  &.high {
+    background: $task-priority-high-bg;
+    color: $task-priority-high-color;
+    border: 1px solid $task-priority-high-border;
+  }
+}
+
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  font-size: 0.98em;
+  color: $task-info-color;
+}
+
+.task-status {
+  font-weight: 500;
+  &.open {
+    color: $task-status-open;
+  }
+  &.done {
+    color: $task-status-done;
+  }
+}
+
+.task-sp {
+  color: $task-sp;
+}
+
+.no-tasks,
+.no-tasks-overall {
+  color: $task-no-tasks;
+  padding: 16px;
+  text-align: center;
+  font-size: 1.08em;
+}

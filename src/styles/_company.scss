@@ -1,0 +1,123 @@
+.company-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  button {
+    border: none;
+    background: $company-tab-bg;
+    color: $company-tab-color;
+    font-weight: 600;
+    font-size: 1.05em;
+    padding: 8px 22px;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    transition: background 0.11s, color 0.11s;
+    &.active {
+      background: $company-tab-active-bg;
+      color: $company-tab-active-color;
+    }
+  }
+}
+
+.company-info,
+.company-ceo-summary,
+.company-tariff-summary {
+  background: $company-info-bg;
+  border-radius: $company-radius;
+  padding: 26px 30px;
+  border: 1px solid $company-info-border;
+}
+.company-info,
+.company-tariff-summary {
+  max-width: 560px;
+}
+.company-ceo-summary {
+  max-width: 660px;
+}
+
+.ceo-row,
+.tariff-main {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+.tariff-main {
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.ceo-metric {
+  margin-bottom: 10px;
+}
+.ceo-metric-label {
+  color: $company-label;
+  font-size: 0.99em;
+  margin-right: 7px;
+}
+.ceo-metric-value {
+  font-size: 1.22em;
+  font-weight: 600;
+  color: $company-title-color;
+  &.done {
+    color: $company-done;
+  }
+  &.inprogress {
+    color: $company-inprogress;
+  }
+}
+.ceo-boards {
+  margin-top: 18px;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1em;
+    th,
+    td {
+      border: 1px solid $company-info-border;
+      padding: 7px 11px;
+      text-align: left;
+    }
+    th {
+      background: $company-tab-bg;
+      font-weight: 600;
+    }
+  }
+}
+
+.company-tariff-summary [ngClass].active {
+  color: $company-done;
+}
+.company-tariff-summary [ngClass].expired {
+  color: $company-expired;
+}
+.company-tariff-summary [ngClass].pending {
+  color: $company-inprogress;
+}
+
+.tariff-name {
+  font-size: 1.12em;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.tariff-trial {
+  color: $company-title-color;
+  font-size: 0.95em;
+  margin-left: 0.35em;
+}
+.tariff-limits {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 180px;
+  b {
+    font-weight: 600;
+  }
+}
+.tariff-features {
+  margin-top: 18px;
+  ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+}

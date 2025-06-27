@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { BoardChartConfig } from '../../../../models/chart.model';
+import { BoardChartConfig } from '../../../../core/models/chart.model';
 import { ChartData, ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';

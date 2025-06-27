@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CompanyService } from '../../../services/company.service';
-import { BoardService } from '../../../services/board.service';
+import { CompanyService } from '../../../core/services/company.service';
+import { BoardService } from '../../../core/services/board.service';
 
 @Component({
   selector: 'app-post-login-redirect',

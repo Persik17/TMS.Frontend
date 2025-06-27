@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BoardStub } from '../../models/board.model';
+import { BoardStub } from '../../core/models/board.model';
 
 @Component({
   selector: 'app-boards',

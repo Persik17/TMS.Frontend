@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RegistrationService } from '../../../services/registration.service';
+import { RegistrationService } from '../../../core/services/registration.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';

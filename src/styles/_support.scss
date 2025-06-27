@@ -1,0 +1,117 @@
+.support-page {
+  max-width: $support-max-width;
+  margin: 0 auto;
+  padding: $support-padding;
+}
+
+.support-description {
+  color: $support-desc-color;
+  margin-bottom: 22px;
+}
+
+.support-form {
+  display: flex;
+  flex-direction: column;
+  gap: $support-form-gap;
+  background: $support-form-bg;
+  padding: $support-form-padding;
+  border-radius: $support-form-radius;
+  box-shadow: $support-form-shadow;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $support-form-group-gap;
+}
+
+input[type="text"],
+textarea {
+  font: inherit;
+  padding: 9px 12px;
+  border: 1px solid $support-input-border;
+  border-radius: $support-input-radius;
+  background: $support-input-bg;
+}
+
+input[type="file"] {
+  margin-top: 3px;
+  font: inherit;
+  padding: 7px 12px;
+  border: 1px solid $support-input-border;
+  background: $support-file-bg;
+  border-radius: $support-input-radius;
+  color: $support-file-color;
+  cursor: pointer;
+  transition: border 0.16s, box-shadow 0.16s;
+  outline: none;
+  width: fit-content;
+}
+
+input[type="file"]:hover,
+input[type="file"]:focus {
+  border: 1.5px solid $support-file-hover-border;
+  background: $support-file-hover-bg;
+}
+
+.screenshots-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $support-screenshots-gap;
+  margin-top: 7px;
+}
+
+.screenshot-thumb {
+  position: relative;
+  display: inline-block;
+  img {
+    width: $support-screenshot-width;
+    height: $support-screenshot-height;
+    object-fit: cover;
+    border-radius: $support-screenshot-radius;
+    border: 1px solid $support-screenshot-border;
+  }
+  button {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    width: 19px;
+    height: 19px;
+    background: $support-screenshot-btn-bg;
+    border: 1px solid $support-screenshot-btn-border;
+    border-radius: 50%;
+    color: $support-screenshot-btn-color;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+  }
+}
+
+button[type="submit"] {
+  align-self: flex-end;
+  background: $support-submit-bg;
+  color: $support-submit-color;
+  font-weight: 600;
+  border: none;
+  border-radius: $support-submit-radius;
+  padding: 10px 24px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.16s;
+  &:disabled {
+    background: $support-submit-disabled-bg;
+    cursor: not-allowed;
+  }
+}
+
+.support-success {
+  margin-top: 20px;
+  color: $support-success-color;
+  background: $support-success-bg;
+  border: 1px solid $support-success-border;
+  border-radius: $support-input-radius;
+  padding: 12px 18px;
+  font-weight: 500;
+  text-align: center;
+}

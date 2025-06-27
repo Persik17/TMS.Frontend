@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TaskService } from '../../../services/task.service';
-import { Task } from '../../../models/task.model';
-import { Comment } from '../../../models/comment.model';
+import { TaskService } from '../../../core/services/task.service';
+import { Task } from '../../../core/models/task.model';
+import { Comment } from '../../../core/models/comment.model';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

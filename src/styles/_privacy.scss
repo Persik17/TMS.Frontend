@@ -1,0 +1,40 @@
+.privacy-page {
+  max-width: $privacy-max-width;
+  margin: $privacy-margin;
+  padding: $privacy-padding;
+  background: $privacy-bg;
+  border-radius: $privacy-radius;
+  box-shadow: $privacy-shadow;
+
+  h1 {
+    font-size: 2.1em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: $privacy-title;
+  }
+  h2 {
+    font-size: 1.18em;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    color: $privacy-h2;
+    font-weight: 600;
+  }
+  ul {
+    margin: 0 0 12px 20px;
+    padding: 0;
+    list-style: disc;
+    color: $privacy-list;
+  }
+  p, li {
+    font-size: 1.08em;
+    color: $privacy-p-li;
+    line-height: 1.6;
+  }
+  a {
+    color: $privacy-link;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

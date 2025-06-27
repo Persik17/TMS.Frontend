@@ -1,0 +1,106 @@
+.license-page {
+  max-width: $license-max-width;
+  margin: 36px auto 0 auto;
+  padding: 0 28px;
+  h1 {
+    font-size: 2.1em;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: $license-h1-color;
+  }
+  .license-info {
+    font-size: 1.15em;
+    color: $license-info-color;
+    margin-bottom: 32px;
+  }
+}
+
+.tariffs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 36px;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tariff-block {
+  background: $license-bg;
+  border-radius: $license-radius;
+  box-shadow: $license-shadow;
+  padding: 28px 24px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border: $license-border;
+  transition: box-shadow 0.15s, border 0.15s;
+
+  &.highlight {
+    border-color: $license-border-highlight;
+    box-shadow: $license-shadow-highlight;
+  }
+
+  .tariff-name {
+    font-size: 1.22em;
+    font-weight: 700;
+    margin-bottom: 7px;
+    color: $license-tariff-name;
+  }
+  .tariff-price {
+    font-size: 1.45em;
+    font-weight: 700;
+    margin-bottom: 11px;
+    color: $license-tariff-price;
+  }
+  .tariff-desc {
+    margin-bottom: 15px;
+    color: $license-tariff-desc;
+  }
+  .tariff-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 22px 0;
+    font-size: 1.04em;
+    color: $license-tariff-features;
+    li {
+      margin-bottom: 5px;
+      &::before {
+        content: "✓";
+        color: $license-tariff-feature-check;
+        margin-right: 8px;
+        font-weight: bold;
+      }
+    }
+  }
+  .choose-btn {
+    background: $license-btn-bg;
+    color: #fff;
+    border: none;
+    padding: 10px 26px;
+    border-radius: $license-btn-radius;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    &:hover:not(:disabled) {
+      background: $license-btn-hover-bg;
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: $license-btn-disabled-bg;
+      color: $license-btn-disabled-color;
+    }
+  }
+}
+
+.license-note {
+  background: $license-note-bg;
+  border-left: 4px solid $license-note-border;
+  margin-top: 12px;
+  padding: 14px 18px;
+  color: $license-note-color;
+  font-size: 1.02em;
+}
