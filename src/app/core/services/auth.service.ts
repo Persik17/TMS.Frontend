@@ -2,14 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-export interface AuthenticationResultViewModel {
-  success: boolean;
-  token?: string;
-  error?: string;
-}
+import { AuthenticationResultViewModel } from '../models/authentication-result.model';
 
 export type AuthResult$ = Observable<AuthenticationResultViewModel>;
+
+export interface TelegramAuthViewModel {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,6 +26,13 @@ export class AuthService {
     return this.http.post<AuthenticationResultViewModel>(
       `${this.apiUrl}/login`,
       { email, password }
+    );
+  }
+
+    loginViaTelegram(user: TelegramAuthViewModel): Observable<AuthenticationResultViewModel> {
+    return this.http.post<AuthenticationResultViewModel>(
+      `${this.apiUrl}/telegram`,
+      user
     );
   }
 

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../core/services/auth.service';
+import {
+  AuthService,
+  TelegramAuthViewModel,
+} from '../../../core/services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -50,6 +53,26 @@ export class LoginComponent {
           });
         } else {
           this.error = res.error || 'Ошибка авторизации';
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err.error?.error || 'Ошибка соединения с сервером';
+      },
+    });
+  }
+
+  onTelegramAuth(user: TelegramAuthViewModel) {
+    this.loading = true;
+    this.error = null;
+    this.auth.loginViaTelegram(user).subscribe({
+      next: (res) => {
+        this.loading = false;
+        if (res.success) {
+          localStorage.setItem('token', res.token!);
+          this.router.navigate(['/boards']);
+        } else {
+          this.error = res.error || 'Ошибка авторизации через Telegram';
         }
       },
       error: (err) => {

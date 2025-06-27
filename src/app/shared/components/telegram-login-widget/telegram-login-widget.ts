@@ -1,29 +1,25 @@
 import {
   Component,
+  Output,
+  EventEmitter,
   AfterViewInit,
-  OnDestroy,
-  ElementRef,
-  Input,
   NgZone,
+  ElementRef,
   ViewChild,
+  Input,
 } from '@angular/core';
 
 @Component({
   selector: 'app-telegram-login-widget',
   standalone: true,
-  templateUrl: './telegram-login-widget.html',
-  styleUrls: ['./telegram-login-widget.scss'],
+  template: `<div #widgetContainer></div>`,
 })
-export class TelegramLoginWidgetComponent implements AfterViewInit, OnDestroy {
+export class TelegramLoginWidgetComponent implements AfterViewInit {
+  @Output() telegramAuth = new EventEmitter<any>();
   @Input() botName: string = 'tms_notify_support_bot';
-  @Input() authUrl: string = 'https://localhost:7087/api/auth/telegram';
   @Input() size: 'large' | 'medium' | 'small' = 'large';
-  @Input() radius: string = '8';
-  @Input() requestAccess: string = 'write';
-  @Input() userpic: string = 'true';
 
   @ViewChild('widgetContainer', { static: true }) widgetContainer!: ElementRef;
-  private telegramScript?: HTMLScriptElement;
 
   constructor(private zone: NgZone) {}
 
@@ -35,20 +31,19 @@ export class TelegramLoginWidgetComponent implements AfterViewInit, OnDestroy {
         script.src = 'https://telegram.org/js/telegram-widget.js?7';
         script.setAttribute('data-telegram-login', this.botName);
         script.setAttribute('data-size', this.size);
-        script.setAttribute('data-radius', this.radius);
-        script.setAttribute('data-auth-url', this.authUrl);
-        script.setAttribute('data-request-access', this.requestAccess);
-        script.setAttribute('data-userpic', this.userpic);
+        script.setAttribute('data-userpic', 'true');
+        script.setAttribute('data-request-access', 'write');
+        script.setAttribute('data-onauth', 'onTelegramAuth(user)');
         script.async = true;
         this.widgetContainer.nativeElement.appendChild(script);
-        this.telegramScript = script;
+
+        // Глобальный callback
+        (window as any).onTelegramAuth = (user: any) => {
+          this.zone.run(() => {
+            this.telegramAuth.emit(user);
+          });
+        };
       }
     });
-  }
-
-  ngOnDestroy() {
-    if (this.telegramScript?.parentNode) {
-      this.telegramScript.parentNode.removeChild(this.telegramScript);
-    }
   }
 }
