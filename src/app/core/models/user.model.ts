@@ -1,6 +1,6 @@
-import { NotificationSettingViewModel } from "./notification-settings.model";
+import { NotificationSettings } from './notification-settings.model';
 
-export interface UserViewModel {
+export interface User {
   id: string;
   fullName: string;
   email: string;
@@ -8,12 +8,12 @@ export interface UserViewModel {
   timezone: string;
   language: string;
   phone: string;
-  status: number;
+  status: string;
   notificationSettingsId: string;
-  registrationDate: string;
-  lastLoginDate: string;
+  registrationDate: Date;
+  lastLoginDate: Date;
   creationDate: string;
   updateDate?: string;
   deleteDate?: string;
-  notificationSettings?: NotificationSettingViewModel;
+  notificationSettings?: NotificationSettings;
 }

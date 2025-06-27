@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserViewModel } from '../models/user.model';
+import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +10,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getProfile(): Observable<UserViewModel> {
-    return this.http.get<UserViewModel>(`${this.baseUrl}/profile`);
+  getProfile(): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/profile`);
   }
 }

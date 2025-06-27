@@ -1,26 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../../../core/models/user.model';
+import { NotificationSettings } from '../../../core/models/notification-settings.model';
 
 type TabType = 'info' | 'system' | 'notif' | 'security';
-
-interface NotificationSettings {
-  emailNotificationsEnabled: boolean;
-  pushNotificationsEnabled: boolean;
-  telegramNotificationsEnabled: boolean;
-}
-
-interface User {
-  fullName: string;
-  language: string;
-  phone: string;
-  telegramId: string;
-  timezone: string;
-  status: string;
-  registrationDate: Date;
-  lastLoginDate: Date;
-  notificationSettings: NotificationSettings;
-}
 
 @Component({
   selector: 'app-profile',
@@ -30,6 +14,7 @@ interface User {
 })
 export class ProfileComponent implements OnInit {
   tab: TabType = 'info';
+  formDirty = false;
 
   user: User = {
     fullName: 'Иван Петров',
@@ -44,13 +29,19 @@ export class ProfileComponent implements OnInit {
       emailNotificationsEnabled: true,
       pushNotificationsEnabled: false,
       telegramNotificationsEnabled: true,
+      id: '',
     },
+    id: '',
+    email: '',
+    notificationSettingsId: '',
+    creationDate: '',
   };
 
   originalNotif: NotificationSettings = {
     emailNotificationsEnabled: true,
     pushNotificationsEnabled: false,
     telegramNotificationsEnabled: true,
+    id: '',
   };
 
   // board background logic
@@ -82,7 +73,7 @@ export class ProfileComponent implements OnInit {
   repeatPassword = '';
 
   ngOnInit() {
-    this.originalNotif = { ...this.user.notificationSettings };
+    //this.originalNotif = { ...this.user.notificationSettings };
   }
 
   saveProfile() {
@@ -90,7 +81,7 @@ export class ProfileComponent implements OnInit {
   }
 
   saveNotificationSettings() {
-    this.originalNotif = { ...this.user.notificationSettings };
+    //this.originalNotif = { ...this.user.notificationSettings };
     alert('Настройки оповещений сохранены!');
   }
 
