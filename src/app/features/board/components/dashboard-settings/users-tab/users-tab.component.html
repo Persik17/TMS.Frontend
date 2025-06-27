@@ -1,0 +1,125 @@
+<section class="section users-section">
+  <h3>Пользователи</h3>
+  <div class="users-header">
+    <button class="add-user-btn" (click)="addUser.emit()">
+      <span>+ Пригласить по email</span>
+    </button>
+    <button
+      class="save-matrix-btn"
+      *ngIf="hasMatrixChanges"
+      (click)="saveMatrixChanges.emit()"
+    >
+      💾 Сохранить изменения
+    </button>
+  </div>
+  <div class="users-list">
+    <div class="user-row" *ngFor="let user of users">
+      <div class="user-info">
+        <div class="user-avatar">
+          {{ user.name ? user.name[0] : user.email[0] }}
+        </div>
+        <div>
+          <div class="user-name">{{ user.name || "(без имени)" }}</div>
+          <div class="user-email">{{ user.email }}</div>
+        </div>
+      </div>
+      <div class="user-status-role">
+        <span class="user-status" [class.invited]="user.status === 'Приглашён'">
+          {{ user.status }}
+        </span>
+      </div>
+      <div class="user-permissions-matrix">
+        <div
+          class="perm-cell"
+          *ngFor="let field of permissionFields"
+          [attr.data-title]="permissionFieldLabels[field]"
+        >
+          <span class="perm-label-visible">
+            {{ permissionFieldLabels[field] }}
+          </span>
+          <button
+            class="perm-icon-btn"
+            [disabled]="user.status !== 'Активный'"
+            [ngClass]="{ changed: isPermissionChanged(user, field) }"
+            (click)="
+              cyclePermission.emit({
+                user: user,
+                field: field,
+                domEvent: $event
+              })
+            "
+            (contextmenu)="
+              openPermissionMenu.emit({
+                user: user,
+                field: field,
+                domEvent: $event
+              })
+            "
+            [title]="accessTitles[user.permissions[field]]"
+            type="button"
+          >
+            {{ accessIcons[user.permissions[field]] }}
+          </button>
+        </div>
+      </div>
+      <button
+        class="remove-user-btn"
+        (click)="removeUser.emit(user)"
+        title="Удалить"
+      >
+        ✕
+      </button>
+    </div>
+    <div *ngIf="users.length === 0" class="empty-users">Нет пользователей</div>
+  </div>
+
+  <!-- Контекстное меню для выбора прав -->
+  <div
+    *ngIf="permissionMenuShow && permissionMenuUser && permissionMenuField"
+    class="perm-menu"
+    [ngStyle]="{ 'left.px': permissionMenuLeft, 'top.px': permissionMenuTop }"
+    (mouseleave)="closePermissionMenu.emit()"
+    tabindex="0"
+    (blur)="closePermissionMenu.emit()"
+  >
+    <button
+      *ngFor="let level of accessLevels"
+      (mousedown)="selectPermission.emit(level)"
+      [ngClass]="{
+        selected:
+          permissionMenuUser &&
+          permissionMenuField &&
+          permissionMenuUser.permissions[permissionMenuField] === level
+      }"
+      type="button"
+    >
+      {{ accessIcons[level] }} {{ accessTitles[level] }}
+    </button>
+  </div>
+
+  <!-- Invite User Modal -->
+  <div
+    class="invite-modal-backdrop"
+    *ngIf="showInviteModal"
+    (click)="closeModal.emit()"
+  ></div>
+  <div class="invite-modal" *ngIf="showInviteModal">
+    <h3>Пригласить пользователя</h3>
+    <label for="inviteEmail">Email:</label>
+    <input
+      id="inviteEmail"
+      type="email"
+      [(ngModel)]="inviteEmail"
+      (keydown.enter)="confirmInvite.emit()"
+      placeholder="user@example.com"
+      autocomplete="off"
+    />
+    <div class="invite-error" *ngIf="inviteError">{{ inviteError }}</div>
+    <div class="invite-actions">
+      <button class="invite-confirm" (click)="confirmInvite.emit()">
+        Пригласить
+      </button>
+      <button class="invite-cancel" (click)="closeModal.emit()">Отмена</button>
+    </div>
+  </div>
+</section>

@@ -1,17 +1,28 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BoardTask } from '../../../../core/models/board-task.model';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
+import { TaskMainTabComponent } from '../../../task-shared/task-main-tab/task-main-tab.component';
+import { TaskHistoryTabComponent } from '../../../task-shared/task-history-tab/task-history-tab.component';
+import { TaskFilesTabComponent } from '../../../task-shared/task-files-tab/task-files-tab.component';
+import { TaskCommentsComponent } from '../../../task-shared/task-comments/task-comments.component';
 
 @Component({
   selector: 'app-task-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, QuillModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    QuillModule,
+    TaskMainTabComponent,
+    TaskHistoryTabComponent,
+    TaskFilesTabComponent,
+    TaskCommentsComponent,
+  ],
   templateUrl: './task-dialog.component.html',
   styleUrls: ['./task-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None, // чтобы стили перекрывали mat-dialog
+  encapsulation: ViewEncapsulation.None,
 })
 export class TaskDialogComponent implements OnInit {
   task: any;
@@ -113,38 +124,5 @@ export class TaskDialogComponent implements OnInit {
 
   openInPage() {
     window.open(`/boards/${this.task.boardId}/tasks/${this.task.id}`, '_blank');
-  }
-
-  private getTaskComments(task: BoardTask) {
-    return [
-      {
-        id: 'c1',
-        text: 'Отличная задача, добавьте acceptance criteria!',
-        creationDate: '2025-06-22T12:30:00Z',
-        updateDate: null,
-        deleteDate: null,
-        userId: 'alice',
-        user: {
-          id: 'alice',
-          name: 'Alice',
-          avatarUrl: 'https://i.pravatar.cc/36?u=alice',
-        },
-        taskId: task.id,
-      },
-      {
-        id: 'c2',
-        text: 'Взял в работу',
-        creationDate: '2025-06-23T08:00:00Z',
-        updateDate: null,
-        deleteDate: null,
-        userId: 'bob',
-        user: {
-          id: 'bob',
-          name: 'Bob',
-          avatarUrl: 'https://i.pravatar.cc/36?u=bob',
-        },
-        taskId: task.id,
-      },
-    ];
   }
 }

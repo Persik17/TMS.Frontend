@@ -1,0 +1,90 @@
+<section class="settings-section">
+  <h3>Системные настройки</h3>
+  <div class="settings-fields">
+    <div class="field">
+      <label>Тема:</label>
+      <select
+        class="styled-select"
+        [(ngModel)]="systemSettings.theme"
+        name="theme"
+      >
+        <option value="light">Светлая</option>
+        <option value="dark">Тёмная</option>
+        <option value="system">Системная</option>
+      </select>
+    </div>
+    <div class="field board-bg-field">
+      <label>Фон для досок:</label>
+      <div class="board-bg-preview" [ngStyle]="getBoardBgStyle()">
+        <ng-container
+          *ngIf="
+            systemSettings.boardBgType === 'custom' && systemSettings.boardBgUrl
+          "
+        >
+          <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
+        </ng-container>
+        <ng-container *ngIf="systemSettings.boardBgType === 'template'">
+          <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
+        </ng-container>
+        <ng-container *ngIf="systemSettings.boardBgType === 'color'">
+          <div
+            class="board-bg-color"
+            [style.background]="systemSettings.boardBgColor"
+          ></div>
+        </ng-container>
+      </div>
+      <button
+        type="button"
+        (click)="openBgModal.emit()"
+        class="primary-btn select-bg-btn"
+      >
+        Выбрать фон
+      </button>
+      <div class="bg-file-name" *ngIf="systemSettings.boardBgName">
+        {{ systemSettings.boardBgName }}
+      </div>
+    </div>
+  </div>
+  <div class="bg-modal" *ngIf="bgModalOpen">
+    <div class="bg-modal-backdrop" (click)="closeBgModal.emit()"></div>
+    <div class="bg-modal-content">
+      <h4>Выберите фон для досок</h4>
+      <div class="bg-templates">
+        <div
+          class="bg-template"
+          *ngFor="let tpl of bgTemplates"
+          [class.selected]="
+            systemSettings.boardBgUrl === tpl.url &&
+            systemSettings.boardBgType === 'template'
+          "
+          (click)="selectTemplateBg.emit(tpl)"
+        >
+          <img [src]="tpl.url" [alt]="tpl.name" />
+        </div>
+      </div>
+      <div class="bg-colors">
+        <div
+          class="bg-color-sample"
+          *ngFor="let color of bgColors"
+          [style.background]="color"
+          [class.selected]="
+            systemSettings.boardBgColor === color &&
+            systemSettings.boardBgType === 'color'
+          "
+          (click)="selectColorBg.emit(color)"
+        ></div>
+      </div>
+      <div class="bg-upload">
+        <label class="custom-file-upload">
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onBoardBgUpload($event)"
+          />
+          <span>Загрузить свой фон</span>
+        </label>
+      </div>
+      <button class="primary-btn" (click)="closeBgModal.emit()">Готово</button>
+    </div>
+  </div>
+</section>

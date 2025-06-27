@@ -15,120 +15,24 @@
       cdkDropListOrientation="horizontal"
       (cdkDropListDropped)="onColumnDrop($event)"
     >
-      <div
-        class="board-column"
-        [style.background]="col.color || '#fff'"
-        *ngFor="let col of sortedColumns"
-        cdkDrag
-        [cdkDragData]="col"
-        (cdkDragStarted)="onColumnDragStarted(col.id)"
-        (cdkDragEnded)="onColumnDragEnded()"
-        [class.is-dragging]="isDraggingColumnId === col.id"
-      >
-        <div class="board-column-header" cdkDragHandle>
-          <span class="board-column-title">
-            {{ col.title }}
-            <span class="task-count">({{ col.tasks.length }})</span>
-          </span>
-          <button
-            class="edit-col-btn"
-            (click)="editColumn(col)"
-            title="Редактировать столбец"
-            type="button"
-          >
-            <span class="material-icons">edit</span>
-          </button>
-          <button
-            class="add-task-btn"
-            (click)="toggleAddTask(col.id)"
-            title="Добавить задачу"
-            type="button"
-          >
-            <span class="material-icons">add</span>
-          </button>
-        </div>
-        <div
-          class="board-tasks-list"
-          cdkDropList
-          [cdkDropListData]="col.tasks"
-          [cdkDropListConnectedTo]="connectedDropListsIds"
-          (cdkDropListDropped)="onTaskDrop($event, col)"
-          [id]="col.id"
-        >
-          <div
-            class="task-card"
-            *ngFor="let task of filteredTasks(col)"
-            cdkDrag
-            [cdkDragData]="task"
-            [cdkDragDisabled]="task.loading"
-            (click)="openTaskDialog(task)"
-          >
-            <div
-              class="task-card-priority"
-              [ngStyle]="{ background: getPriorityColor(task.priority) }"
-            ></div>
-            <div class="task-card-content">
-              <div class="task-header">
-                <span class="task-title">{{ task.name }}</span>
-                <span class="story-points">SP: {{ task.storyPoints }}</span>
-              </div>
-              <div class="task-desc">{{ task.description }}</div>
-              <div class="task-meta">
-                <span
-                  class="priority"
-                  [style.color]="getPriorityColor(task.priority)"
-                >
-                  {{ getPriorityLabel(task.priority) }}
-                </span>
-                <span class="assignee"
-                  ><span class="material-icons">person</span>
-                  {{ task.assigneeId }}</span
-                >
-              </div>
-              <div class="task-dates">
-                <span class="date-label"
-                  ><span class="material-icons">event</span>
-                  {{ task.startDate | date : "M/d/yy" }} -
-                  {{ task.endDate | date : "M/d/yy" }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="filteredTasks(col).length === 0" class="no-tasks">
-            Нет задач
-          </div>
-        </div>
-
-        <div class="add-task-form" *ngIf="addingTaskColumnId === col.id">
-          <input
-            type="text"
-            [(ngModel)]="newTaskName"
-            placeholder="Название задачи"
-            (keydown.enter)="addTask(col)"
-            maxlength="60"
-            autofocus
-          />
-          <button
-            class="add-btn"
-            (click)="addTask(col)"
-            [disabled]="!newTaskName.trim()"
-            title="Добавить"
-          >
-            +
-          </button>
-          <button class="cancel-btn" (click)="cancelAddTask()" title="Отмена">
-            ×
-          </button>
-        </div>
-        <button
-          class="add-task-bottom"
-          *ngIf="addingTaskColumnId !== col.id"
-          (click)="toggleAddTask(col.id)"
-        >
-          + Новая задача
-        </button>
-      </div>
-
+      <app-board-column
+        *ngFor="let col of sortedColumns; trackBy: trackByColId"
+        [column]="col"
+        [isDragging]="isDraggingColumnId === col.id"
+        [addingTaskColumnId]="addingTaskColumnId"
+        [newTaskName]="newTaskName"
+        [connectedDropListsIds]="connectedDropListsIds"
+        [getPriorityColor]="getPriorityColor"
+        [getPriorityLabel]="getPriorityLabel"
+        (editColumn)="editColumn($event)"
+        (addTask)="addTask($event)"
+        (toggleAddTask)="toggleAddTask($event)"
+        (cancelAddTask)="cancelAddTask()"
+        (onTaskDrop)="onTaskDrop($event, col)"
+        (openTaskDialog)="openTaskDialog($event)"
+        (columnDragStarted)="onColumnDragStarted($event)"
+        (columnDragEnded)="onColumnDragEnded()"
+      ></app-board-column>
       <div class="board-column board-column-add">
         <ng-container *ngIf="!addingColumn; else addColForm">
           <button

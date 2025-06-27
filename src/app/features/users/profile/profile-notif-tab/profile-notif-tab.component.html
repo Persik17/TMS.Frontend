@@ -1,0 +1,65 @@
+<section class="settings-section">
+  <h3>Оповещения</h3>
+  <div class="notification-hint">
+    <span class="hint-icon">ℹ️</span>
+    <div>
+      <b>SMS-подтверждения</b> отправляются по принципу приоритета:
+      <ol>
+        <li>
+          <b>Сначала</b> попытка отправить <span class="tg">Telegram</span>.
+        </li>
+        <li>Если не доставлено — <b>E-mail</b>.</li>
+        <li>Если и это не сработало — <b>SMS</b> на номер телефона.</li>
+      </ol>
+      <div class="hint-note">
+        <b>Обычные уведомления</b> (о событиях, напоминания и т.д.) отправляются
+        <b>одновременно</b> по всем каналам: <span class="tg">Telegram</span>,
+        <span class="mail">E-mail</span>, <span class="sms">SMS</span>.
+      </div>
+    </div>
+  </div>
+  <div class="notif-checkboxes-row">
+    <label
+      class="notif-checkbox"
+      [class.changed]="
+        userNotif.emailNotificationsEnabled !==
+        originalNotif.emailNotificationsEnabled
+      "
+    >
+      <input
+        type="checkbox"
+        [(ngModel)]="userNotif.emailNotificationsEnabled"
+      />
+      <span class="icon email"></span>
+      Email
+    </label>
+    <label
+      class="notif-checkbox"
+      [class.changed]="
+        userNotif.pushNotificationsEnabled !==
+        originalNotif.pushNotificationsEnabled
+      "
+    >
+      <input type="checkbox" [(ngModel)]="userNotif.pushNotificationsEnabled" />
+      <span class="icon push"></span>
+      Push
+    </label>
+    <label
+      class="notif-checkbox"
+      [class.changed]="
+        userNotif.telegramNotificationsEnabled !==
+        originalNotif.telegramNotificationsEnabled
+      "
+    >
+      <input
+        type="checkbox"
+        [(ngModel)]="userNotif.telegramNotificationsEnabled"
+      />
+      <span class="icon telegram"></span>
+      Telegram
+    </label>
+  </div>
+  <button class="primary-btn" (click)="saveNotificationSettings.emit()">
+    Сохранить
+  </button>
+</section>

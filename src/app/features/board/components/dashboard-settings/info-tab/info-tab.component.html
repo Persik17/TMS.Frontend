@@ -1,0 +1,25 @@
+<section class="section">
+  <h3>Общие сведения по доске</h3>
+  <div class="fields-grid">
+    <div class="field">
+      <label>Название:</label>
+      <span>{{ board.name }}</span>
+    </div>
+    <div class="field">
+      <label>Описание:</label>
+      <span>{{ board.description }}</span>
+    </div>
+    <div class="field">
+      <label>Отдел:</label>
+      <span>{{ board.department }}</span>
+    </div>
+    <div class="field">
+      <label>Тип доски:</label>
+      <span>{{ board.boardType }}</span>
+    </div>
+    <div class="field">
+      <label>Приватная:</label>
+      <span>{{ board.isPrivate ? "Да" : "Нет" }}</span>
+    </div>
+  </div>
+</section>

@@ -1,11 +1,25 @@
 import { Component, HostListener } from '@angular/core';
 import { NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DashboardSettingsInfoTabComponent } from './info-tab/info-tab.component';
+import { DashboardSettingsUsersTabComponent } from './users-tab/users-tab.component';
+import { BoardUser } from '../../../../core/models/board-user.model';
+import { AccessLevel } from '../../../../core/models/access-level.model';
+import { UserPermissions } from '../../../../core/models/user-permissions.model';
+import { PermissionsDiff } from '../../../../core/models/permissions-diff.model';
 
 @Component({
   selector: 'app-dashboard-settings',
   standalone: true,
-  imports: [NgIf, NgFor, FormsModule, NgStyle, NgClass],
+  imports: [
+    NgIf,
+    NgFor,
+    FormsModule,
+    NgStyle,
+    NgClass,
+    DashboardSettingsInfoTabComponent,
+    DashboardSettingsUsersTabComponent,
+  ],
   templateUrl: './dashboard-settings.component.html',
   styleUrls: ['./dashboard-settings.component.scss'],
 })

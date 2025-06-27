@@ -1,0 +1,35 @@
+<div
+  class="task-card"
+  cdkDrag
+  [cdkDragData]="task"
+  [cdkDragDisabled]="task.loading"
+  (click)="onClick()"
+>
+  <div
+    class="task-card-priority"
+    [ngStyle]="{ background: getPriorityColor(task.priority) }"
+  ></div>
+  <div class="task-card-content">
+    <div class="task-header">
+      <span class="task-title">{{ task.name }}</span>
+      <span class="story-points">SP: {{ task.storyPoints }}</span>
+    </div>
+    <div class="task-desc">{{ task.description }}</div>
+    <div class="task-meta">
+      <span class="priority" [style.color]="getPriorityColor(task.priority)">
+        {{ getPriorityLabel(task.priority) }}
+      </span>
+      <span class="assignee">
+        <span class="material-icons">person</span>
+        {{ task.assigneeId }}
+      </span>
+    </div>
+    <div class="task-dates">
+      <span class="date-label">
+        <span class="material-icons">event</span>
+        {{ task.startDate | date : "M/d/yy" }} -
+        {{ task.endDate | date : "M/d/yy" }}
+      </span>
+    </div>
+  </div>
+</div>

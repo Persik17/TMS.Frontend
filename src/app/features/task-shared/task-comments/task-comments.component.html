@@ -1,0 +1,32 @@
+<div class="task-page-comments">
+  <div class="comments-title">Комментарии</div>
+  <div *ngFor="let comment of comments" class="comment-card">
+    <img
+      *ngIf="comment.user?.avatarUrl"
+      class="avatar"
+      [src]="comment.user.avatarUrl"
+      [alt]="comment.user.name"
+    />
+    <div>
+      <div class="comment-meta">
+        <span class="author">{{ comment.user?.name || comment.userId }}</span>
+        <span class="date">{{ comment.creationDate | date : "short" }}</span>
+      </div>
+      <div class="text">{{ comment.text }}</div>
+    </div>
+  </div>
+  <div class="add-comment">
+    <textarea
+      [(ngModel)]="newCommentText"
+      (ngModelChange)="newCommentTextChange.emit($event)"
+      placeholder="Добавить комментарий..."
+      rows="2"
+    ></textarea>
+    <button
+      (click)="addComment.emit()"
+      [disabled]="addingComment || !newCommentText.trim()"
+    >
+      <span class="material-icons">send</span>
+    </button>
+  </div>
+</div>

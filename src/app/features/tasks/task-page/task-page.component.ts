@@ -7,10 +7,24 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
+import { TaskMainTabComponent } from '../../task-shared/task-main-tab/task-main-tab.component';
+import { TaskHistoryTabComponent } from '../../task-shared/task-history-tab/task-history-tab.component';
+import { TaskFilesTabComponent } from '../../task-shared/task-files-tab/task-files-tab.component';
+import { TaskCommentsComponent } from '../../task-shared/task-comments/task-comments.component';
 
 @Component({
   selector: 'app-task-page',
-  imports: [CommonModule, FormsModule, RouterModule, QuillModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    QuillModule,
+    TaskMainTabComponent,
+    TaskHistoryTabComponent,
+    TaskFilesTabComponent,
+    TaskCommentsComponent,
+  ],
   templateUrl: './task-page.component.html',
   styleUrls: ['./task-page.component.scss'],
 })
@@ -158,7 +172,6 @@ export class TaskPageComponent implements OnInit {
   startEdit(field: string, value: any) {
     this.editingField = field;
     if (field === 'dates') {
-      // value может быть строкой или объектом, но мы всегда делаем editValue объектом
       this.editValue = {
         start: this.task?.startDate || '',
         end: this.task?.endDate || '',

@@ -1,0 +1,7 @@
+<div class="task-history">
+  <div *ngFor="let record of changeHistory" class="history-record">
+    <span class="history-date">{{ record.date | date : "short" }}</span>
+    <span class="history-user">{{ record.user }}</span>
+    <span class="history-text">{{ record.text }}</span>
+  </div>
+</div>

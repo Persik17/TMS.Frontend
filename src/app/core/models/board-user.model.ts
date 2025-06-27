@@ -1,7 +1,9 @@
-interface BoardUser {
+import { UserPermissions } from "./user-permissions.model";
+
+export interface BoardUser {
   id: number;
   name: string;
   email: string;
-  status: UserStatus;
+  status: string;
   permissions: UserPermissions;
 }

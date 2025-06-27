@@ -1,0 +1,79 @@
+<div
+  class="board-column"
+  [style.background]="column.color || '#fff'"
+  cdkDrag
+  [cdkDragData]="column"
+  (cdkDragStarted)="columnDragStarted.emit(column.id)"
+  (cdkDragEnded)="columnDragEnded.emit()"
+  [class.is-dragging]="isDragging"
+>
+  <div class="board-column-header" cdkDragHandle>
+    <span class="board-column-title">
+      {{ column.title }}
+      <span class="task-count">({{ column.tasks.length }})</span>
+    </span>
+    <button
+      class="edit-col-btn"
+      (click)="editColumn.emit(column)"
+      title="Редактировать столбец"
+      type="button"
+    >
+      <span class="material-icons">edit</span>
+    </button>
+    <button
+      class="add-task-btn"
+      (click)="toggleAddTask.emit(column.id)"
+      title="Добавить задачу"
+      type="button"
+    >
+      <span class="material-icons">add</span>
+    </button>
+  </div>
+  <div
+    class="board-tasks-list"
+    cdkDropList
+    [cdkDropListData]="column.tasks"
+    [cdkDropListConnectedTo]="connectedDropListsIds"
+    (cdkDropListDropped)="onTaskDrop.emit($event)"
+    [id]="column.id"
+  >
+    <app-board-task
+      *ngFor="let task of filteredTasks(column)"
+      [task]="task"
+      [getPriorityColor]="getPriorityColor"
+      [getPriorityLabel]="getPriorityLabel"
+      (openTask)="openTaskDialog.emit($event)"
+    ></app-board-task>
+    <div *ngIf="filteredTasks(column).length === 0" class="no-tasks">
+      Нет задач
+    </div>
+  </div>
+  <div class="add-task-form" *ngIf="addingTaskColumnId === column.id">
+    <input
+      type="text"
+      [(ngModel)]="newTaskName"
+      placeholder="Название задачи"
+      (keydown.enter)="addTask.emit(column)"
+      maxlength="60"
+      autofocus
+    />
+    <button
+      class="add-btn"
+      (click)="addTask.emit(column)"
+      [disabled]="!newTaskName.trim()"
+      title="Добавить"
+    >
+      +
+    </button>
+    <button class="cancel-btn" (click)="cancelAddTask.emit()" title="Отмена">
+      ×
+    </button>
+  </div>
+  <button
+    class="add-task-bottom"
+    *ngIf="addingTaskColumnId !== column.id"
+    (click)="toggleAddTask.emit(column.id)"
+  >
+    + Новая задача
+  </button>
+</div>

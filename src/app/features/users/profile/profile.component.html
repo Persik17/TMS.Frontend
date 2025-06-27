@@ -15,315 +15,45 @@
     </button>
   </nav>
 
-  <!-- Основное -->
-  <section *ngIf="tab === 'info'" class="settings-section">
-    <h3>Основная информация</h3>
-    <form (ngSubmit)="saveProfile()" #profileForm="ngForm" autocomplete="off">
-      <div class="profile-info-grid">
-        <div class="profile-info-col">
-          <div class="info-row">
-            <span class="info-label">ФИО:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.fullName"
-              name="fullName"
-              required
-            />
-          </div>
-          <div class="info-row">
-            <span class="info-label">Язык:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.language"
-              name="language"
-            />
-          </div>
-          <div class="info-row">
-            <span class="info-label">Телефон:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.phone"
-              name="phone"
-            />
-          </div>
-          <div class="info-row">
-            <span class="info-label">Telegram ID:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.telegramId"
-              name="telegramId"
-            />
-          </div>
-        </div>
-        <div class="profile-info-col">
-          <div class="info-row">
-            <span class="info-label">Часовой пояс:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.timezone"
-              name="timezone"
-            />
-          </div>
-          <div class="info-row">
-            <span class="info-label">Статус:</span>
-            <input
-              class="info-value editable"
-              [(ngModel)]="user.status"
-              name="status"
-            />
-          </div>
-          <div class="info-row">
-            <span class="info-label">Дата регистрации:</span>
-            <span class="info-value">{{
-              user?.registrationDate | date : "medium"
-            }}</span>
-          </div>
-          <div class="info-row">
-            <span class="info-label">Последний вход:</span>
-            <span class="info-value">{{
-              user?.lastLoginDate | date : "medium"
-            }}</span>
-          </div>
-        </div>
-      </div>
-      <button
-        class="primary-btn"
-        type="submit"
-        [disabled]="profileForm.invalid"
-      >
-        Сохранить изменения
-      </button>
-    </form>
-  </section>
-  <!-- Системные -->
-  <section *ngIf="tab === 'system'" class="settings-section">
-    <h3>Системные настройки</h3>
-    <div class="settings-fields">
-      <div class="field">
-        <label>Тема:</label>
-        <select class="styled-select" [(ngModel)]="systemSettings.theme">
-          <option value="light">Светлая</option>
-          <option value="dark">Тёмная</option>
-          <option value="system">Системная</option>
-        </select>
-      </div>
-      <div class="field board-bg-field">
-        <label>Фон для досок:</label>
-        <div class="board-bg-preview" [ngStyle]="getBoardBgStyle()">
-          <ng-container
-            *ngIf="
-              systemSettings.boardBgType === 'custom' &&
-              systemSettings.boardBgUrl
-            "
-          >
-            <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
-          </ng-container>
-          <ng-container *ngIf="systemSettings.boardBgType === 'template'">
-            <img [src]="systemSettings.boardBgUrl" alt="Фон досок" />
-          </ng-container>
-          <ng-container *ngIf="systemSettings.boardBgType === 'color'">
-            <div
-              class="board-bg-color"
-              [style.background]="systemSettings.boardBgColor"
-            ></div>
-          </ng-container>
-        </div>
-        <button
-          type="button"
-          (click)="openBgModal()"
-          class="primary-btn select-bg-btn"
-        >
-          Выбрать фон
-        </button>
-        <div class="bg-file-name" *ngIf="systemSettings.boardBgName">
-          {{ systemSettings.boardBgName }}
-        </div>
-      </div>
-    </div>
-    <!-- Модальное окно выбора фона -->
-    <div class="bg-modal" *ngIf="bgModalOpen">
-      <div class="bg-modal-backdrop" (click)="closeBgModal()"></div>
-      <div class="bg-modal-content">
-        <h4>Выберите фон для досок</h4>
-        <div class="bg-templates">
-          <div
-            class="bg-template"
-            *ngFor="let tpl of bgTemplates"
-            [class.selected]="
-              systemSettings.boardBgUrl === tpl.url &&
-              systemSettings.boardBgType === 'template'
-            "
-            (click)="selectTemplateBg(tpl)"
-          >
-            <img [src]="tpl.url" [alt]="tpl.name" />
-          </div>
-        </div>
-        <div class="bg-colors">
-          <div
-            class="bg-color-sample"
-            *ngFor="let color of bgColors"
-            [style.background]="color"
-            [class.selected]="
-              systemSettings.boardBgColor === color &&
-              systemSettings.boardBgType === 'color'
-            "
-            (click)="selectColorBg(color)"
-          ></div>
-        </div>
-        <div class="bg-upload">
-          <label class="custom-file-upload">
-            <input
-              type="file"
-              accept="image/*"
-              (change)="onBoardBgUpload($event)"
-            />
-            <span>Загрузить свой фон</span>
-          </label>
-        </div>
-        <button class="primary-btn" (click)="closeBgModal()">Готово</button>
-      </div>
-    </div>
-  </section>
-  <!-- Оповещения -->
-  <section *ngIf="tab === 'notif'" class="settings-section">
-    <h3>Оповещения</h3>
-    <div class="notification-hint">
-      <span class="hint-icon">ℹ️</span>
-      <div>
-        <b>SMS-подтверждения</b> отправляются по принципу приоритета:
-        <ol>
-          <li>
-            <b>Сначала</b> попытка отправить <span class="tg">Telegram</span>.
-          </li>
-          <li>Если не доставлено — <b>E-mail</b>.</li>
-          <li>Если и это не сработало — <b>SMS</b> на номер телефона.</li>
-        </ol>
-        <div class="hint-note">
-          <b>Обычные уведомления</b> (о событиях, напоминания и т.д.)
-          отправляются <b>одновременно</b> по всем каналам:
-          <span class="tg">Telegram</span>, <span class="mail">E-mail</span>,
-          <span class="sms">SMS</span>.
-        </div>
-      </div>
-    </div>
-    <div class="notif-checkboxes-row">
-      <label
-        class="notif-checkbox"
-        [class.changed]="
-          user.notificationSettings.emailNotificationsEnabled !==
-          originalNotif.emailNotificationsEnabled
-        "
-      >
-        <input
-          type="checkbox"
-          [(ngModel)]="user.notificationSettings.emailNotificationsEnabled"
-        />
-        <span class="icon email"></span>
-        Email
-      </label>
-      <label
-        class="notif-checkbox"
-        [class.changed]="
-          user.notificationSettings.pushNotificationsEnabled !==
-          originalNotif.pushNotificationsEnabled
-        "
-      >
-        <input
-          type="checkbox"
-          [(ngModel)]="user.notificationSettings.pushNotificationsEnabled"
-        />
-        <span class="icon push"></span>
-        Push
-      </label>
-      <label
-        class="notif-checkbox"
-        [class.changed]="
-          user.notificationSettings.telegramNotificationsEnabled !==
-          originalNotif.telegramNotificationsEnabled
-        "
-      >
-        <input
-          type="checkbox"
-          [(ngModel)]="user.notificationSettings.telegramNotificationsEnabled"
-        />
-        <span class="icon telegram"></span>
-        Telegram
-      </label>
-    </div>
-    <button class="primary-btn" (click)="saveNotificationSettings()">
-      Сохранить
-    </button>
-  </section>
-  <!-- Безопасность -->
-  <section *ngIf="tab === 'security'" class="settings-section">
-    <h3>Смена Email и пароля</h3>
-    <form
-      (ngSubmit)="changeEmail()"
-      #emailForm="ngForm"
-      autocomplete="off"
-      class="security-form"
-    >
-      <div class="security-fields">
-        <label>
-          Новый email:
-          <input type="email" [(ngModel)]="newEmail" name="newEmail" required />
-        </label>
-        <button
-          class="primary-btn"
-          type="submit"
-          [disabled]="emailForm.invalid"
-        >
-          Изменить email
-        </button>
-      </div>
-    </form>
-    <form
-      (ngSubmit)="changePassword()"
-      #pwdForm="ngForm"
-      autocomplete="off"
-      class="security-form"
-    >
-      <div class="security-fields">
-        <label>
-          Новый пароль:
-          <input
-            type="password"
-            [(ngModel)]="newPassword"
-            name="newPassword"
-            required
-            minlength="6"
-          />
-        </label>
-        <label>
-          Повторите пароль:
-          <input
-            type="password"
-            [(ngModel)]="repeatPassword"
-            name="repeatPassword"
-            required
-            [pattern]="newPassword"
-          />
-        </label>
-        <button
-          class="primary-btn"
-          type="submit"
-          [disabled]="pwdForm.invalid || newPassword !== repeatPassword"
-        >
-          Сменить пароль
-        </button>
-      </div>
-    </form>
-    <div *ngIf="smsRequired" class="sms-confirm">
-      <label>
-        Введите код из SMS:
-        <input type="text" [(ngModel)]="smsCode" name="smsCode" maxlength="6" />
-      </label>
-      <button class="primary-btn" (click)="confirmSmsCode()">
-        Подтвердить
-      </button>
-    </div>
-    <div class="security-hint">
-      После смены email или пароля потребуется подтверждение через SMS код.
-    </div>
-  </section>
+  <app-profile-info-tab
+    *ngIf="tab === 'info'"
+    [user]="user"
+    (saveProfile)="saveProfile()"
+  ></app-profile-info-tab>
+
+  <app-profile-system-tab
+    *ngIf="tab === 'system'"
+    [systemSettings]="systemSettings"
+    [bgModalOpen]="bgModalOpen"
+    [bgTemplates]="bgTemplates"
+    [bgColors]="bgColors"
+    (openBgModal)="openBgModal()"
+    (closeBgModal)="closeBgModal()"
+    (selectTemplateBg)="selectTemplateBg($event)"
+    (selectColorBg)="selectColorBg($event)"
+    (boardBgUpload)="onBoardBgUpload($event)"
+  ></app-profile-system-tab>
+
+  <app-profile-notif-tab
+    *ngIf="tab === 'notif' && user.notificationSettings"
+    [userNotif]="user.notificationSettings"
+    [originalNotif]="originalNotif"
+    (saveNotificationSettings)="saveNotificationSettings()"
+  ></app-profile-notif-tab>
+
+  <app-profile-security-tab
+    *ngIf="tab === 'security'"
+    [newEmail]="newEmail"
+    [newPassword]="newPassword"
+    [repeatPassword]="repeatPassword"
+    [smsRequired]="smsRequired"
+    [smsCode]="smsCode"
+    (newEmailChange)="newEmail = $event"
+    (newPasswordChange)="newPassword = $event"
+    (repeatPasswordChange)="repeatPassword = $event"
+    (smsCodeChange)="smsCode = $event"
+    (changeEmail)="changeEmail()"
+    (changePassword)="changePassword()"
+    (confirmSmsCode)="confirmSmsCode()"
+  ></app-profile-security-tab>
 </div>

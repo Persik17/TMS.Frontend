@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProfileInfoTabComponent } from './profile-info-tab/profile-info-tab.component';
+import { ProfileSystemTabComponent } from './profile-system-tab/profile-system-tab.component';
+import { ProfileNotifTabComponent } from './profile-notif-tab/profile-notif-tab.component';
+import { ProfileSecurityTabComponent } from './profile-security-tab/profile-security-tab.component';
 import { User } from '../../../core/models/user.model';
 import { NotificationSettings } from '../../../core/models/notification-settings.model';
 
@@ -8,13 +12,20 @@ type TabType = 'info' | 'system' | 'notif' | 'security';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ProfileInfoTabComponent,
+    ProfileSystemTabComponent,
+    ProfileNotifTabComponent,
+    ProfileSecurityTabComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
   tab: TabType = 'info';
-  formDirty = false;
 
   user: User = {
     fullName: 'Иван Петров',
@@ -44,9 +55,8 @@ export class ProfileComponent implements OnInit {
     id: '',
   };
 
-  // board background logic
+  // System settings
   bgModalOpen = false;
-
   bgTemplates = [
     { name: 'Заглушка 1', url: 'https://picsum.photos/120/60?random=1' },
     { name: 'Заглушка 2', url: 'https://placehold.co/120x60?text=Board+BG' },
@@ -55,9 +65,7 @@ export class ProfileComponent implements OnInit {
       url: 'https://dummyimage.com/120x60/1976d2/fff&text=BG',
     },
   ];
-
   bgColors = ['#f7cac9', '#92a8d1', '#f9f871', '#b5ead7', '#ffffff', '#232323'];
-
   systemSettings = {
     theme: 'light',
     boardBgType: 'template' as 'template' | 'color' | 'custom',
@@ -72,16 +80,11 @@ export class ProfileComponent implements OnInit {
   newPassword = '';
   repeatPassword = '';
 
-  ngOnInit() {
-    //this.originalNotif = { ...this.user.notificationSettings };
-  }
-
   saveProfile() {
     alert('Профиль сохранён!');
   }
 
   saveNotificationSettings() {
-    //this.originalNotif = { ...this.user.notificationSettings };
     alert('Настройки оповещений сохранены!');
   }
 
@@ -142,21 +145,5 @@ export class ProfileComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
-  }
-  getBoardBgStyle() {
-    if (this.systemSettings.boardBgType === 'color') {
-      return { background: this.systemSettings.boardBgColor };
-    }
-    if (
-      (this.systemSettings.boardBgType === 'template' ||
-        this.systemSettings.boardBgType === 'custom') &&
-      this.systemSettings.boardBgUrl
-    ) {
-      return {
-        background: `url('${this.systemSettings.boardBgUrl}') center/cover`,
-      };
-    }
-    // CSS-заглушка-градиент
-    return {};
   }
 }

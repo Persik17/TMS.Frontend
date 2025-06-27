@@ -1,9 +1,9 @@
-import { BoardTask } from './board-task.model';
+import { BoardTask } from "./board-task.model";
 
-export interface BoardColumn {
+export type BoardColumn = {
   id: string;
   title: string;
-  color: string; // Цвет фона колонки
-  tasks: BoardTask[];
+  color: string;
   order: number;
-}
+  tasks: BoardTask[];
+};

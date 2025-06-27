@@ -1,0 +1,171 @@
+<div class="task-page-info">
+  <!-- Описание -->
+  <div class="info-row">
+    <span class="info-title">Описание:</span>
+    <span class="info-description">
+      <ng-container *ngIf="editingField !== 'description'; else editDesc">
+        <div [innerHTML]="task?.description"></div>
+        <button
+          class="edit-btn"
+          (click)="
+            startEdit.emit({ field: 'description', value: task?.description })
+          "
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editDesc>
+        <quill-editor
+          [(ngModel)]="editValue"
+          [modules]="quillModules"
+          (ngModelChange)="onEditValueChange.emit($event)"
+          (onBlur)="saveEdit.emit('description')"
+          [style.height.px]="160"
+          autofocus
+        ></quill-editor>
+      </ng-template>
+    </span>
+  </div>
+  <!-- Исполнитель -->
+  <div class="info-row">
+    <span class="info-title">Исполнитель:</span>
+    <span>
+      <ng-container *ngIf="editingField !== 'assigneeId'; else editAssignee">
+        {{ task?.assigneeId }}
+        <button
+          class="edit-btn"
+          (click)="
+            startEdit.emit({ field: 'assigneeId', value: task?.assigneeId })
+          "
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editAssignee>
+        <input
+          [(ngModel)]="editValue"
+          (blur)="saveEdit.emit('assigneeId')"
+          (keydown.enter)="saveEdit.emit('assigneeId')"
+          (keydown.esc)="cancelEdit.emit()"
+          autofocus
+        />
+      </ng-template>
+    </span>
+  </div>
+  <!-- Даты -->
+  <div class="info-row">
+    <span class="info-title">Даты:</span>
+    <span>
+      <ng-container *ngIf="editingField !== 'dates'; else editDates">
+        {{ task?.startDate | date : "short" }} –
+        {{ task?.endDate | date : "short" }}
+        <button
+          class="edit-btn"
+          (click)="
+            startEdit.emit({
+              field: 'dates',
+              value: { start: task?.startDate, end: task?.endDate }
+            })
+          "
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editDates>
+        <input
+          type="datetime-local"
+          [(ngModel)]="editValue.start"
+          (blur)="saveEdit.emit('dates')"
+          (keydown.enter)="saveEdit.emit('dates')"
+          (keydown.esc)="cancelEdit.emit()"
+          autofocus
+        />
+        <span>–</span>
+        <input
+          type="datetime-local"
+          [(ngModel)]="editValue.end"
+          (blur)="saveEdit.emit('dates')"
+          (keydown.enter)="saveEdit.emit('dates')"
+          (keydown.esc)="cancelEdit.emit()"
+        />
+      </ng-template>
+    </span>
+  </div>
+  <!-- Story Points -->
+  <div class="info-row">
+    <span class="info-title">Story Points:</span>
+    <span>
+      <ng-container *ngIf="editingField !== 'storyPoints'; else editSP">
+        {{ task?.storyPoints }}
+        <button
+          class="edit-btn"
+          (click)="
+            startEdit.emit({ field: 'storyPoints', value: task?.storyPoints })
+          "
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editSP>
+        <input
+          type="number"
+          [(ngModel)]="editValue"
+          (blur)="saveEdit.emit('storyPoints')"
+          (keydown.enter)="saveEdit.emit('storyPoints')"
+          (keydown.esc)="cancelEdit.emit()"
+          autofocus
+        />
+      </ng-template>
+    </span>
+  </div>
+  <!-- Приоритет -->
+  <div class="info-row">
+    <span class="info-title">Приоритет:</span>
+    <span>
+      <ng-container *ngIf="editingField !== 'priority'; else editPriority">
+        {{ task?.priority }}
+        <button
+          class="edit-btn"
+          (click)="startEdit.emit({ field: 'priority', value: task?.priority })"
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editPriority>
+        <input
+          type="number"
+          [(ngModel)]="editValue"
+          (blur)="saveEdit.emit('priority')"
+          (keydown.enter)="saveEdit.emit('priority')"
+          (keydown.esc)="cancelEdit.emit()"
+          autofocus
+        />
+      </ng-template>
+    </span>
+  </div>
+  <!-- Серьёзность -->
+  <div class="info-row">
+    <span class="info-title">Серьёзность:</span>
+    <span>
+      <ng-container *ngIf="editingField !== 'severity'; else editSeverity">
+        {{ task?.severity }}
+        <button
+          class="edit-btn"
+          (click)="startEdit.emit({ field: 'severity', value: task?.severity })"
+        >
+          <span class="material-icons">edit</span>
+        </button>
+      </ng-container>
+      <ng-template #editSeverity>
+        <input
+          type="number"
+          [(ngModel)]="editValue"
+          (blur)="saveEdit.emit('severity')"
+          (keydown.enter)="saveEdit.emit('severity')"
+          (keydown.esc)="cancelEdit.emit()"
+          autofocus
+        />
+      </ng-template>
+    </span>
+  </div>
+</div>

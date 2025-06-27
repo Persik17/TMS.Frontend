@@ -7,35 +7,24 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
-import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
-import { BoardAnalyticsComponent } from './analytics/board-analytics/board-analytics.component';
 import { MatDialog } from '@angular/material/dialog';
+import { BoardAnalyticsComponent } from './analytics/board-analytics/board-analytics.component';
+import { BoardColumnComponent } from './components/board-column/board-column.component';
+import { BoardTask } from '../../core/models/board-task.model';
+import { BoardColumn } from '../../core/models/board-column.model';
 
-type BoardTask = {
-  id: string;
-  name: string;
-  description: string;
-  assigneeId: string;
-  startDate: string;
-  endDate: string | null;
-  storyPoints: number;
-  priority: number;
-  columnId: string;
-  loading: boolean;
-};
-
-type BoardColumn = {
-  id: string;
-  title: string;
-  color: string;
-  order: number;
-  tasks: BoardTask[];
-};
+import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, DragDropModule, FormsModule, BoardAnalyticsComponent],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    FormsModule,
+    BoardAnalyticsComponent,
+    BoardColumnComponent,
+  ],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
@@ -70,6 +59,9 @@ export class BoardComponent implements OnInit {
         priority: 2,
         columnId: 'todo',
         loading: false,
+        comments: [],
+        changeHistory: [],
+        attachedFiles: []
       },
       {
         id: '2',
@@ -82,6 +74,9 @@ export class BoardComponent implements OnInit {
         priority: 1,
         columnId: 'in-progress',
         loading: false,
+        comments: [],
+        changeHistory: [],
+        attachedFiles: []
       },
       {
         id: '3',
@@ -94,6 +89,9 @@ export class BoardComponent implements OnInit {
         priority: 3,
         columnId: 'done',
         loading: false,
+        comments: [],
+        changeHistory: [],
+        attachedFiles: []
       },
     ];
 
@@ -127,7 +125,7 @@ export class BoardComponent implements OnInit {
     return [...this.columns].sort((a, b) => a.order - b.order);
   }
 
-  openTaskDialog(task: any) {
+  openTaskDialog(task: BoardTask) {
     this.dialog.open(TaskDialogComponent, {
       width: '90vw',
       maxWidth: '98vw',
@@ -171,23 +169,9 @@ export class BoardComponent implements OnInit {
   }
 
   editColumn(col: BoardColumn) {
-    // Открой форму редактирования столбца, например:
     this.editingColumnId = col.id;
     this.editColumnTitle = col.title;
     this.editColumnColor = col.color;
-  }
-
-  getDaysForSprint(): string[] {
-    const days: string[] = [];
-    let d = new Date();
-    for (let i = 0; i < 7; i++) {
-      const dd = new Date(d.getTime());
-      dd.setDate(d.getDate() + i);
-      days.push(
-        dd.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' })
-      );
-    }
-    return days;
   }
 
   onTaskDrop(event: CdkDragDrop<BoardTask[]>, targetCol: BoardColumn) {
@@ -211,10 +195,6 @@ export class BoardComponent implements OnInit {
         task.loading = false;
       }, 800);
     }
-  }
-
-  filteredTasks(col: BoardColumn): BoardTask[] {
-    return col.tasks;
   }
 
   toggleAddTask(colId: string) {
@@ -252,6 +232,9 @@ export class BoardComponent implements OnInit {
       priority: 0,
       columnId: col.id,
       loading: false,
+      comments: [],
+      changeHistory: [],
+      attachedFiles: []
     };
     col.tasks.unshift(newTask);
     this.cancelAddTask();
@@ -301,5 +284,9 @@ export class BoardComponent implements OnInit {
 
   onColumnDragEnded() {
     this.isDraggingColumnId = null;
+  }
+
+  trackByColId(index: number, col: BoardColumn) {
+    return col.id;
   }
 }

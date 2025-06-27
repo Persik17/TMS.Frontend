@@ -1,0 +1,79 @@
+<section class="settings-section">
+  <h3>Основная информация</h3>
+  <form
+    (ngSubmit)="saveProfile.emit()"
+    #profileForm="ngForm"
+    autocomplete="off"
+  >
+    <div class="profile-info-grid">
+      <div class="profile-info-col">
+        <div class="info-row">
+          <span class="info-label">ФИО:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.fullName"
+            name="fullName"
+            required
+          />
+        </div>
+        <div class="info-row">
+          <span class="info-label">Язык:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.language"
+            name="language"
+          />
+        </div>
+        <div class="info-row">
+          <span class="info-label">Телефон:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.phone"
+            name="phone"
+          />
+        </div>
+        <div class="info-row">
+          <span class="info-label">Telegram ID:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.telegramId"
+            name="telegramId"
+          />
+        </div>
+      </div>
+      <div class="profile-info-col">
+        <div class="info-row">
+          <span class="info-label">Часовой пояс:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.timezone"
+            name="timezone"
+          />
+        </div>
+        <div class="info-row">
+          <span class="info-label">Статус:</span>
+          <input
+            class="info-value editable"
+            [(ngModel)]="user.status"
+            name="status"
+          />
+        </div>
+        <div class="info-row">
+          <span class="info-label">Дата регистрации:</span>
+          <span class="info-value">{{
+            user?.registrationDate | date : "medium"
+          }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Последний вход:</span>
+          <span class="info-value">{{
+            user?.lastLoginDate | date : "medium"
+          }}</span>
+        </div>
+      </div>
+    </div>
+    <button class="primary-btn" type="submit" [disabled]="profileForm.invalid">
+      Сохранить изменения
+    </button>
+  </form>
+</section>
