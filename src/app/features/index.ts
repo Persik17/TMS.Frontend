@@ -4,7 +4,6 @@ export * from './boards';
 export * from './company';
 export * from './feed';
 export * from './license';
-export * from './plan';
 export * from './privacy';
 export * from './support';
 export * from './tasks';

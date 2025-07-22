@@ -17,7 +17,6 @@ import {
   PrivacyComponent,
   FeedComponent,
   LicenseComponent,
-  PlanComponent,
   SupportComponent,
   MyTasksComponent,
 } from './features';
@@ -75,12 +74,6 @@ export const routes: Routes = [
       { path: 'privacy', component: PrivacyComponent },
       { path: 'feed', component: FeedComponent },
       { path: 'license', component: LicenseComponent },
-      {
-        path: 'plan',
-        component: PlanComponent,
-        //canActivate: [roleGuard],
-        //data: { roles: ['owner'] },
-      },
       { path: 'support', component: SupportComponent },
       { path: 'my-tasks', component: MyTasksComponent },
       {

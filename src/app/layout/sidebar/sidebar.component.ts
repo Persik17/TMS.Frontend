@@ -4,14 +4,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
-
-// BoardStub interface
-interface BoardStub {
-  id: string;
-  name: string;
-  owner?: string;
-  privacy?: string;
-}
+import { BoardService } from '../../core/services/board.service';
+import { BoardStub } from '../../core/models/board.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,41 +18,12 @@ export class SidebarComponent implements OnInit {
   boardId?: string;
   isBoardPage = false;
 
-  // Моковые данные для проверки подсписка
-  boards: BoardStub[] = [
-    { id: '1', name: 'Проект Alpha', owner: 'Иван Петров', privacy: 'private' },
-    {
-      id: '2',
-      name: 'Общая доска',
-      owner: 'Елена Сидорова',
-      privacy: 'public',
-    },
-    {
-      id: '3',
-      name: 'Маркетинг 2025',
-      owner: 'Иван Петров',
-      privacy: 'private',
-    },
-    { id: '4', name: 'HR и найм', owner: 'Мария Ким', privacy: 'public' },
-    { id: '5', name: 'Финансы', owner: 'Петр Ким', privacy: 'private' },
-    {
-      id: '6',
-      name: 'Моя секретная',
-      owner: 'Иван Петров',
-      privacy: 'private',
-    },
-    { id: '7', name: 'Дизайн', owner: 'Екатерина Серова', privacy: 'public' },
-    {
-      id: '8',
-      name: 'Разработка',
-      owner: 'Даниил Романов',
-      privacy: 'private',
-    },
-  ];
-
+  boards: BoardStub[] = []; // ← теперь это реальные доски
   maxBoardsInSidebar = 5;
+  loading = true;
+  error = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private boardService: BoardService) {
     this.checkBoardPage(this.router.url);
 
     this.router.events
@@ -68,10 +33,26 @@ export class SidebarComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const companyId = localStorage.getItem('companyId') || '';
+    if (!companyId) {
+      this.error = 'Компания не найдена';
+      this.loading = false;
+      return;
+    }
+    this.boardService.getBoards(companyId).subscribe({
+      next: (boards) => {
+        this.boards = boards;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Ошибка загрузки досок';
+        this.loading = false;
+      },
+    });
+  }
 
   private checkBoardPage(url: string) {
-    // Вытаскиваем boardId из урла /boards/:id или /boards/:id/*
     const match = url.match(/^\/boards\/([^/]+)/);
     this.isBoardPage = !!match;
     this.boardId = match ? match[1] : undefined;
@@ -85,7 +66,7 @@ export class SidebarComponent implements OnInit {
   }
 
   get hasUnreadFeed(): boolean {
-    const feed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // список id новостей
+    const feed = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const readIds = JSON.parse(localStorage.getItem('readFeedIds') || '[]');
     return feed.some((id) => !readIds.includes(id));
   }

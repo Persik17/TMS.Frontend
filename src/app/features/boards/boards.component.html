@@ -40,9 +40,12 @@
     <button
       class="add-btn"
       (click)="createBoard()"
-      [disabled]="!newBoardName.trim()"
+      [disabled]="!newBoardName.trim() || isCreatingBoard"
     >
-      Создать
+      <ng-container *ngIf="isCreatingBoard; else createText">
+        <span class="loader"></span>
+      </ng-container>
+      <ng-template #createText>Создать</ng-template>
     </button>
     <button class="cancel-btn" (click)="cancelCreateBoard()">Отмена</button>
   </div>
@@ -61,11 +64,15 @@
         </span>
       </div>
       <div class="board-actions">
-        <button disabled>Открыть (заглушка)</button>
+        <button (click)="goToBoard(board.id); $event.stopPropagation()">
+          Открыть
+        </button>
       </div>
     </div>
     <div *ngIf="filteredBoards.length === 0" class="no-boards">
       Доски не найдены по выбранным фильтрам.
     </div>
   </div>
+  <div *ngIf="loading" class="boards-loading">Загрузка...</div>
+  <div *ngIf="error" class="boards-error">{{ error }}</div>
 </div>

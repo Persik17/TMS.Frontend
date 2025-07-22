@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { BoardService } from '../../core/services/board.service';
 import { BoardStub } from '../../core/models/board.model';
 
 @Component({
@@ -11,34 +12,39 @@ import { BoardStub } from '../../core/models/board.model';
   templateUrl: './boards.component.html',
   styleUrls: ['./boards.component.scss'],
 })
-export class BoardsComponent {
-  constructor(private router: Router) {}
-
-  boards: BoardStub[] = [
-    { id: '1', name: 'Проект Alpha', owner: 'Иван Петров', privacy: 'private' },
-    {
-      id: '2',
-      name: 'Общая доска',
-      owner: 'Елена Сидорова',
-      privacy: 'public',
-    },
-    {
-      id: '3',
-      name: 'Маркетинг 2025',
-      owner: 'Иван Петров',
-      privacy: 'private',
-    },
-    { id: '4', name: 'HR и найм', owner: 'Мария Ким', privacy: 'public' },
-  ];
-
+export class BoardsComponent implements OnInit {
+  boards: BoardStub[] = [];
   filterName = '';
   filterOwner = '';
   filterPrivacy: '' | 'private' | 'public' = '';
 
   creatingBoard = false;
+  isCreatingBoard = false; // блокировка спама
   newBoardName = '';
   newBoardPrivacy: 'private' | 'public' = 'private';
-  newBoardOwner = 'Вы'; // Можно подставить из профиля
+  loading = true;
+  error = '';
+
+  constructor(private router: Router, private boardService: BoardService) {}
+
+  ngOnInit() {
+    const companyId = localStorage.getItem('companyId') || '';
+    if (!companyId) {
+      this.error = 'Компания не найдена';
+      this.loading = false;
+      return;
+    }
+    this.boardService.getBoards(companyId).subscribe({
+      next: (boards) => {
+        this.boards = boards;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Ошибка загрузки досок';
+        this.loading = false;
+      },
+    });
+  }
 
   get filteredBoards(): BoardStub[] {
     return this.boards.filter(
@@ -46,8 +52,11 @@ export class BoardsComponent {
         (!this.filterName ||
           b.name.toLowerCase().includes(this.filterName.toLowerCase())) &&
         (!this.filterOwner ||
-          b.owner.toLowerCase().includes(this.filterOwner.toLowerCase())) &&
-        (!this.filterPrivacy || b.privacy === this.filterPrivacy)
+          (b.headFullName ?? '')
+            .toLowerCase()
+            .includes(this.filterOwner.toLowerCase())) &&
+        (!this.filterPrivacy ||
+          (this.filterPrivacy === 'private' ? b.isPrivate : !b.isPrivate))
     );
   }
 
@@ -71,21 +80,33 @@ export class BoardsComponent {
     this.creatingBoard = false;
     this.newBoardName = '';
     this.newBoardPrivacy = 'private';
+    this.isCreatingBoard = false;
   }
 
   createBoard() {
     const name = this.newBoardName.trim();
-    if (!name) return;
-    const id = Date.now().toString();
-    this.boards.push({
-      id,
-      name,
-      owner: this.newBoardOwner,
-      privacy: this.newBoardPrivacy,
-    });
-    this.creatingBoard = false;
-    this.newBoardName = '';
-    this.newBoardPrivacy = 'private';
-    this.goToBoard(id);
+    if (!name || this.isCreatingBoard) return;
+    const companyId = localStorage.getItem('companyId') || '';
+    if (!companyId) {
+      this.error = 'Компания не найдена';
+      return;
+    }
+    this.isCreatingBoard = true;
+    this.boardService
+      .createBoard(companyId, name, this.newBoardPrivacy)
+      .subscribe({
+        next: (board) => {
+          this.boards.push(board);
+          this.creatingBoard = false;
+          this.newBoardName = '';
+          this.newBoardPrivacy = 'private';
+          this.isCreatingBoard = false;
+          this.goToBoard(board.id);
+        },
+        error: () => {
+          this.error = 'Ошибка создания доски';
+          this.isCreatingBoard = false;
+        },
+      });
   }
 }

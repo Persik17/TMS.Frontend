@@ -46,13 +46,16 @@ export class LoginComponent {
     this.auth.login(this.email, this.password).subscribe({
       next: (res) => {
         this.loading = false;
-        if (res.success) {
-          localStorage.setItem('token', res.token!);
+        if (res.success && res.verificationId) {
           this.router.navigate(['/confirm-sms'], {
-            state: { email: this.email },
+            state: {
+              verificationId: res.verificationId,
+              email: this.email,
+              mode: 'login',
+            },
           });
         } else {
-          this.error = res.error || 'Ошибка авторизации';
+          this.error = res.error || 'Ошибка Авторизации';
         }
       },
       error: (err) => {

@@ -2,6 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { BoardStub } from '../models/board.model';
+import { BoardColumn } from '../models/board-column.model';
+
+export interface BoardTaskType {
+  id: string;
+  name: string;
+  color: string;
+}
+
+export interface BoardInfoDto {
+  boardId: string;
+  columns: BoardColumn[];
+  taskTypes: BoardTaskType[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class BoardService {
@@ -9,17 +23,43 @@ export class BoardService {
 
   constructor(private http: HttpClient) {}
 
-  getFirstBoard(companyId: string): Observable<any | null> {
-    return this.http
-      .get<any[]>(`${this.baseUrl}/${companyId}/boards`)
-      .pipe(
-        map((list) => (Array.isArray(list) && list.length > 0 ? list[0] : null))
-      );
+  getBoards(companyId: string): Observable<BoardStub[]> {
+    const userId = localStorage.getItem('userId');
+    return this.http.get<BoardStub[]>(
+      `${this.baseUrl}/${companyId}/boards?userId=${userId}`
+    );
   }
 
-  createDefaultBoard(companyId: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/${companyId}/boards`, {
-      name: 'Моя первая доска',
-    });
+  getFirstBoard(companyId: string): Observable<BoardStub | null> {
+    return this.getBoards(companyId).pipe(
+      map((list) => (Array.isArray(list) && list.length > 0 ? list[0] : null))
+    );
+  }
+
+  createBoard(
+    companyId: string,
+    name: string,
+    privacy: 'private' | 'public'
+  ): Observable<BoardStub> {
+    const body = {
+      name,
+      description: '',
+      companyId,
+      boardType: 0,
+      isPrivate: privacy === 'private',
+      creationDate: new Date().toISOString(),
+    };
+    const userId = localStorage.getItem('userId');
+    return this.http.post<BoardStub>(
+      `${this.baseUrl}/${companyId}/boards?userId=${userId}`,
+      body
+    );
+  }
+
+  getBoardInfo(companyId: string, boardId: string): Observable<BoardInfoDto> {
+    const userId = localStorage.getItem('userId');
+    return this.http.get<BoardInfoDto>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/info?userId=${userId}`
+    );
   }
 }

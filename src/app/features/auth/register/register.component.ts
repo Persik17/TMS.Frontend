@@ -41,7 +41,11 @@ export class RegisterComponent {
         this.loading = false;
         if (res.success && res.verificationId) {
           this.router.navigate(['/confirm-sms'], {
-            state: { verificationId: res.verificationId, email: this.email },
+            state: {
+              verificationId: res.verificationId,
+              email: this.email,
+              mode: 'register',
+            },
           });
         } else {
           this.error = res.error || 'Ошибка регистрации';

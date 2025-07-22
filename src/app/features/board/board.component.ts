@@ -12,7 +12,8 @@ import { BoardAnalyticsComponent } from './analytics/board-analytics/board-analy
 import { BoardColumnComponent } from './components/board-column/board-column.component';
 import { BoardTask } from '../../core/models/board-task.model';
 import { BoardColumn } from '../../core/models/board-column.model';
-
+import { BoardService, BoardInfoDto, BoardTaskType } from '../../core/services/board.service';
+import { ActivatedRoute } from '@angular/router';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
 
 @Component({
@@ -29,7 +30,11 @@ import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit {
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private boardService: BoardService
+  ) {}
 
   editingColumnId: string | null = null;
   editColumnTitle: string = '';
@@ -38,6 +43,7 @@ export class BoardComponent implements OnInit {
   tab: 'board' | 'burn' = 'board';
 
   columns: BoardColumn[] = [];
+  taskTypes: BoardTaskType[] = [];
   connectedDropListsIds: string[] = [];
   addingTaskColumnId: string | null = null;
   newTaskName = '';
@@ -46,79 +52,31 @@ export class BoardComponent implements OnInit {
   newColumnColor = '#e3f2fd';
   isDraggingColumnId: string | null = null;
 
-  ngOnInit() {
-    const allTasks: BoardTask[] = [
-      {
-        id: '1',
-        name: 'Сделать дизайн',
-        description: 'Подготовить макеты для главной страницы.',
-        assigneeId: 'alice',
-        startDate: '2025-06-20',
-        endDate: '2025-06-25',
-        storyPoints: 5,
-        priority: 2,
-        columnId: 'todo',
-        loading: false,
-        comments: [],
-        changeHistory: [],
-        attachedFiles: []
-      },
-      {
-        id: '2',
-        name: 'Верстка',
-        description: 'Сделать адаптивную верстку.',
-        assigneeId: 'bob',
-        startDate: '2025-06-21',
-        endDate: '2025-06-27',
-        storyPoints: 8,
-        priority: 1,
-        columnId: 'in-progress',
-        loading: false,
-        comments: [],
-        changeHistory: [],
-        attachedFiles: []
-      },
-      {
-        id: '3',
-        name: 'Тестирование',
-        description: 'Провести тестирование.',
-        assigneeId: 'charlie',
-        startDate: '2025-06-23',
-        endDate: '2025-06-29',
-        storyPoints: 3,
-        priority: 3,
-        columnId: 'done',
-        loading: false,
-        comments: [],
-        changeHistory: [],
-        attachedFiles: []
-      },
-    ];
+  loading = true;
+  error = '';
+  boardId: string = '';
+  companyId: string = '';
 
-    this.columns = [
-      {
-        id: 'todo',
-        title: 'К выполнению',
-        color: '#e3f2fd',
-        tasks: allTasks.filter((t) => t.columnId === 'todo'),
-        order: 1,
+  ngOnInit() {
+    this.boardId = this.route.snapshot.paramMap.get('id') || '';
+    this.companyId = localStorage.getItem('companyId') || '';
+    if (!this.boardId || !this.companyId) {
+      this.error = 'Доска или компания не найдена';
+      this.loading = false;
+      return;
+    }
+    this.boardService.getBoardInfo(this.companyId, this.boardId).subscribe({
+      next: (info: BoardInfoDto) => {
+        this.columns = info.columns;
+        this.taskTypes = info.taskTypes;
+        this.connectedDropListsIds = this.columns.map((col) => col.id);
+        this.loading = false;
       },
-      {
-        id: 'in-progress',
-        title: 'В работе',
-        color: '#fffde7',
-        tasks: allTasks.filter((t) => t.columnId === 'in-progress'),
-        order: 2,
+      error: () => {
+        this.error = 'Ошибка загрузки данных доски';
+        this.loading = false;
       },
-      {
-        id: 'done',
-        title: 'Готово',
-        color: '#e8f5e9',
-        tasks: allTasks.filter((t) => t.columnId === 'done'),
-        order: 3,
-      },
-    ];
-    this.connectedDropListsIds = this.columns.map((col) => col.id);
+    });
   }
 
   get sortedColumns() {
@@ -234,7 +192,7 @@ export class BoardComponent implements OnInit {
       loading: false,
       comments: [],
       changeHistory: [],
-      attachedFiles: []
+      attachedFiles: [],
     };
     col.tasks.unshift(newTask);
     this.cancelAddTask();

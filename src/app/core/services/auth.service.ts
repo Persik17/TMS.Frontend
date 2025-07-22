@@ -29,16 +29,18 @@ export class AuthService {
     );
   }
 
-    loginViaTelegram(user: TelegramAuthViewModel): Observable<AuthenticationResultViewModel> {
+  loginViaTelegram(
+    user: TelegramAuthViewModel
+  ): Observable<AuthenticationResultViewModel> {
     return this.http.post<AuthenticationResultViewModel>(
       `${this.apiUrl}/telegram`,
       user
     );
   }
 
-  confirmSms(verificationId: string, code: string): AuthResult$ {
+  confirmLogin(verificationId: string, code: string): AuthResult$ {
     return this.http.post<AuthenticationResultViewModel>(
-      `${this.apiUrl}/confirm-sms`,
+      `${this.apiUrl}/confirm`,
       { verificationId, code }
     );
   }
