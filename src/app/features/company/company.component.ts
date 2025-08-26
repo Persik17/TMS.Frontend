@@ -12,7 +12,7 @@ import { CompanyService } from './company.service';
 })
 export class CompanyComponent implements OnInit {
   tab: 'info' | 'ceo' | 'tariff' = 'info';
-  company: CompanyViewModel | null = null; // начальное значение — null
+  company: CompanyViewModel | null = null; //  начальное значение — null
 
   private companyId: string = '9a6ce22f-c09e-4e03-a78b-cce8c1c64be4';
 
