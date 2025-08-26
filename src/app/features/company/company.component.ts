@@ -23,7 +23,6 @@ export class CompanyComponent implements OnInit {
 
   loadCompany(): void {
     const userId = localStorage.getItem('userId') || '';
-    console.log(userId);
 
     if (!userId) {
       this.error = 'Пользователь не найден';

@@ -12,8 +12,6 @@ export class CompanyService {
 
   getCompany(userId: string): Observable<CompanyViewModel> {
     const url = `${this.baseUrl}`;
-    console.log(userId);
-    console.log(url);
     return this.http.get<CompanyViewModel>(url, { params: { userId } });
   }
 
