@@ -48,6 +48,7 @@ export class BoardService {
       boardType: 0,
       isPrivate: privacy === 'private',
       creationDate: new Date().toISOString(),
+      headFullName: '',
     };
     const userId = localStorage.getItem('userId');
     return this.http.post<BoardStub>(
