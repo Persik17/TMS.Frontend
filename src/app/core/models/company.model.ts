@@ -1,4 +1,4 @@
-interface CompanyViewModel {
+export interface CompanyViewModel {
   id: string;
   name: string;
   logo?: string;
