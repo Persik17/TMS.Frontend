@@ -58,9 +58,9 @@
     >
       <div class="board-title">{{ board.name }}</div>
       <div class="board-meta">
-        <span>Владелец: {{ board.owner }}</span>
-        <span class="privacy" [ngClass]="board.privacy">
-          {{ board.privacy === "private" ? "Приватная" : "Публичная" }}
+        <span>Владелец: {{ board.headFullName }}</span>
+        <span class="privacy" *ngIf="board.isPrivate">
+          {{ board.isPrivate === true ? "Приватная" : "Публичная" }}
         </span>
       </div>
       <div class="board-actions">
