@@ -1,7 +1,7 @@
-import { CompanyViewModel } from './company.model';
+import { CompanyViewModel } from './../../core/models/company.model';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CompanyService } from './company.service';
+import { CompanyService } from './../../core/services/company.service';
 
 @Component({
   selector: 'app-company',
@@ -11,10 +11,9 @@ import { CompanyService } from './company.service';
   styleUrls: ['./company.component.scss'],
 })
 export class CompanyComponent implements OnInit {
+  company: CompanyViewModel | null = null;
   tab: 'info' | 'ceo' | 'tariff' = 'info';
-  company: CompanyViewModel | null = null; //  начальное значение — null
-
-  private companyId: string = '9a6ce22f-c09e-4e03-a78b-cce8c1c64be4';
+  error = '';
 
   constructor(private companyService: CompanyService) {}
 
@@ -23,78 +22,23 @@ export class CompanyComponent implements OnInit {
   }
 
   loadCompany(): void {
-    this.companyService.getCompany(this.companyId).subscribe({
-      next: (data) => {
-        this.company = data;
+    const userId = localStorage.getItem('userId') || '';
+    console.log(userId);
+
+    if (!userId) {
+      this.error = 'Пользователь не найден';
+      return;
+    }
+
+    this.companyService.getCompany(userId).subscribe({
+      next: (company) => {
+        this.company = company;
       },
       error: (err) => {
         console.error('Ошибка загрузки компании:', err);
       },
     });
   }
-
-  // export class CompanyComponent {
-  //   tab: 'info' | 'ceo' | 'tariff' = 'info';
-
-  //   company: CompanyViewModel = {
-  //     id: '1',
-  //     name: 'ООО Тестовая компания',
-  //     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Logo_2013_Google.png/320px-Logo_2013_Google.png',
-  //     inn: '1234567890',
-  //     ogrn: '1027700132195',
-  //     address: 'г. Москва, ул. Примерная, д. 1',
-  //     website: 'https://test-company.ru',
-  //     industry: 'IT/Технологии',
-  //     description:
-  //       'Ведущий разработчик решений для управления командами и проектами.',
-  //     contactEmail: 'info@test-company.ru',
-  //     contactPhone: '+7 495 123-45-67',
-  //     isActive: true,
-  //     ceoSummary: {
-  //       boards: [
-  //         {
-  //           name: 'Проект Alpha',
-  //           tasksTotal: 42,
-  //           tasksDone: 30,
-  //           tasksInProgress: 12,
-  //         },
-  //         {
-  //           name: 'Маркетинг 2025',
-  //           tasksTotal: 18,
-  //           tasksDone: 15,
-  //           tasksInProgress: 3,
-  //         },
-  //         { name: 'HR и найм', tasksTotal: 9, tasksDone: 7, tasksInProgress: 2 },
-  //       ],
-  //       totalTasks: 69,
-  //       totalDone: 52,
-  //       totalInProgress: 17,
-  //       leadBoard: 'Проект Alpha',
-  //       mostActiveUser: 'alice',
-  //     },
-  //     tariffSummary: {
-  //       planName: 'Бизнес',
-  //       isTrial: false,
-  //       status: 'active',
-  //       period: '01.06.2025 – 01.07.2025',
-  //       usersLimit: 50,
-  //       boardsLimit: 20,
-  //       tasksLimit: 5000,
-  //       currentUsers: 23,
-  //       currentBoards: 6,
-  //       currentTasks: 412,
-  //       autoRenew: true,
-  //       renewalDate: '01.07.2025',
-  //       pricePerPeriod: 2990,
-  //       currency: '₽',
-  //       features: [
-  //         'Все основные функции',
-  //         'Расширенные отчёты',
-  //         'Приоритетная поддержка',
-  //         'Безлимит на задачи в рамках тарифа',
-  //       ],
-  //     },
-  //   };
 
   setTab(tab: 'info' | 'ceo' | 'tariff') {
     this.tab = tab;
