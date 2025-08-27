@@ -12,7 +12,11 @@ import { BoardAnalyticsComponent } from './analytics/board-analytics/board-analy
 import { BoardColumnComponent } from './components/board-column/board-column.component';
 import { BoardTask } from '../../core/models/board-task.model';
 import { BoardColumn } from '../../core/models/board-column.model';
-import { BoardService, BoardInfoDto, BoardTaskType } from '../../core/services/board.service';
+import {
+  BoardService,
+  BoardInfoDto,
+  BoardTaskType,
+} from '../../core/services/board.service';
 import { ActivatedRoute } from '@angular/router';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
 
@@ -207,27 +211,34 @@ export class BoardComponent implements OnInit {
       input?.focus();
     });
   }
+
   cancelAddColumn() {
     this.addingColumn = false;
     this.newColumnTitle = '';
     this.newColumnColor = '#e3f2fd';
   }
+
   addColumn() {
     const title = this.newColumnTitle.trim();
     if (!title) return;
     const color = this.newColumnColor || '#e3f2fd';
-    const id = Date.now().toString();
     const order = this.columns.length;
 
-    this.columns.push({
-      id,
-      title,
-      color,
-      order,
-      tasks: [],
-    });
-    this.connectedDropListsIds = this.columns.map((col) => col.id);
-    this.cancelAddColumn();
+    this.loading = true;
+    this.boardService
+      .addColumn(this.companyId, this.boardId, title, order, color)
+      .subscribe({
+        next: (newCol) => {
+          this.columns.push(newCol);
+          this.connectedDropListsIds = this.columns.map((col) => col.id);
+          this.cancelAddColumn();
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Ошибка создания столбца';
+          this.loading = false;
+        },
+      });
   }
 
   onColumnDrop(event: CdkDragDrop<any[]>) {

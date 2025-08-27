@@ -63,4 +63,25 @@ export class BoardService {
       `${this.baseUrl}/${companyId}/boards/${boardId}/info?userId=${userId}`
     );
   }
+
+  addColumn(
+    companyId: string,
+    boardId: string,
+    name: string,
+    order: number,
+    color?: string,
+    description?: string
+  ): Observable<BoardColumn> {
+    const userId = localStorage.getItem('userId');
+    const body = {
+      name,
+      order,
+      color: color ?? '#e3f2fd',
+      description: description ?? '',
+    };
+    return this.http.post<BoardColumn>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/columns?userId=${userId}`,
+      body
+    );
+  }
 }
