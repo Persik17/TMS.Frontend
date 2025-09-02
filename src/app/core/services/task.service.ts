@@ -1,36 +1,101 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Task } from '../models/task.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Task } from '../models/task.model';
+import { Comment } from '../models/comment.model';
+
+export type TaskCreateDto = {
+  name: string;
+  boardId: string;
+  creatorId: string;
+  assigneeId: string;
+  taskTypeId: string;
+  columnId: string;
+};
+
+export interface TaskDto extends TaskCreateDto {
+  id: string;
+  description?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  actualClosingDate?: string | null;
+  storyPoints?: number | null;
+  priority?: number | null;
+  severity?: number | null;
+  parentTaskId?: string | null;
+  creationDate?: string;
+  updateDate?: string | null;
+  deleteDate?: string | null;
+}
+
+export interface CommentDto {
+  id?: string;
+  text: string;
+  taskId?: string;
+  authorId: string;
+  creationDate?: string;
+  updateDate?: string | null;
+  deleteDate?: string | null;
+}
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/tasks`;
+  private readonly baseUrl = `${environment.apiBaseUrl}/task`;
 
-  private demoTask: Task = {
-    id: '1',
-    name: 'Сделать дизайн',
-    description: 'Подготовить макеты для главной страницы.',
-    boardId: 'board1',
-    creatorId: 'user1',
-    assigneeId: 'user2',
-    startDate: '2025-06-20T10:00:00Z',
-    endDate: '2025-06-25T18:00:00Z',
-    actualClosingDate: null,
-    storyPoints: 5,
-    taskTypeId: 'type1',
-    priority: 2,
-    severity: 1,
-    parentTaskId: null,
-    columnId: 'todo',
-    creationDate: '2025-06-19T15:00:00Z',
-    updateDate: '2025-06-19T15:00:00Z',
-    deleteDate: null,
-  };
+  constructor(private http: HttpClient) {}
 
-  // constructor(private http: HttpClient) {}
-  getTask(boardId: string, taskId: string): Observable<Task> {
-    // return this.http.get<Task>(`${this.baseUrl}/${boardId}/${taskId}`);
-    return of(this.demoTask);
+  getTask(id: string, userId: string): Observable<Task> {
+    return this.http.get<Task>(`${this.baseUrl}/${id}?userId=${userId}`);
+  }
+
+  createTask(task: TaskCreateDto, userId: string): Observable<Task> {
+    return this.http.post<Task>(`${this.baseUrl}?userId=${userId}`, task);
+  }
+
+  updateTask(
+    id: string,
+    task: Partial<Task>,
+    userId: string
+  ): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}?userId=${userId}`, task);
+  }
+
+  deleteTask(id: string, userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}?userId=${userId}`);
+  }
+
+  addComment(taskId: string, comment: CommentDto): Observable<Comment> {
+    return this.http.post<Comment>(
+      `${this.baseUrl}/${taskId}/comments`,
+      comment
+    );
+  }
+
+  getComments(taskId: string, userId: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(
+      `${this.baseUrl}/${taskId}/comments?userId=${userId}`
+    );
+  }
+
+  updateComment(
+    taskId: string,
+    commentId: string,
+    comment: CommentDto
+  ): Observable<Comment> {
+    return this.http.put<Comment>(
+      `${this.baseUrl}/${taskId}/comments/${commentId}`,
+      comment
+    );
+  }
+
+  deleteComment(
+    taskId: string,
+    commentId: string,
+    userId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/${taskId}/comments/${commentId}?userId=${userId}`
+    );
   }
 }
