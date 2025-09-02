@@ -11,6 +11,99 @@
   position: relative;
   padding: 0 0 1.2rem 0;
 }
+.section {
+  padding: 0 0 2rem 0;
+}
+
+.fields-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    font-size: 1rem;
+  }
+
+  .field.actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 18px;
+
+    .actions-inner {
+      display: flex;
+      gap: 12px;
+    }
+  }
+}
+
+input,
+textarea,
+select {
+  padding: 7px 12px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 1em;
+  background: #fff;
+  transition: border-color 0.12s;
+  outline: none;
+  &:focus {
+    border-color: #1976d2;
+  }
+}
+
+.btn {
+  padding: 7px 22px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.15s, color 0.15s, border 0.15s;
+}
+.btn-primary {
+  background: #1976d2;
+  color: #fff;
+}
+.btn-primary:disabled {
+  background: #bdbdbd;
+  color: #fff;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: #fff;
+  color: #1976d2;
+  border: 1px solid #1976d2;
+}
+.edit-board-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  margin-left: 8px;
+  font-size: 1.4em;
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: 10px;
+  transition: color 0.15s;
+  &:hover {
+    color: #0d47a1;
+  }
+}
+
+.form-error {
+  color: #d32f2f;
+  font-size: 1em;
+  margin-top: 8px;
+  grid-column: span 2;
+}
 .board-column-add {
   min-width: $column-add-min-width;
   max-width: $column-add-max-width;
@@ -377,5 +470,21 @@
     min-width: 128px;
     background: $board-bg;
     color: $chart-type-filter-color;
+  }
+}
+
+.delete-col-btn {
+  background: $btn-red-bg;
+  color: $btn-red;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 4px 7px;
+  border-radius: 4px;
+  margin-left: 2px;
+  transition: background 0.13s, color 0.13s;
+  &:hover {
+    background: $btn-red-bg-hover;
+    color: $btn-red-hover;
   }
 }
