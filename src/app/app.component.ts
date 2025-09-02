@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, MatIconModule],
-  template: `<router-outlet></router-outlet>`,
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {

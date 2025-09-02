@@ -5,7 +5,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { BoardService } from '../../core/services/board.service';
-import { BoardStub } from '../../core/models/board.model';
+import { Board } from '../../core/models/board.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,7 +18,7 @@ export class SidebarComponent implements OnInit {
   boardId?: string;
   isBoardPage = false;
 
-  boards: BoardStub[] = []; // ← теперь это реальные доски
+  boards: Board[] = [];
   maxBoardsInSidebar = 5;
   loading = true;
   error = '';
@@ -58,7 +58,7 @@ export class SidebarComponent implements OnInit {
     this.boardId = match ? match[1] : undefined;
   }
 
-  get shownBoards(): BoardStub[] {
+  get shownBoards(): Board[] {
     return this.boards.slice(0, this.maxBoardsInSidebar);
   }
   get hasMoreBoards(): boolean {

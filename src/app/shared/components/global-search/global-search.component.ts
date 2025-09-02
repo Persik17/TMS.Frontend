@@ -23,26 +23,22 @@ type SearchResult = {
 })
 export class GlobalSearchComponent {
   query = '';
-  results: SearchResult[] = [
-    { type: 'user', name: 'alice', id: '1' },
-    { type: 'board', name: 'Проект Alpha', id: '2' },
-    { type: 'task', name: 'Сделать дизайн', id: '3' },
-  ];
+  results: SearchResult[] = [];
   filteredResults: SearchResult[] = [];
   showDropdown = false;
   isLoading = false;
 
   @Output() select = new EventEmitter<SearchResult>();
 
-  private debounceTimer: any;
+  private debounceTimer: number | undefined;
 
   constructor(private el: ElementRef) {}
 
   onSearch() {
-    clearTimeout(this.debounceTimer);
+    if (this.debounceTimer) window.clearTimeout(this.debounceTimer);
     this.isLoading = true;
     this.showDropdown = !!this.query;
-    this.debounceTimer = setTimeout(() => {
+    this.debounceTimer = window.setTimeout(() => {
       this.doSearch();
     }, 2000);
   }
@@ -54,13 +50,10 @@ export class GlobalSearchComponent {
       this.isLoading = false;
       return;
     }
-    // Имитация "загрузки", замени на реальный HTTP-запрос при необходимости
-    setTimeout(() => {
-      this.filteredResults = this.results.filter((item) =>
-        item.name.toLowerCase().includes(this.query.toLowerCase())
-      );
-      this.isLoading = false;
-    }, 400);
+    this.filteredResults = this.results.filter((item) =>
+      item.name.toLowerCase().includes(this.query.toLowerCase())
+    );
+    this.isLoading = false;
   }
 
   selectResult(result: SearchResult) {

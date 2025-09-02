@@ -1,0 +1,13 @@
+.layout {
+  display: flex;
+  min-height: calc(100vh - 56px - 44px);
+  padding-top: 56px;
+  padding-bottom: 44px;
+}
+
+.private-main {
+  flex: 1;
+  padding: 2.5rem 2.5rem 1.5rem 240px;
+  background: #fff;
+  min-height: calc(100vh - 56px - 44px);
+}

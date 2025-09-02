@@ -13,10 +13,7 @@ import { GlobalSearchComponent } from '../../shared/components/global-search/glo
 })
 export class HeaderComponent {
   menuOpen = false;
-  user = {
-    username: 'Persik172',
-    avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-  };
+  user: { username: string; avatarUrl?: string } = { username: '' };
 
   companyName = 'TMS';
 
@@ -27,17 +24,16 @@ export class HeaderComponent {
   private route = inject(ActivatedRoute);
 
   constructor() {
-    // Здесь нужно подгружать реальные названия доски и задачи!
-    // Замените на реальные сервисы/селекторы/асинхронные данные по вашему проекту.
-    // Пример с мок-данными для скриншота:
     this.router.events.subscribe(() => {
       const url = this.router.url;
-      if (/^\/boards\/\d+$/.test(url)) {
-        this.boardName = 'Проект Alpha'; // <-- реальное название доски
+      const isBoard = /^\/boards\//.test(url);
+      const isTask = /^\/boards\//.test(url) && /\/tasks\//.test(url);
+      if (isTask) {
+        this.boardName = undefined;
         this.taskName = undefined;
-      } else if (/^\/boards\/\d+\/tasks\/\d+$/.test(url)) {
-        this.boardName = 'Проект Alpha';
-        this.taskName = 'Сделать дизайн'; // <-- реальное название задачи
+      } else if (isBoard) {
+        this.boardName = undefined;
+        this.taskName = undefined;
       } else {
         this.boardName = undefined;
         this.taskName = undefined;
@@ -56,10 +52,11 @@ export class HeaderComponent {
   }
 
   logout() {
-    alert('Вы вышли из аккаунта');
+    localStorage.removeItem('token');
+    this.router.navigate(['/auth/login']);
   }
 
-  onGlobalSelect(event: any) {
+  onGlobalSelect(event: { type: 'user' | 'board' | 'task'; id: string }) {
     // Навигация по результату поиска
     if (event.type === 'user') {
       this.router.navigate(['/users', event.id]);
