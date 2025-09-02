@@ -88,11 +88,22 @@ export class TaskPageComponent implements OnInit {
   ngOnInit() {
     const boardId = this.route.snapshot.paramMap.get('boardId')!;
     const taskId = this.route.snapshot.paramMap.get('taskId')!;
-    this.taskService.getTask(boardId, taskId).subscribe((task) => {
-      this.task = task;
-      this.loading = false;
+    const userId = localStorage.getItem('userId') || '';
+
+    this.taskService.getTask(taskId, userId).subscribe({
+      next: (task) => {
+        this.task = {
+          ...task,
+          name: task.name,
+        };
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
     });
-    this.loadComments(taskId);
+
+    this.loadComments(taskId, userId);
   }
 
   get taskUrl(): string {
@@ -100,37 +111,37 @@ export class TaskPageComponent implements OnInit {
     return `${window.location.origin}/boards/${this.task.boardId}/tasks/${this.task.id}`;
   }
 
-  loadComments(taskId: string) {
-    this.comments = [
-      {
-        id: 'c1',
-        text: 'Отличная задача, добавьте acceptance criteria!',
-        creationDate: '2025-06-22T12:30:00Z',
-        updateDate: null,
-        deleteDate: null,
-        userId: 'alice',
-        user: {
-          id: 'alice',
-          name: 'Alice',
-          avatarUrl: 'https://i.pravatar.cc/36?u=alice',
-        },
-        taskId,
+  loadComments(taskId: string, userId: string) {
+    this.taskService.getComments(taskId, userId).subscribe({
+      next: (comments) => {
+        this.comments = comments;
       },
-      {
-        id: 'c2',
-        text: 'Взял в работу',
-        creationDate: '2025-06-23T08:00:00Z',
-        updateDate: null,
-        deleteDate: null,
-        userId: 'bob',
-        user: {
-          id: 'bob',
-          name: 'Bob',
-          avatarUrl: 'https://i.pravatar.cc/36?u=bob',
-        },
-        taskId,
+      error: () => {
+        this.comments = [];
       },
-    ];
+    });
+  }
+
+  addComment() {
+    if (!this.newCommentText.trim() || !this.task) return;
+    this.addingComment = true;
+    const userId = localStorage.getItem('userId') || '';
+    this.taskService
+      .addComment(this.task.id, {
+        text: this.newCommentText,
+        authorId: userId,
+      })
+      .subscribe({
+        next: (comment) => {
+          this.comments.push(comment);
+          this.newCommentText = '';
+          this.addingComment = false;
+        },
+        error: () => {
+          // обработка ошибки
+          this.addingComment = false;
+        },
+      });
   }
 
   copyLink() {
@@ -142,27 +153,6 @@ export class TaskPageComponent implements OnInit {
   backToBoard() {
     if (!this.task) return;
     this.router.navigate(['/boards', this.task.boardId]);
-  }
-
-  addComment() {
-    if (!this.newCommentText.trim() || !this.task) return;
-    this.addingComment = true;
-    setTimeout(() => {
-      this.comments.push({
-        id: 'c' + Math.random(),
-        text: this.newCommentText,
-        creationDate: new Date().toISOString(),
-        userId: 'currentUser',
-        user: {
-          id: 'currentUser',
-          name: 'Вы',
-          avatarUrl: 'https://i.pravatar.cc/36?u=me',
-        },
-        taskId: this.task!.id,
-      });
-      this.newCommentText = '';
-      this.addingComment = false;
-    }, 800);
   }
 
   setTab(tab: 'main' | 'history' | 'files') {

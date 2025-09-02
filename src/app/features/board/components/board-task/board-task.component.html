@@ -7,7 +7,7 @@
 >
   <div
     class="task-card-priority"
-    [ngStyle]="{ background: getPriorityColor(task.priority) }"
+    [ngStyle]="{ background: getPriorityColor(task.priority ?? 0) }"
   ></div>
   <div class="task-card-content">
     <div class="task-header">
@@ -16,8 +16,8 @@
     </div>
     <div class="task-desc">{{ task.description }}</div>
     <div class="task-meta">
-      <span class="priority" [style.color]="getPriorityColor(task.priority)">
-        {{ getPriorityLabel(task.priority) }}
+      <span class="priority" [style.color]="getPriorityColor(task.priority ?? 0)">
+        {{ getPriorityLabel(task.priority ?? 0) }}
       </span>
       <span class="assignee">
         <span class="material-icons">person</span>

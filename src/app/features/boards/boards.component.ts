@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BoardService } from '../../core/services/board.service';
-import { BoardStub } from '../../core/models/board.model';
+import { Board } from '../../core/models/board.model';
 
 @Component({
   selector: 'app-boards',
@@ -13,7 +13,7 @@ import { BoardStub } from '../../core/models/board.model';
   styleUrls: ['./boards.component.scss'],
 })
 export class BoardsComponent implements OnInit {
-  boards: BoardStub[] = [];
+  boards: Board[] = [];
   filterName = '';
   filterOwner = '';
   filterPrivacy: '' | 'private' | 'public' = '';
@@ -46,7 +46,7 @@ export class BoardsComponent implements OnInit {
     });
   }
 
-  get filteredBoards(): BoardStub[] {
+  get filteredBoards(): Board[] {
     return this.boards.filter(
       (b) =>
         (!this.filterName ||
@@ -68,12 +68,10 @@ export class BoardsComponent implements OnInit {
     this.creatingBoard = true;
     this.newBoardName = '';
     this.newBoardPrivacy = 'private';
-    setTimeout(() => {
-      const input = document.querySelector<HTMLInputElement>(
-        '.create-board-input'
-      );
-      input?.focus();
-    });
+    const input = document.querySelector<HTMLInputElement>(
+      '.create-board-input'
+    );
+    queueMicrotask(() => input?.focus());
   }
 
   cancelCreateBoard() {
@@ -108,5 +106,23 @@ export class BoardsComponent implements OnInit {
           this.isCreatingBoard = false;
         },
       });
+  }
+
+  deleteBoard(board: Board, event?: MouseEvent) {
+    if (event) event.stopPropagation();
+    if (!confirm(`Удалить доску "${board.name}"? Это действие необратимо.`))
+      return;
+    const companyId = localStorage.getItem('companyId') || '';
+    this.loading = true;
+    this.boardService.deleteBoard(companyId, board.id).subscribe({
+      next: () => {
+        this.boards = this.boards.filter((b) => b.id !== board.id);
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Ошибка удаления доски';
+        this.loading = false;
+      },
+    });
   }
 }

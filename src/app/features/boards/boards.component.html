@@ -67,6 +67,13 @@
         <button (click)="goToBoard(board.id); $event.stopPropagation()">
           Открыть
         </button>
+        <button
+          class="delete-board-btn"
+          (click)="deleteBoard(board, $event)"
+          title="Удалить доску"
+        >
+          <span class="material-icons">delete</span>
+        </button>
       </div>
     </div>
     <div *ngIf="filteredBoards.length === 0" class="no-boards">

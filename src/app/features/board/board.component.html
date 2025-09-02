@@ -20,11 +20,17 @@
         [column]="col"
         [isDragging]="isDraggingColumnId === col.id"
         [addingTaskColumnId]="addingTaskColumnId"
-        [newTaskName]="newTaskName"
         [connectedDropListsIds]="connectedDropListsIds"
         [getPriorityColor]="getPriorityColor"
         [getPriorityLabel]="getPriorityLabel"
+        [editing]="editingColumnId === col.id"
+        [editTitle]="editColumnTitle"
+        [editColor]="editColumnColor"
+        [editDescription]="editColumnDescription"
+        [taskTypes]="taskTypes"
         (editColumn)="editColumn($event)"
+        (saveEditColumn)="saveEditColumn($event)"
+        (cancelEditColumn)="cancelEditColumn()"
         (addTask)="addTask($event)"
         (toggleAddTask)="toggleAddTask($event)"
         (cancelAddTask)="cancelAddTask()"
@@ -32,6 +38,7 @@
         (openTaskDialog)="openTaskDialog($event)"
         (columnDragStarted)="onColumnDragStarted($event)"
         (columnDragEnded)="onColumnDragEnded()"
+        (deleteColumn)="deleteColumn($event)"
       ></app-board-column>
       <div class="board-column board-column-add">
         <ng-container *ngIf="!addingColumn; else addColForm">
@@ -59,6 +66,15 @@
               placeholder="Название столбца"
               autofocus
             />
+            <textarea
+              class="add-col-desc"
+              [(ngModel)]="newColumnDescription"
+              name="newColumnDescription"
+              rows="3"
+              maxlength="256"
+              required
+              placeholder="Описание столбца"
+            ></textarea>
             <input
               class="add-col-color"
               type="color"
@@ -69,7 +85,9 @@
             <button
               class="add-btn"
               type="submit"
-              [disabled]="!newColumnTitle.trim()"
+              [disabled]="
+                !newColumnTitle.trim() || !newColumnDescription.trim()
+              "
             >
               +
             </button>

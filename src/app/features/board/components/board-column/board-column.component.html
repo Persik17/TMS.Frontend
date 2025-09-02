@@ -8,26 +8,68 @@
   [class.is-dragging]="isDragging"
 >
   <div class="board-column-header" cdkDragHandle>
-    <span class="board-column-title">
-      {{ column.title }}
-      <span class="task-count">({{ column.tasks.length }})</span>
-    </span>
-    <button
-      class="edit-col-btn"
-      (click)="editColumn.emit(column)"
-      title="Редактировать столбец"
-      type="button"
-    >
-      <span class="material-icons">edit</span>
-    </button>
-    <button
-      class="add-task-btn"
-      (click)="toggleAddTask.emit(column.id)"
-      title="Добавить задачу"
-      type="button"
-    >
-      <span class="material-icons">add</span>
-    </button>
+    <ng-container *ngIf="!editing; else editForm">
+      <span class="board-column-title">
+        {{ column.title }}
+        <span class="task-count">({{ column.tasks?.length || 0 }})</span>
+      </span>
+      <button
+        class="edit-col-btn"
+        (click)="editColumn.emit(column)"
+        title="Редактировать столбец"
+        type="button"
+      >
+        <span class="material-icons">edit</span>
+      </button>
+      <button
+        class="delete-col-btn"
+        (click)="deleteColumn.emit(column)"
+        title="Удалить столбец"
+        type="button"
+      >
+        <span class="material-icons">delete</span>
+      </button>
+      <button
+        class="add-task-btn"
+        (click)="toggleAddTask.emit(column.id)"
+        title="Добавить задачу"
+        type="button"
+      >
+        <span class="material-icons">add</span>
+      </button>
+    </ng-container>
+    <ng-template #editForm>
+      <input
+        type="text"
+        [(ngModel)]="editTitle"
+        maxlength="32"
+        placeholder="Название столбца"
+      />
+      <input type="color" [(ngModel)]="editColor" />
+      <textarea
+        [(ngModel)]="editDescription"
+        rows="3"
+        maxlength="256"
+        class="edit-col-desc"
+        placeholder="Описание столбца"
+      ></textarea>
+      <button
+        (click)="
+          saveEditColumn.emit({
+            id: column.id,
+            title: editTitle,
+            color: editColor,
+            description: editDescription
+          })
+        "
+        title="Сохранить"
+      >
+        <span class="material-icons">done</span>
+      </button>
+      <button (click)="cancelEditColumn.emit()" title="Отмена">
+        <span class="material-icons">close</span>
+      </button>
+    </ng-template>
   </div>
   <div
     class="board-tasks-list"
@@ -44,7 +86,7 @@
       [getPriorityLabel]="getPriorityLabel"
       (openTask)="openTaskDialog.emit($event)"
     ></app-board-task>
-    <div *ngIf="filteredTasks(column).length === 0" class="no-tasks">
+    <div *ngIf="(filteredTasks(column)?.length || 0) === 0" class="no-tasks">
       Нет задач
     </div>
   </div>
@@ -53,14 +95,20 @@
       type="text"
       [(ngModel)]="newTaskName"
       placeholder="Название задачи"
-      (keydown.enter)="addTask.emit(column)"
+      (keydown.enter)="emitAddTask()"
       maxlength="60"
       autofocus
     />
+    <select [(ngModel)]="selectedTaskTypeId">
+      <option value="" disabled selected>Тип задачи</option>
+      <option *ngFor="let type of taskTypes" [value]="type.id">
+        {{ type.name }}
+      </option>
+    </select>
     <button
       class="add-btn"
-      (click)="addTask.emit(column)"
-      [disabled]="!newTaskName.trim()"
+      (click)="emitAddTask()"
+      [disabled]="!newTaskName.trim() || !selectedTaskTypeId"
       title="Добавить"
     >
       +

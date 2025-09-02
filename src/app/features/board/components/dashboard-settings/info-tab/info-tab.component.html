@@ -1,6 +1,63 @@
 <section class="section">
   <h3>Общие сведения по доске</h3>
-  <div class="fields-grid">
+  <form
+    class="fields-grid"
+    *ngIf="editing"
+    (ngSubmit)="saveEdit()"
+    autocomplete="off"
+  >
+    <div class="field">
+      <label for="editName">Название:</label>
+      <input
+        id="editName"
+        [(ngModel)]="editName"
+        name="editName"
+        maxlength="80"
+        [disabled]="saving"
+        autofocus
+      />
+    </div>
+    <div class="field">
+      <label for="editDescription">Описание:</label>
+      <textarea
+        id="editDescription"
+        [(ngModel)]="editDescription"
+        name="editDescription"
+        maxlength="256"
+        [disabled]="saving"
+        rows="3"
+      ></textarea>
+    </div>
+    <div class="field">
+      <label>Приватная:</label>
+      <select
+        [(ngModel)]="editIsPrivate"
+        name="editIsPrivate"
+        [disabled]="saving"
+      >
+        <option [ngValue]="true">Да</option>
+        <option [ngValue]="false">Нет</option>
+      </select>
+    </div>
+    <div class="field actions">
+      <div class="actions-inner">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelEdit()"
+          [disabled]="saving"
+        >
+          Отмена
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="saving">
+          Сохранить
+        </button>
+      </div>
+    </div>
+    <div *ngIf="error" class="form-error">{{ error }}</div>
+  </form>
+
+  <div class="fields-grid" *ngIf="!editing">
     <div class="field">
       <label>Название:</label>
       <span>{{ board.name }}</span>
@@ -10,16 +67,16 @@
       <span>{{ board.description }}</span>
     </div>
     <div class="field">
-      <label>Отдел:</label>
-      <span>{{ board.department }}</span>
-    </div>
-    <div class="field">
-      <label>Тип доски:</label>
-      <span>{{ board.boardType }}</span>
-    </div>
-    <div class="field">
       <label>Приватная:</label>
       <span>{{ board.isPrivate ? "Да" : "Нет" }}</span>
     </div>
+    <button
+      class="edit-board-btn"
+      (click)="startEdit()"
+      title="Редактировать"
+      type="button"
+    >
+      <span class="material-icons">edit</span>
+    </button>
   </div>
 </section>

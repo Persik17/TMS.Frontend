@@ -7,6 +7,7 @@ import { BoardUser } from '../../../../core/models/board-user.model';
 import { AccessLevel } from '../../../../core/models/access-level.model';
 import { UserPermissions } from '../../../../core/models/user-permissions.model';
 import { PermissionsDiff } from '../../../../core/models/permissions-diff.model';
+import { Board } from '../../../../core/models/board.model';
 
 @Component({
   selector: 'app-dashboard-settings',
@@ -25,41 +26,7 @@ import { PermissionsDiff } from '../../../../core/models/permissions-diff.model'
 })
 export class DashboardSettingsComponent {
   tab: 'info' | 'users' = 'info';
-  users: BoardUser[] = [
-    {
-      id: 1,
-      name: 'Иван',
-      email: 'ivan@mail.com',
-      status: 'Активный',
-      permissions: {
-        tasks: 'Редактирование',
-        board: 'Чтение',
-        members: 'Нет',
-      },
-    },
-    {
-      id: 2,
-      name: 'Мария',
-      email: 'maria@mail.com',
-      status: 'Активный',
-      permissions: {
-        tasks: 'Чтение',
-        board: 'Чтение',
-        members: 'Нет',
-      },
-    },
-    {
-      id: 3,
-      name: '',
-      email: 'invited@user.com',
-      status: 'Приглашён',
-      permissions: {
-        tasks: 'Нет',
-        board: 'Чтение',
-        members: 'Нет',
-      },
-    },
-  ];
+  users: BoardUser[] = [];
   showInviteModal = false;
   inviteEmail = '';
   inviteError = '';
@@ -102,12 +69,15 @@ export class DashboardSettingsComponent {
   permissionDiffs: PermissionsDiff[] = [];
   hasMatrixChanges = false;
 
-  board = {
-    name: 'Маркетинг',
-    description: 'Доска для маркетинговых задач',
-    department: 'Маркетинг',
-    boardType: 1,
+  board: Board = {
+    id: '',
+    companyId: '',
+    name: '',
+    description: '',
+    boardType: 0,
     isPrivate: false,
+    headFullName: '',
+    creationDate: '',
   };
 
   constructor() {

@@ -19,6 +19,8 @@ import {
 } from '../../core/services/board.service';
 import { ActivatedRoute } from '@angular/router';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
+import { TaskCreateDto, TaskService } from '../../core/services/task.service';
+import { TaskTypeService } from '../../core/services/task-type.service';
 
 @Component({
   selector: 'app-board',
@@ -37,12 +39,15 @@ export class BoardComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private taskService: TaskService,
+    private taskTypeService: TaskTypeService
   ) {}
 
   editingColumnId: string | null = null;
   editColumnTitle: string = '';
   editColumnColor: string = '#e3f2fd';
+  editColumnDescription: string = '';
 
   tab: 'board' | 'burn' = 'board';
 
@@ -53,6 +58,7 @@ export class BoardComponent implements OnInit {
   newTaskName = '';
   addingColumn = false;
   newColumnTitle = '';
+  newColumnDescription = '';
   newColumnColor = '#e3f2fd';
   isDraggingColumnId: string | null = null;
 
@@ -64,6 +70,7 @@ export class BoardComponent implements OnInit {
   ngOnInit() {
     this.boardId = this.route.snapshot.paramMap.get('id') || '';
     this.companyId = localStorage.getItem('companyId') || '';
+    const userId = localStorage.getItem('userId') || '';
     if (!this.boardId || !this.companyId) {
       this.error = 'Доска или компания не найдена';
       this.loading = false;
@@ -72,13 +79,21 @@ export class BoardComponent implements OnInit {
     this.boardService.getBoardInfo(this.companyId, this.boardId).subscribe({
       next: (info: BoardInfoDto) => {
         this.columns = info.columns;
-        this.taskTypes = info.taskTypes;
         this.connectedDropListsIds = this.columns.map((col) => col.id);
         this.loading = false;
       },
       error: () => {
         this.error = 'Ошибка загрузки данных доски';
         this.loading = false;
+      },
+    });
+
+    this.taskTypeService.getTaskTypesByBoardId(this.boardId, userId).subscribe({
+      next: (types) => {
+        this.taskTypes = types;
+      },
+      error: () => {
+        this.taskTypes = [];
       },
     });
   }
@@ -95,9 +110,6 @@ export class BoardComponent implements OnInit {
       maxHeight: '98vh',
       data: {
         task: task,
-        comments: task.comments || [],
-        changeHistory: task.changeHistory || [],
-        attachedFiles: task.attachedFiles || [],
       },
       autoFocus: false,
       restoreFocus: false,
@@ -134,6 +146,43 @@ export class BoardComponent implements OnInit {
     this.editingColumnId = col.id;
     this.editColumnTitle = col.title;
     this.editColumnColor = col.color;
+    this.editColumnDescription = col.description ?? '';
+  }
+  cancelEditColumn() {
+    this.editingColumnId = null;
+    this.editColumnTitle = '';
+    this.editColumnColor = '#e3f2fd';
+    this.editColumnDescription = '';
+  }
+  saveEditColumn(data: {
+    id: string;
+    title: string;
+    color: string;
+    description: string;
+  }) {
+    const idx = this.columns.findIndex((c) => c.id === data.id);
+    if (idx < 0) return;
+    const col = {
+      ...this.columns[idx],
+      title: data.title,
+      color: data.color,
+      description: data.description,
+    };
+    this.boardService
+      .updateColumn(this.companyId, this.boardId, col)
+      .subscribe((updated) => {
+        this.columns[idx] = updated;
+        this.cancelEditColumn();
+      });
+  }
+
+  deleteColumn(col: BoardColumn) {
+    this.boardService
+      .deleteColumn(this.companyId, this.boardId, col.id)
+      .subscribe(() => {
+        this.columns = this.columns.filter((c) => c.id !== col.id);
+        this.connectedDropListsIds = this.columns.map((col) => col.id);
+      });
   }
 
   onTaskDrop(event: CdkDragDrop<BoardTask[]>, targetCol: BoardColumn) {
@@ -144,18 +193,16 @@ export class BoardComponent implements OnInit {
         event.currentIndex
       );
     } else {
+      const userId = localStorage.getItem('userId') || '';
       const task: BoardTask = event.previousContainer.data[event.previousIndex];
-      task.loading = true;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      setTimeout(() => {
-        task.columnId = targetCol.id;
-        task.loading = false;
-      }, 800);
+      task.columnId = targetCol.id;
+      this.taskService.updateTask(task.id, task, userId).subscribe();
     }
   }
 
@@ -165,12 +212,10 @@ export class BoardComponent implements OnInit {
     } else {
       this.addingTaskColumnId = colId;
       this.newTaskName = '';
-      setTimeout(() => {
-        const input = document.querySelector<HTMLInputElement>(
-          '.add-task-form input'
-        );
-        input?.focus();
-      });
+      const input = document.querySelector<HTMLInputElement>(
+        '.add-task-form input'
+      );
+      queueMicrotask(() => input?.focus());
     }
   }
 
@@ -179,54 +224,74 @@ export class BoardComponent implements OnInit {
     this.newTaskName = '';
   }
 
-  addTask(col: BoardColumn) {
-    const name = this.newTaskName.trim();
+  addTask(event: { column: BoardColumn; name: string; taskTypeId: string }) {
+    const name = event.name?.trim();
     if (!name) return;
-    const id = Date.now().toString();
-    const newTask: BoardTask = {
-      id,
+
+    const col = event.column;
+    const taskTypeId = event.taskTypeId;
+    const userId = localStorage.getItem('userId') || '';
+    const boardId = this.boardId;
+    const creatorId = userId;
+    const assigneeId = userId;
+    const columnId = col.id;
+
+    const newTask: TaskCreateDto = {
       name,
-      description: '',
-      assigneeId: '',
-      startDate: new Date().toISOString(),
-      endDate: null,
-      storyPoints: 0,
-      priority: 0,
-      columnId: col.id,
-      loading: false,
-      comments: [],
-      changeHistory: [],
-      attachedFiles: [],
+      boardId,
+      creatorId,
+      assigneeId,
+      taskTypeId,
+      columnId,
     };
-    col.tasks.unshift(newTask);
-    this.cancelAddTask();
+
+    this.taskService.createTask(newTask, userId).subscribe({
+      next: (created: BoardTask) => {
+        col.tasks.unshift({ ...created, loading: false });
+        this.cancelAddTask();
+      },
+      error: (err) => {
+        console.error('Error creating task:', err);
+      },
+    });
+  }
+
+  deleteTask(task: BoardTask) {
+    const userId = localStorage.getItem('userId') || '';
+    this.taskService.deleteTask(task.id, userId).subscribe(() => {
+      const col = this.columns.find((c) => c.id === task.columnId);
+      if (col) {
+        col.tasks = col.tasks.filter((t) => t.id !== task.id);
+      }
+    });
   }
 
   showAddColumnForm() {
     this.addingColumn = true;
     this.newColumnTitle = '';
+    this.newColumnDescription = '';
     this.newColumnColor = '#e3f2fd';
-    setTimeout(() => {
-      const input = document.querySelector<HTMLInputElement>('.add-col-input');
-      input?.focus();
-    });
+    const input = document.querySelector<HTMLInputElement>('.add-col-input');
+    queueMicrotask(() => input?.focus());
   }
 
   cancelAddColumn() {
     this.addingColumn = false;
     this.newColumnTitle = '';
+    this.newColumnDescription = '';
     this.newColumnColor = '#e3f2fd';
   }
 
   addColumn() {
     const title = this.newColumnTitle.trim();
-    if (!title) return;
+    const description = this.newColumnDescription.trim();
+    if (!title || !description) return;
     const color = this.newColumnColor || '#e3f2fd';
     const order = this.columns.length;
 
     this.loading = true;
     this.boardService
-      .addColumn(this.companyId, this.boardId, title, order, color)
+      .addColumn(this.companyId, this.boardId, title, description, order, color)
       .subscribe({
         next: (newCol) => {
           this.columns.push(newCol);
@@ -241,7 +306,7 @@ export class BoardComponent implements OnInit {
       });
   }
 
-  onColumnDrop(event: CdkDragDrop<any[]>) {
+  onColumnDrop(event: CdkDragDrop<BoardColumn[]>) {
     if (event.previousIndex === event.currentIndex) return;
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
     this.columns.forEach((col, idx) => (col.order = idx));
