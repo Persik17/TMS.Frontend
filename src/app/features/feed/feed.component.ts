@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FeedItem } from '../../core/models/feed.model';
 
 @Component({
   selector: 'app-feed',

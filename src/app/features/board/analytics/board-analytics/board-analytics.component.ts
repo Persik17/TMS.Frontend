@@ -12,7 +12,7 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./board-analytics.component.scss'],
 })
 export class BoardAnalyticsComponent {
-  @Input() columns: { title: string; color: string; tasks: any[] }[] = [];
+  @Input() columns: { title: string; color: string; tasks: { id: string }[] }[] = [];
 
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,

@@ -1,14 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Tariff {
-  name: string;
-  price: string;
-  description: string;
-  features: string[];
-  highlight?: boolean;
-  payUrl?: string;
-}
+import { TariffPlan } from '../../core/models/tariff-plan.model';
 
 @Component({
   selector: 'app-license',
@@ -18,7 +10,7 @@ interface Tariff {
   styleUrls: ['./license.component.scss'],
 })
 export class LicenseComponent {
-  tariffs: Tariff[] = [
+  tariffs: TariffPlan[] = [
     {
       name: 'Free',
       price: '0 ₽',
@@ -59,7 +51,7 @@ export class LicenseComponent {
     },
   ];
 
-  onChooseTariff(tariff: Tariff) {
+  onChooseTariff(tariff: TariffPlan) {
     if (tariff.payUrl) {
       window.open(tariff.payUrl, '_blank');
     }

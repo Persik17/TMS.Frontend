@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProfileInfoTabComponent } from './profile-info-tab/profile-info-tab.component';
@@ -7,6 +7,7 @@ import { ProfileNotifTabComponent } from './profile-notif-tab/profile-notif-tab.
 import { ProfileSecurityTabComponent } from './profile-security-tab/profile-security-tab.component';
 import { User } from '../../../core/models/user.model';
 import { NotificationSettings } from '../../../core/models/notification-settings.model';
+import { UserService } from '../../../core/services/user.service';
 
 type TabType = 'info' | 'system' | 'notif' | 'security';
 
@@ -24,54 +25,23 @@ type TabType = 'info' | 'system' | 'notif' | 'security';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   tab: TabType = 'info';
 
-  user: User = {
-    fullName: 'Иван Петров',
-    language: 'ru',
-    phone: '+7 900 123-45-67',
-    telegramId: 'petrov_ivan',
-    timezone: 'Europe/Moscow',
-    status: 'Активен',
-    registrationDate: new Date('2023-05-01T10:33:00'),
-    lastLoginDate: new Date(),
-    notificationSettings: {
-      emailNotificationsEnabled: true,
-      pushNotificationsEnabled: false,
-      telegramNotificationsEnabled: true,
-      id: '',
-    },
-    id: '',
-    email: '',
-    notificationSettingsId: '',
-    creationDate: '',
-  };
+  user!: User;
 
-  originalNotif: NotificationSettings = {
-    emailNotificationsEnabled: true,
-    pushNotificationsEnabled: false,
-    telegramNotificationsEnabled: true,
-    id: '',
-  };
+  originalNotif!: NotificationSettings;
 
   // System settings
   bgModalOpen = false;
-  bgTemplates = [
-    { name: 'Заглушка 1', url: 'https://picsum.photos/120/60?random=1' },
-    { name: 'Заглушка 2', url: 'https://placehold.co/120x60?text=Board+BG' },
-    {
-      name: 'Заглушка 3',
-      url: 'https://dummyimage.com/120x60/1976d2/fff&text=BG',
-    },
-  ];
+  bgTemplates: { name: string; url: string }[] = [];
   bgColors = ['#f7cac9', '#92a8d1', '#f9f871', '#b5ead7', '#ffffff', '#232323'];
   systemSettings = {
     theme: 'light',
     boardBgType: 'template' as 'template' | 'color' | 'custom',
-    boardBgUrl: 'https://picsum.photos/120/60?random=1',
+    boardBgUrl: '',
     boardBgColor: '',
-    boardBgName: 'Заглушка 1',
+    boardBgName: '',
   };
 
   smsRequired = false;
@@ -80,37 +50,34 @@ export class ProfileComponent {
   newPassword = '';
   repeatPassword = '';
 
-  saveProfile() {
-    alert('Профиль сохранён!');
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.getProfile().subscribe((u) => {
+      this.user = u;
+      this.originalNotif = u.notificationSettings as NotificationSettings;
+    });
   }
 
-  saveNotificationSettings() {
-    alert('Настройки оповещений сохранены!');
-  }
+  saveProfile() {}
+
+  saveNotificationSettings() {}
 
   changeEmail() {
     this.smsRequired = true;
-    alert(
-      'Ссылка для подтверждения отправлена на новый email. Введите код из SMS для подтверждения.'
-    );
   }
 
   changePassword() {
     if (this.newPassword !== this.repeatPassword) {
-      alert('Пароли не совпадают!');
       return;
     }
     this.smsRequired = true;
-    alert('Пароль изменён. Введите код из SMS для подтверждения.');
   }
 
   confirmSmsCode() {
     if (this.smsCode.trim().length === 6) {
       this.smsRequired = false;
       this.smsCode = '';
-      alert('SMS подтверждение прошло успешно!');
-    } else {
-      alert('Введите корректный 6-значный код из SMS');
     }
   }
 

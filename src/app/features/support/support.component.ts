@@ -35,8 +35,7 @@ export class SupportComponent {
   }
 
   submitSupport() {
-    this.successMsg =
-      'Ваше обращение успешно отправлено! Мы свяжемся с вами по указанным контактам.';
+    this.successMsg = 'Отправлено';
     this.supportData = { subject: '', message: '' };
     this.screenshots = [];
   }
