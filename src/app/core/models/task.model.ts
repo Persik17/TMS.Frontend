@@ -1,17 +1,17 @@
 export interface Task {
   id: string;
   name: string;
-  description: string;
+  description?: string | null;
   boardId: string;
   creatorId: string;
-  assigneeId: string;
-  startDate: string | null;
-  endDate: string | null;
+  assigneeId?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
   actualClosingDate?: string | null;
-  storyPoints: number;
+  storyPoints?: number | null;
   taskTypeId: string;
-  priority: number;
-  severity: number;
+  priority?: number | null;
+  severity?: number | null;
   parentTaskId?: string | null;
   columnId: string;
   creationDate: string;

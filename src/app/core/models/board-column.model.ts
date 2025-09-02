@@ -1,9 +1,10 @@
-import { BoardTask } from "./board-task.model";
+import { BoardTask } from './board-task.model';
 
-export type BoardColumn = {
+export interface BoardColumn {
   id: string;
   title: string;
+  description: string;
   color: string;
   order: number;
   tasks: BoardTask[];
-};
+}

@@ -25,9 +25,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           localStorage.removeItem('token');
           this.router.navigate(['/login']);
         }
-        // Можно добавить обработку других статусов, например 500, 403 и т.д.
-        // Например, показать уведомление:
-        // alert('Ошибка: ' + (error.error?.message || error.statusText));
         return throwError(() => error);
       })
     );
