@@ -10,9 +10,11 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  getCompany(userId: string): Observable<CompanyViewModel> {
+  getCompany(userId: string, companyId: string): Observable<CompanyViewModel> {
     const url = `${this.baseUrl}`;
-    return this.http.get<CompanyViewModel>(url, { params: { userId } });
+    return this.http.get<CompanyViewModel>(url, {
+      params: { userId, companyId },
+    });
   }
 
   getFirstCompany(): Observable<CompanyViewModel | null> {

@@ -62,8 +62,9 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
+    const companyId = localStorage.getItem('companyId') || '';
     if (userId) {
-      this.companyService.getCompany(userId).subscribe({
+      this.companyService.getCompany(userId, companyId).subscribe({
         next: (company) => {
           if (company && company.name) {
             this.companyName = company.name;
