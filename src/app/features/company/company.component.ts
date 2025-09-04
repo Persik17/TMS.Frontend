@@ -23,13 +23,19 @@ export class CompanyComponent implements OnInit {
 
   loadCompany(): void {
     const userId = localStorage.getItem('userId') || '';
+    const companyId = localStorage.getItem('companyId') || '';
 
     if (!userId) {
       this.error = 'Пользователь не найден';
       return;
     }
 
-    this.companyService.getCompany(userId).subscribe({
+    if (!companyId) {
+      this.error = 'Компания не найдена';
+      return;
+    }
+
+    this.companyService.getCompany(userId, companyId).subscribe({
       next: (company) => {
         this.company = company;
       },
