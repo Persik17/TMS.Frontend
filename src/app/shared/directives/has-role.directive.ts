@@ -12,7 +12,7 @@ export class HasRoleDirective {
     this.updateView();
   }
 
-  private userRoles: string[] = ['admin', 'user']; // пример, заменить на реальное получение ролей
+  private userRoles: string[] = ['admin', 'user'];
 
   constructor(private tpl: TemplateRef<any>, private vcr: ViewContainerRef) {}
 

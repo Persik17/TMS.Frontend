@@ -12,20 +12,27 @@
   </div>
   <div class="header-right">
     <a class="profile-username-link" routerLink="/profile">
-      {{ user.username }}
+      {{ user.username || "" }}
     </a>
     <div class="profile-menu-container" [class.open]="menuOpen">
-      <img
-        class="profile-avatar"
-        [src]="user.avatarUrl"
-        alt="Avatar"
+      <div
+        class="profile-avatar initials"
+        *ngIf="userInitials; else noUser"
+        [ngStyle]="{ 'background-color': initialsColor }"
         (click)="toggleMenu($event)"
-      />
+      >
+        {{ userInitials }}
+      </div>
+      <ng-template #noUser>
+        <div class="profile-avatar icon" (click)="toggleMenu($event)">
+          <span class="material-icons">person</span>
+        </div>
+      </ng-template>
       <div class="profile-dropdown" *ngIf="menuOpen">
-        <a class="profile-menu-item" routerLink="/profile">
+        <button class="profile-menu-item" (click)="goToProfile()">
           <span class="material-icons">person</span>
           Мой профиль
-        </a>
+        </button>
         <button class="profile-menu-item logout-btn" (click)="logout()">
           <span class="material-icons">logout</span>
           Выйти

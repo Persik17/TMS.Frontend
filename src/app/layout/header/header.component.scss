@@ -62,7 +62,6 @@
   display: inline-block;
 }
 
-/* Абсолютное центрирование поиска */
 .header-center {
   position: absolute;
   left: 50%;
@@ -189,12 +188,42 @@
   color: #d32f2f;
 }
 
+.profile-avatar.initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1em;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.07);
+  transition: background 0.2s;
+}
+
+.profile-avatar.icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #bdbdbd;
+  color: #fff;
+  font-size: 1.6em;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.07);
+}
+
 .logout-btn:hover {
   background: #fdeaea;
   color: #c62828;
 }
 
-/* Адаптив для поиска и левой части */
 @media (max-width: 900px) {
   .header-center {
     width: 260px;

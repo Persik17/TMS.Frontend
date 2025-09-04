@@ -37,7 +37,6 @@ export class TelegramLoginWidgetComponent implements AfterViewInit {
         script.async = true;
         this.widgetContainer.nativeElement.appendChild(script);
 
-        // Глобальный callback
         (window as any).onTelegramAuth = (user: any) => {
           this.zone.run(() => {
             this.telegramAuth.emit(user);

@@ -18,7 +18,6 @@ export class RelativeDatePipe implements PipeTransform {
     if (day === 1) return 'вчера';
     if (day < 7) return `${day} дн назад`;
 
-    // Возвращаем дату в формате ДД.ММ.ГГГГ
     return date.toLocaleDateString('ru-RU');
   }
 }

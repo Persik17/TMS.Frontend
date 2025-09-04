@@ -1,10 +1,9 @@
-// === Переменные ===
-$profile-max-width: 950px;
-$profile-margin: 48px auto 0 auto;
+$profile-max-width: 900px;
+$profile-margin: 40px auto;
 $profile-bg: #fff;
-$profile-radius: 24px;
-$profile-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.08);
-$profile-padding: 48px 60px 54px 60px;
+$profile-radius: 20px;
+$profile-shadow: 0 2px 24px rgba(0, 0, 0, 0.07);
+$profile-padding: 40px 38px;
 
 $profile-title-size: 2.4rem;
 $profile-title-mb: 38px;
@@ -12,55 +11,37 @@ $profile-title-fw: 800;
 $profile-title-ls: -1.4px;
 $profile-title-align: left;
 
-$tabs-gap: 18px;
-$tabs-mb: 40px;
+$tabs-gap: 22px;
+$tabs-mb: 32px;
 $tabs-border: 2px solid #e4e7ec;
-$tab-fs: 1.13rem;
+$tab-fs: 1.15rem;
 $tab-fw: 600;
-$tab-padding: 13px 32px 13px 20px;
-$tab-radius: 13px 13px 0 0;
+$tab-padding: 12px 28px;
+$tab-radius: 11px 11px 0 0;
 $tab-color: #444;
 $tab-color-active: #1976d2;
 $tab-bg-active: #eaf3ff;
 $tab-fw-active: 700;
 $tab-border-active: 3px solid #1976d2;
 
-$section-mt: 16px;
-$section-title-mb: 18px;
-$section-title-size: 1.21rem;
-$section-title-fw: 700;
-$section-title-color: #1976d2;
-
-$grid-gap: 0 48px;
-$grid-mb: 18px;
-$info-col-gap: 16px;
-$info-row-gap: 12px;
-$info-row-fs: 1.07rem;
-$info-label-width: 152px;
-$info-label-color: #7b8794;
-$info-label-fw: 500;
-$info-label-align: right;
-$info-value-color: #232323;
-$info-value-fw: 600;
-
-$fields-gap: 42px;
-$fields-mb: 10px;
-$field-gap: 8px;
-$field-label-fs: 1.09rem;
-$field-label-color: #666;
+$fields-gap: 24px;
 $field-label-fw: 500;
+$field-label-color: #555;
+$field-input-bg: #f7faff;
+$field-input-radius: 8px;
+$field-input-border: 1px solid #c7d2e3;
+$field-input-padding: 10px 14px;
+$field-input-fs: 1.09rem;
 
 $btn-bg: #1976d2;
 $btn-color: #fff;
-$btn-radius: 9px;
-$btn-fs: 1.08rem;
+$btn-radius: 8px;
+$btn-fs: 1.07rem;
 $btn-fw: 600;
-$btn-padding: 9px 26px;
-$btn-mt: 8px;
+$btn-padding: 12px 34px;
 $btn-shadow: 0 1px 4px 0 rgba(25, 118, 210, 0.08);
 $btn-bg-hover: #1252a7;
 
-// === Основная карточка профиля ===
 .profile-settings-card {
   max-width: $profile-max-width;
   margin: $profile-margin;
@@ -93,7 +74,9 @@ $btn-bg-hover: #1252a7;
       cursor: pointer;
       transition: color 0.2s, background 0.18s;
       position: relative;
-      .tab-icon { margin-right: 7px; }
+      .tab-icon {
+        margin-right: 7px;
+      }
       &.active {
         color: $tab-color-active;
         background: $tab-bg-active;
@@ -103,427 +86,182 @@ $btn-bg-hover: #1252a7;
     }
   }
 
-  .settings-section {
-    margin-top: $section-mt;
-    h3 {
-      margin-bottom: $section-title-mb;
-      font-size: $section-title-size;
-      font-weight: $section-title-fw;
-      color: $section-title-color;
-    }
-    .profile-info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: $grid-gap;
-      margin-bottom: $grid-mb;
-      @media (max-width: 700px) {
-        grid-template-columns: 1fr;
-        gap: 12px 0;
-      }
-    }
-    .profile-info-col {
-      display: flex;
-      flex-direction: column;
-      gap: $info-col-gap;
-    }
-    .info-row {
-      display: flex;
-      gap: $info-row-gap;
-      font-size: $info-row-fs;
-      align-items: flex-start;
-    }
-    .info-label {
-      width: $info-label-width;
-      color: $info-label-color;
-      font-weight: $info-label-fw;
-      flex-shrink: 0;
-      text-align: $info-label-align;
-    }
-    .info-value {
-      color: $info-value-color;
-      font-weight: $info-value-fw;
-      word-break: break-word;
-    }
-    .settings-fields {
-      display: flex;
-      gap: $fields-gap;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: $fields-mb;
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: $field-gap;
-        label {
-          font-size: $field-label-fs;
-          color: $field-label-color;
-          font-weight: $field-label-fw;
-        }
-      }
-    }
-    .primary-btn {
-      background: $btn-bg;
-      color: $btn-color;
-      border: none;
-      border-radius: $btn-radius;
-      font-size: $btn-fs;
-      font-weight: $btn-fw;
-      padding: $btn-padding;
-      cursor: pointer;
-      margin-top: $btn-mt;
-      transition: background 0.16s;
-      box-shadow: $btn-shadow;
-      &:hover {
-        background: $btn-bg-hover;
-      }
-    }
+  .profile-main-section,
+  .profile-system-section,
+  .profile-notif-section,
+  .profile-security-section {
+    margin-top: 20px;
   }
 
-  // Стилизация select
-  .styled-select {
-    appearance: none;
-    background: #f5f7fa url("data:image/svg+xml,%3Csvg fill='none' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7 10 5 5 5-5' stroke='%231976d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 12px center/18px 18px;
-    border: 1.4px solid #b7c2d6;
-    border-radius: 7px;
-    padding: 8px 38px 8px 14px;
-    font-size: 1.09rem;
-    color: #232323;
-    min-width: 130px;
-    outline: none;
-    transition: border 0.18s;
-    &:focus {
-      border: 1.7px solid #1976d2;
-    }
-  }
-
-  // Кастомизация кнопки для file
-  .custom-file-upload {
-    display: inline-block;
-    cursor: pointer;
-    background: #f5f7fa;
-    color: #1976d2;
-    border: 1.4px solid #b7c2d6;
-    border-radius: 7px;
-    padding: 8px 24px;
-    font-size: 1.09rem;
-    font-weight: 600;
-    transition: background 0.18s, color 0.18s, border 0.18s;
-    input[type="file"] { display: none; }
-    &:hover {
-      background: #eaf3ff;
-      color: #1252a7;
-      border: 1.7px solid #1976d2;
-    }
-    span { pointer-events: none; }
-  }
-  .file-name {
-    margin-left: 16px;
-    color: #008866;
-    font-size: 1em;
-    font-weight: 500;
-  }
-
-  // Чекбоксы для оповещений
-  .settings-fields label {
+  .profile-main-grid {
     display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .profile-avatar {
+    flex-shrink: 0;
+    min-width: 84px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    user-select: none;
-    font-size: 1.09rem;
-    input[type="checkbox"] {
-      accent-color: #1976d2;
-      width: 18px;
-      height: 18px;
-      border-radius: 4px;
-      margin: 0 4px 0 0;
+    img {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      box-shadow: 0 1px 8px #aaa2;
+      object-fit: cover;
+      margin-bottom: 12px;
     }
   }
 
-  @media (max-width: 950px) {
+  .profile-fields {
+    display: flex;
+    flex-direction: column;
+    gap: $fields-gap;
+    width: 100%;
+    min-width: 320px;
+    max-width: 420px;
+    position: relative;
+  }
+
+  .fields-table {
+    display: table;
+    width: 100%;
+    border-spacing: 0 16px;
+  }
+  .field-row {
+    display: table-row;
+    width: 100%;
+  }
+  .field-label-cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    padding-right: 22px;
+    font-weight: $field-label-fw;
+    color: $field-label-color;
+    font-size: 1.09rem;
+    width: 110px;
+    min-width: 90px;
+    white-space: nowrap;
+  }
+  .field-input-cell {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    input {
+      background: $field-input-bg;
+      border-radius: $field-input-radius;
+      border: $field-input-border;
+      padding: $field-input-padding;
+      font-size: $field-input-fs;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.18s;
+      &:focus {
+        border-color: #1976d2;
+        background: #fff;
+      }
+      &:disabled {
+        color: #999;
+        background: #f5f7fa;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .profile-save-btn {
+    margin: 36px auto 0 auto;
+    display: block;
+    background: $btn-bg;
+    color: $btn-color;
+    border: none;
+    border-radius: $btn-radius;
+    padding: $btn-padding;
+    cursor: pointer;
+    font-size: $btn-fs;
+    font-weight: $btn-fw;
+    box-shadow: $btn-shadow;
+    transition: background 0.16s;
+    min-width: 220px;
+    text-align: center;
+    &:hover {
+      background: $btn-bg-hover;
+    }
+  }
+
+  .save-result-popup {
+    position: fixed;
+    bottom: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1976d2;
+    color: #fff;
+    padding: 14px 34px;
+    border-radius: 10px;
+    font-size: 1.07rem;
+    font-weight: 500;
+    box-shadow: 0 2px 16px #1976d278;
+    z-index: 60;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    &.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    &.success {
+      background: #1976d2;
+      color: #fff;
+    }
+    &.error {
+      background: #d32f2f;
+      color: #fff;
+    }
+  }
+}
+
+@media (max-width: 950px) {
+  .profile-settings-card {
     max-width: 99vw;
     padding: 16px 2vw;
-    .settings-section .settings-fields {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .settings-section .profile-info-grid {
-      gap: 8px 0;
-    }
-    .settings-section h3 {
-      margin-bottom: 10px;
+    .settings-tabs {
+      flex-wrap: wrap;
+      gap: 12px;
+      button {
+        padding: 10px 14px;
+        font-size: 1rem;
+      }
     }
     h2 {
       font-size: 2rem;
       margin-bottom: 24px;
     }
-  }
-}
-
-// === Вне карточки ===
-.error {
-  color: #d43d3d;
-  text-align: center;
-  margin-top: 32px;
-  font-size: 1.15rem;
-}
-
-.editable {
-  border: 1.2px solid #e0e4ec;
-  border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 1.08rem;
-  margin-left: 0;
-  background: #fafbfc;
-  color: #232323;
-  font-weight: 500;
-  transition: border 0.15s;
-  width: 100%;
-  &:focus {
-    border: 1.4px solid #1976d2;
-    background: #fff;
-  }
-}
-
-// === Безопасность ===
-.security-form {
-  margin-bottom: 22px;
-  .security-fields {
-    display: flex;
-    gap: 22px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    label {
-      display: flex;
+    .profile-main-grid {
       flex-direction: column;
-      font-size: 1.09rem;
-      color: #444;
-      font-weight: 500;
+      align-items: center;
+      gap: 20px;
     }
-    input[type="password"],
-    input[type="email"],
-    input[type="text"] {
-      margin-top: 5px;
-      border: 1.2px solid #e0e4ec;
-      border-radius: 6px;
-      padding: 7px 10px;
-      font-size: 1.08rem;
-      background: #fafbfc;
-      width: 220px;
-      &:focus {
-        border: 1.4px solid #1976d2;
-        background: #fff;
-      }
-    }
-  }
-}
-.sms-confirm {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  label {
-    font-size: 1.09rem;
-    color: #444;
-    font-weight: 500;
-    input[type="text"] {
-      margin-left: 8px;
-      border: 1.2px solid #e0e4ec;
-      border-radius: 6px;
-      padding: 7px 10px;
-      font-size: 1.08rem;
-      background: #fafbfc;
-      width: 120px;
-      &:focus {
-        border: 1.4px solid #1976d2;
-        background: #fff;
-      }
-    }
-  }
-  .primary-btn { margin-top: 0; }
-}
-.security-hint {
-  margin-top: 14px;
-  color: #888;
-  font-size: 0.99rem;
-}
-
-// === Оповещения ===
-.notif-checkboxes-row {
-  display: flex;
-  gap: 32px;
-  margin: 28px 0 18px 0;
-  justify-content: flex-start;
-  align-items: flex-end;
-  flex-wrap: wrap;
-}
-.notif-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.09em;
-  font-weight: 500;
-  background: #f5f7fa;
-  padding: 0.7em 1.3em 0.7em 1em;
-  border-radius: 12px;
-  box-shadow: 0 1px 6px #1976d210;
-  transition: background 0.13s, border 0.13s, box-shadow 0.13s;
-  cursor: pointer;
-  min-width: 160px;
-  input[type="checkbox"] {
-    accent-color: #1976d2;
-    width: 20px;
-    height: 20px;
-    margin-right: 4px;
-  }
-  &:hover {
-    background: #e3f2fd;
-  }
-  .icon {
-    display: inline-block;
-    width: 22px;
-    height: 22px;
-    margin-right: 2px;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  .email {
-    background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="22" width="22" viewBox="0 0 24 24" stroke="%231976d2" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="14" x="2" y="5" rx="3" fill="%23e3eafc" stroke="%231976d2"/><path d="M2.5 6l9.5 8 9.5-8" stroke="%231976d2"/></svg>');
-  }
-  .push {
-    background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="22" width="22" viewBox="0 0 24 24" stroke="%231976d2" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C8.13 3 5 6.13 5 10v4.29l-1.71 1.7A1 1 0 0 0 4 18h16a1 1 0 0 0 .71-1.71L19 14.29V10c0-3.87-3.13-7-7-7z" fill="%23e3eafc"/><path d="M9 21h6" stroke="%231976d2" stroke-linecap="round"/></svg>');
-  }
-  .telegram {
-    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" width="22" height="22" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="%23229ed9"/><path d="M18 7l-2.5 10.5c-.2.9-.8 1.1-1.6.7l-2.2-1.7-1.1 1.1c-.1.1-.3.2-.5.2l.2-2.3L16.5 8.5c.2-.2-.1-.3-.3-.2l-8.2 3.2-2.2-.7c-.5-.2-.5-.5.1-.7l12.8-4.2c.5-.2.9.1.7.8z" fill="white"/></svg>');
-  }
-}
-.notif-checkbox.changed {
-  background: #fff8e1 !important;
-  border: 2px solid #ffb300 !important;
-  box-shadow: 0 0 0 3px #ffe08280 !important;
-  transition: background 0.18s, border 0.18s, box-shadow 0.18s;
-}
-
-// === Настройки фона доски ===
-.board-bg-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  .board-bg-preview {
-    width: 120px;
-    height: 60px;
-    border-radius: 10px;
-    box-shadow: 0 1px 8px #aaa2;
-    margin-bottom: 8px;
-    overflow: hidden;
-    background: repeating-linear-gradient(135deg, #e3eafc 0 20px, #f5f7fa 20px 40px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    img {
+    .profile-fields {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      min-width: 0;
+      max-width: 100%;
+      gap: 18px;
     }
-    .board-bg-color {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
+    .profile-save-btn {
+      min-width: 140px;
+      font-size: 1rem;
+      padding: 10px 20px;
+      margin-top: 28px;
     }
   }
-  .select-bg-btn {
-    margin-top: 4px;
-    width: max-content;
-  }
-  .bg-file-name {
-    font-size: 0.97em;
-    color: #888;
-    margin-top: 2px;
-    margin-bottom: 4px;
-  }
-}
-
-// === Модальное окно выбора фона ===
-.bg-modal {
-  position: fixed;
-  z-index: 200;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  .bg-modal-backdrop {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background: #23232388;
-    z-index: 1;
-  }
-  .bg-modal-content {
-    position: relative;
-    z-index: 2;
-    background: #fff;
-    border-radius: 20px;
-    padding: 32px 36px 24px 36px;
-    min-width: 350px;
-    max-width: 96vw;
-    box-shadow: 0 6px 28px #23232322;
-    h4 { margin-bottom: 18px; }
-    .bg-templates {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 12px;
-      .bg-template {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 1px 8px #aaa2;
-        cursor: pointer;
-        border: 2.5px solid transparent;
-        transition: border 0.15s;
-        width: 65px;
-        height: 40px;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        &.selected {
-          border: 2.5px solid #1976d2;
-        }
-      }
-    }
-    .bg-colors {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-      .bg-color-sample {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: 2.5px solid #eee;
-        cursor: pointer;
-        transition: border 0.14s;
-        &.selected {
-          border: 2.5px solid #1976d2;
-        }
-      }
-    }
-    .bg-upload {
-      margin-bottom: 16px;
-      .custom-file-upload {
-        cursor: pointer;
-        color: #1976d2;
-        font-weight: 600;
-        input[type="file"] { display: none; }
-        span { pointer-events: none; }
-      }
-    }
-    .primary-btn {
-      margin-top: 8px;
-      width: 100%;
-    }
+  .profile-settings-card .save-result-popup {
+    font-size: 0.98rem;
+    padding: 11px 16px;
+    bottom: 15px;
   }
 }

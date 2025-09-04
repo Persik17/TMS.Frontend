@@ -11,21 +11,21 @@ app-root {
 app-header {
   width: 100%;
   z-index: 100;
-  position: relative; /* Важно для z-index */
-  height: 60px; /* Фиксированная высота для расчётов */
+  position: relative;
+  height: 60px;
   display: block;
 }
 
 app-footer {
   width: 100%;
-  height: 48px; /* Фиксированная высота футера */
+  height: 48px;
   display: block;
 }
 
 .main-layout {
   display: flex;
-  height: calc(100vh - 60px - 44px); // header (60px) + footer (44px)
-  margin-top: 60px; /* сдвиг вниз на высоту header */
+  height: calc(100vh - 60px - 44px);
+  margin-top: 60px;
 }
 
 app-sidebar, .main-content {

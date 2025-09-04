@@ -20,7 +20,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Централизованная обработка ошибок
         if (error.status === 401) {
           localStorage.removeItem('token');
           this.router.navigate(['/login']);

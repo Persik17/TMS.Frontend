@@ -1,4 +1,3 @@
-// Dialog container
 ::ng-deep .mat-dialog-container {
   padding: 0 !important;
   width: 95vw !important;
@@ -13,7 +12,6 @@
   justify-content: stretch;
 }
 
-// Main dialog wrapper
 .task-dialog-95 {
   width: 100%;
   height: 100%;
@@ -22,7 +20,6 @@
   background: $dialog-bg;
 }
 
-// Header
 .task-dialog-header {
   background: $dialog-header-bg;
   color: $dialog-header-color;
@@ -78,7 +75,6 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-// Tabs
 .task-tabs {
   display: flex;
   gap: 0.4em;
@@ -104,7 +100,6 @@
   color: $dialog-tabs-active-color;
 }
 
-// Main content
 .task-dialog-main {
   flex: 1 1 auto;
   display: flex;
@@ -119,7 +114,6 @@
   overflow-x: hidden;
 }
 
-// Info section
 .task-dialog-info {
   flex: 1 1 55%;
   min-width: 0;
@@ -168,7 +162,6 @@ input:focus {
   border-color: $input-focus;
 }
 
-// History
 .task-history {
   flex: 1 1 55%;
   min-width: 0;
@@ -199,7 +192,6 @@ input:focus {
   flex: 1;
 }
 
-// Files
 .task-files {
   flex: 1 1 55%;
   min-width: 0;
@@ -240,7 +232,6 @@ input:focus {
   font-size: 1.2em;
 }
 
-// Comments
 .task-dialog-comments {
   flex: 1 1 45%;
   min-width: 0;
@@ -338,7 +329,6 @@ input:focus {
   cursor: not-allowed;
 }
 
-// Media queries
 @media (max-width: 1000px) {
   .task-dialog-main {
     flex-direction: column;
