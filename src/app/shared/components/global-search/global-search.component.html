@@ -18,8 +18,6 @@
         *ngFor="let result of filteredResults"
         (mousedown)="selectResult(result)"
       >
-        <span *ngIf="result.type === 'user'">👤</span>
-        <span *ngIf="result.type === 'board'">📋</span>
         <span *ngIf="result.type === 'task'">✅</span>
         {{ result.name }}
       </li>

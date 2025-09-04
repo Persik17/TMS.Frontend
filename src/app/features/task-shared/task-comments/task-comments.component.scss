@@ -1,0 +1,38 @@
+.comments-list {
+  max-height: 350px;  /* или 300px, как тебе удобно */
+  overflow-y: auto;
+  padding-right: 8px; /* чтобы скроллбар не перекрывал текст */
+}
+
+.comment-card {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment-card-content {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-left: 8px;
+  flex: 1;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.add-comment {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.add-comment textarea {
+  flex: 1;
+  resize: none;
+}

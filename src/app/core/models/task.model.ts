@@ -1,22 +1,23 @@
 export interface Task {
   id: string;
   name: string;
-  description?: string | null;
+  description: string;
   boardId: string;
   creatorId: string;
-  creatorName?: string | null;
-  assigneeId?: string | null;
-  assigneeName?: string | null;
-  startDate?: string | null;
-  endDate?: string | null;
-  actualClosingDate?: string | null;
-  storyPoints?: number | null;
+  creatorName: string;
+  assigneeId: string | null;
+  assigneeName: string;
+  startDate?: string;
+  endDate?: string;
+  actualClosingDate?: string;
+  storyPoints?: number;
   taskTypeId: string;
-  priority?: number | null;
-  severity?: number | null;
-  parentTaskId?: string | null;
+  priority?: number;
+  severity?: number;
+  parentTaskId?: string;
   columnId: string;
   creationDate: string;
-  updateDate?: string | null;
-  deleteDate?: string | null;
+  updateDate?: string;
+  deleteDate?: string;
+  boardName?: string;
 }

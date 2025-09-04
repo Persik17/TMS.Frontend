@@ -1,19 +1,21 @@
 <ng-container *ngIf="comments && comments.length > 0; else noComments">
-  <div *ngFor="let comment of comments" class="comment-card">
-    <img
-      *ngIf="comment.user?.avatarUrl"
-      class="avatar"
-      [src]="comment.user.avatarUrl"
-      [alt]="comment.user.name || comment.authorId"
-    />
-    <div class="comment-card-content">
-      <div class="comment-meta">
-        <span class="author">
-          {{ comment.user?.name || comment.authorId }}
-        </span>
-        <span class="date">{{ comment.creationDate | date : "short" }}</span>
+  <div class="comments-list">
+    <div *ngFor="let comment of comments" class="comment-card">
+      <img
+        *ngIf="comment.user?.avatarUrl"
+        class="avatar"
+        [src]="comment.user.avatarUrl"
+        [alt]="comment.user.name || comment.authorId"
+      />
+      <div class="comment-card-content">
+        <div class="comment-meta">
+          <span class="author">
+            {{ comment.authorName }}
+          </span>
+          <span class="date">{{ comment.creationDate | date : "short" }}</span>
+        </div>
+        <div class="text">{{ comment.text }}</div>
       </div>
-      <div class="text">{{ comment.text }}</div>
     </div>
   </div>
 </ng-container>

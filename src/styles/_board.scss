@@ -11,6 +11,7 @@
   position: relative;
   padding: 0 0 1.2rem 0;
 }
+
 .section {
   padding: 0 0 2rem 0;
 }
@@ -104,6 +105,7 @@ select {
   margin-top: 8px;
   grid-column: span 2;
 }
+
 .board-column-add {
   min-width: $column-add-min-width;
   max-width: $column-add-max-width;
@@ -115,6 +117,7 @@ select {
   justify-content: center;
   margin-top: 24px;
 }
+
 .add-column-btn {
   display: flex;
   align-items: center;
@@ -134,6 +137,7 @@ select {
     color: $btn-blue-hover;
   }
 }
+
 .add-column-form {
   display: flex;
   gap: 0.4em;
@@ -143,6 +147,7 @@ select {
   box-shadow: 0 1.5px 8px #1976d219;
   padding: 0.7em 0.5em 0.7em 0.9em;
 }
+
 .add-col-input,
 .edit-col-input {
   font-size: 1em;
@@ -156,6 +161,7 @@ select {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .add-col-color,
 .edit-col-color {
   width: 32px;
@@ -163,7 +169,23 @@ select {
   border: none;
   border-radius: 6px;
   background: transparent;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-left: 6px;
 }
+
+.add-col-color + .color-preview,
+.edit-col-color + .color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #1976d2;
+  box-shadow: 0 1px 2px #0002;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 .add-btn,
 .cancel-btn,
 .edit-col-btn,
@@ -190,6 +212,7 @@ select {
     background: $btn-neutral-hover;
   }
 }
+
 .board-column-header[cdkDragHandle] {
   cursor: grab;
   display: flex;
@@ -206,30 +229,93 @@ select {
     cursor: grabbing;
   }
 }
+
 .board-column-title {
   flex: 1 1 0;
   font-weight: bold;
   font-size: 1.15rem;
   letter-spacing: 0.5px;
 }
+
 .task-count {
   color: $task-header-color;
   font-weight: normal;
   font-size: 1rem;
   margin-left: 0.5em;
 }
+
+// --- EDIT COLUMN FORM ---
+
 .edit-column-form {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto auto;
+  gap: 0.4em 0.7em;
   margin: 0.7em 1.3em 0.4em 1.3em;
   max-width: 100%;
   overflow: hidden;
+  background: $input-bg;
+  border-radius: 10px;
+  box-shadow: 0 1.5px 8px #1976d219;
+  padding: 0.7em 0.8em 0.7em 0.8em;
+  align-items: center;
 }
+
+.edit-col-input {
+  grid-column: 1 / 2;
+  grid-row: 1;
+}
+
+.edit-col-color {
+  grid-column: 2 / 3;
+  grid-row: 1;
+}
+
+.color-preview {
+  grid-column: 2 / 3;
+  grid-row: 1;
+  margin-left: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #1976d2;
+  box-shadow: 0 1px 2px #0002;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.edit-col-desc {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  min-height: 32px;
+  max-height: 80px;
+  resize: vertical;
+  font-size: 1em;
+  padding: $input-padding;
+  border-radius: $input-radius;
+  border: 1px solid $input-border;
+  box-sizing: border-box;
+  margin-top: 0.4em;
+}
+
+.edit-col-btn {
+  grid-column: 3 / 4;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.cancel-btn {
+  grid-column: 4 / 5;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+// --- END EDIT COLUMN FORM ---
+
 .board-tasks-list {
   flex: 1 1 0;
   padding: 0 1.3rem;
 }
+
 .task-card {
   background: $task-card-bg;
   border-radius: $task-card-radius;

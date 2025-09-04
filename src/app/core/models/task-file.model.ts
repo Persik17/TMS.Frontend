@@ -1,6 +1,9 @@
 export interface TaskFile {
-  name: string;
-  url: string;
-  size?: string;
-  date?: string;
+  id: string;
+  taskId: string;
+  fileName: string;
+  contentType: string;
+  size?: number;
+  creationDate: string;
+  url?: string;
 }

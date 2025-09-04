@@ -1,0 +1,146 @@
+.board-columns-outer {
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.board-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: flex-start;
+  min-height: 400px;
+}
+
+.board-column-add {
+  min-width: 260px;
+  max-width: 300px;
+  margin-top: 8px;
+}
+
+.add-column-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 3px #0002;
+  transition: background 0.2s;
+  margin-top: 12px;
+}
+
+.add-column-btn:hover {
+  background: #1565c0;
+}
+
+.add-column-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 12px 12px 12px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 12px #0001;
+  min-width: 230px;
+  max-width: 300px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.color-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.color-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.add-col-input,
+.add-col-desc {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  padding: 8px 10px;
+  font-size: 15px;
+  background: #fafbfc;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.add-col-input:focus,
+.add-col-desc:focus {
+  border-color: #1976d2;
+}
+
+.add-col-color {
+  width: 32px;
+  height: 32px;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #1976d2;
+  box-shadow: 0 1px 2px #0002;
+  margin-left: 2px;
+  display: inline-block;
+}
+
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.add-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 18px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px #0002;
+  transition: background 0.2s;
+}
+
+.add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: none;
+  border: none;
+  color: #1976d2;
+  font-size: 22px;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: background 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e3f2fd;
+}

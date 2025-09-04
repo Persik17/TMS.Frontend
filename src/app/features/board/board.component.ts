@@ -121,9 +121,7 @@ export class BoardComponent implements OnInit, OnDestroy {
       maxWidth: '98vw',
       height: '90vh',
       maxHeight: '98vh',
-      data: {
-        task: task,
-      },
+      data: { task },
       autoFocus: false,
       restoreFocus: false,
       panelClass: 'task-dialog-panel',
@@ -142,6 +140,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         return '#bdbdbd';
     }
   }
+
   getPriorityLabel(priority: number): string {
     switch (priority) {
       case 1:
@@ -161,12 +160,14 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.editColumnColor = col.color;
     this.editColumnDescription = col.description ?? '';
   }
+
   cancelEditColumn() {
     this.editingColumnId = null;
     this.editColumnTitle = '';
     this.editColumnColor = '#e3f2fd';
     this.editColumnDescription = '';
   }
+
   saveEditColumn(data: {
     id: string;
     title: string;
@@ -286,8 +287,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.newColumnTitle = '';
     this.newColumnDescription = '';
     this.newColumnColor = '#e3f2fd';
-    const input = document.querySelector<HTMLInputElement>('.add-col-input');
-    queueMicrotask(() => input?.focus());
+    queueMicrotask(() => {
+      const input = document.querySelector<HTMLInputElement>('.add-col-input');
+      input?.focus();
+    });
   }
 
   cancelAddColumn() {

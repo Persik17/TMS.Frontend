@@ -1,14 +1,24 @@
 <div class="task-files">
   <div *ngFor="let file of attachedFiles" class="file-row">
     <span class="file-icon material-icons">attach_file</span>
-    <a [href]="file.url" target="_blank">{{ file.name }}</a>
-    <span class="file-size">{{ file.size }}</span>
-    <span class="file-date">{{ file.date }}</span>
+    <a [href]="file.url" target="_blank">{{ file.fileName }}</a>
+    <span class="file-size">{{ formatSize(file.size) }}</span>
+    <span class="file-date">{{ file.creationDate | date : "shortDate" }}</span>
+    <button class="delete-btn" (click)="deleteFile(file.id)">
+      <span class="material-icons">delete</span>
+    </button>
   </div>
   <div class="file-upload">
-    <input type="file" id="fileUpload" hidden />
+    <input
+      type="file"
+      id="fileUpload"
+      hidden
+      (change)="onFileChange($event)"
+      [disabled]="uploading"
+    />
     <label for="fileUpload" class="upload-btn">
       <span class="material-icons">cloud_upload</span> Прикрепить файл
     </label>
+    <span *ngIf="uploading">Загрузка...</span>
   </div>
 </div>

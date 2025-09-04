@@ -120,7 +120,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/auth/login']);
   }
 
-  onGlobalSelect(event: { type: 'user' | 'board' | 'task'; id: string }) {
+  onGlobalSelect(event: { type: 'user' | 'board' | 'task'; id?: string }) {
+    if (!event.id) return;
     if (event.type === 'user') {
       this.router.navigate(['/users', event.id]);
     } else if (event.type === 'board') {

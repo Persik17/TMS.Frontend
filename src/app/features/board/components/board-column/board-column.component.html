@@ -39,36 +39,65 @@
       </button>
     </ng-container>
     <ng-template #editForm>
-      <input
-        type="text"
-        [(ngModel)]="editTitle"
-        maxlength="32"
-        placeholder="Название столбца"
-      />
-      <input type="color" [(ngModel)]="editColor" />
-      <textarea
-        [(ngModel)]="editDescription"
-        rows="3"
-        maxlength="256"
-        class="edit-col-desc"
-        placeholder="Описание столбца"
-      ></textarea>
-      <button
-        (click)="
+      <form
+        class="edit-col-form"
+        (submit)="
           saveEditColumn.emit({
             id: column.id,
             title: editTitle,
             color: editColor,
             description: editDescription
-          })
+          });
+          $event.preventDefault()
         "
-        title="Сохранить"
       >
-        <span class="material-icons">done</span>
-      </button>
-      <button (click)="cancelEditColumn.emit()" title="Отмена">
-        <span class="material-icons">close</span>
-      </button>
+        <div class="edit-form-row">
+          <input
+            type="text"
+            [(ngModel)]="editTitle"
+            maxlength="32"
+            placeholder="Название столбца"
+            name="editTitle"
+            class="edit-col-input"
+            required
+          />
+        </div>
+        <div class="edit-form-row color-row">
+          <label class="color-label">
+            Цвет:
+            <input
+              type="color"
+              [(ngModel)]="editColor"
+              name="editColor"
+              class="edit-col-color"
+              required
+            />
+          </label>
+        </div>
+        <div class="edit-form-row">
+          <textarea
+            [(ngModel)]="editDescription"
+            rows="3"
+            maxlength="256"
+            class="edit-col-desc"
+            name="editDescription"
+            placeholder="Описание столбца"
+          ></textarea>
+        </div>
+        <div class="edit-form-row btn-row">
+          <button type="submit" class="save-btn" title="Сохранить">
+            <span class="material-icons">done</span>
+          </button>
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="cancelEditColumn.emit()"
+            title="Отмена"
+          >
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+      </form>
     </ng-template>
   </div>
   <div

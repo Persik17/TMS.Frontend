@@ -6,7 +6,11 @@ import { QuillModule } from 'ngx-quill';
 import { TaskCommentsComponent } from '../../../task-shared/task-comments/task-comments.component';
 import { TaskHistoryTabComponent } from '../../../task-shared/task-history-tab/task-history-tab.component';
 import { TaskFilesTabComponent } from '../../../task-shared/task-files-tab/task-files-tab.component';
-import { TaskService } from '../../../../core/services/task.service';
+import {
+  TaskService,
+  TaskUpdateDto,
+} from '../../../../core/services/task.service';
+import { Task } from '../../../../core/models/task.model';
 
 @Component({
   selector: 'app-task-dialog',
@@ -24,7 +28,8 @@ import { TaskService } from '../../../../core/services/task.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class TaskDialogComponent implements OnInit {
-  task: any = null;
+  task: Task | null = null;
+  userId: string = '';
   comments: any[] = [];
   changeHistory: any[] = [];
   attachedFiles: any[] = [];
@@ -46,10 +51,10 @@ export class TaskDialogComponent implements OnInit {
   ngOnInit() {
     const boardId = this.data.boardId || this.data.task?.boardId;
     const taskId = this.data.taskId || this.data.task?.id;
-    const userId = localStorage.getItem('userId') || '';
+    this.userId = localStorage.getItem('userId') || '';
 
-    if (taskId && userId) {
-      this.taskService.getTask(taskId, userId).subscribe({
+    if (taskId && this.userId) {
+      this.taskService.getTask(taskId, this.userId).subscribe({
         next: (task) => {
           this.task = { ...task };
         },
@@ -58,7 +63,7 @@ export class TaskDialogComponent implements OnInit {
         },
       });
 
-      this.loadComments(taskId, userId);
+      this.loadComments(taskId, this.userId);
     }
 
     this.changeHistory = this.data.changeHistory || [];
@@ -92,38 +97,45 @@ export class TaskDialogComponent implements OnInit {
     }, 60);
   }
 
-  saveEdit(field: string) {
-    if (!this.task) return;
-    const id = this.task.id;
-    const userId = localStorage.getItem('userId') || '';
-    (this.task as any)[field] = this.editValue;
-    this.taskService
-      .updateTask(id, { [field]: this.editValue }, userId)
-      .subscribe();
-    this.editingField = null;
-    this.editValue = '';
-    this.hoveredField = null;
-  }
-
   cancelEdit() {
     this.editingField = null;
     this.editValue = '';
     this.hoveredField = null;
   }
 
-  autoSave(field: string) {
+  saveEdit(field: keyof TaskUpdateDto) {
     if (!this.task) return;
     const id = this.task.id;
-    const userId = localStorage.getItem('userId') || '';
-    if (this.editTimer) clearTimeout(this.editTimer);
-    this.editTimer = setTimeout(() => {
-      (this.task as any)[field] = this.editValue;
-      this.taskService
-        .updateTask(id, { [field]: this.editValue }, userId)
-        .subscribe();
-      this.editingField = null;
-      this.editValue = '';
-    }, 700);
+    const userId = this.userId;
+
+    const update: TaskUpdateDto = {
+      id,
+      name: this.task.name,
+    };
+
+    if (field === 'name') {
+      update.name = this.editValue;
+    }
+
+    if (field === 'description' && this.editValue !== undefined)
+      update.description = this.editValue;
+    if (field === 'assigneeId' && this.editValue)
+      update.assigneeId = this.editValue;
+    if (field === 'storyPoints' && this.editValue !== undefined)
+      update.storyPoints = Number(this.editValue);
+    if (field === 'priority' && this.editValue !== undefined)
+      update.priority = Number(this.editValue);
+    if (field === 'severity' && this.editValue !== undefined)
+      update.severity = Number(this.editValue);
+
+    this.taskService.updateTask(id, update, userId).subscribe({
+      next: () => {
+        (this.task as any)[field] = update[field];
+        this.editingField = null;
+        this.editValue = '';
+        this.hoveredField = null;
+      },
+    });
   }
 
   addComment() {

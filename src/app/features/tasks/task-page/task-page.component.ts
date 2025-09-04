@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TaskService } from '../../../core/services/task.service';
+import {
+  TaskService,
+  TaskUpdateDto,
+} from '../../../core/services/task.service';
 import { Task } from '../../../core/models/task.model';
 import { Comment } from '../../../core/models/comment.model';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -11,6 +14,7 @@ import { TaskMainTabComponent } from '../../task-shared/task-main-tab/task-main-
 import { TaskHistoryTabComponent } from '../../task-shared/task-history-tab/task-history-tab.component';
 import { TaskFilesTabComponent } from '../../task-shared/task-files-tab/task-files-tab.component';
 import { TaskCommentsComponent } from '../../task-shared/task-comments/task-comments.component';
+import { TaskFile } from '../../../core/models/task-file.model';
 
 @Component({
   selector: 'app-task-page',
@@ -41,8 +45,7 @@ export class TaskPageComponent implements OnInit {
   editTimer?: any;
 
   changeHistory = [];
-  attachedFiles = [];
-
+  attachedFiles: TaskFile[] = [];
   error: string | null = null;
   userId: string = '';
   taskId: string = '';
@@ -78,10 +81,22 @@ export class TaskPageComponent implements OnInit {
         this.task = task;
         this.loading = false;
         this.loadComments(this.taskId, this.userId);
+        this.loadFiles(this.taskId, this.userId);
       },
       error: () => {
         this.error = 'Задача не найдена';
         this.loading = false;
+      },
+    });
+  }
+
+  loadFiles(taskId: string, userId: string) {
+    this.taskService.getTaskFiles(taskId, userId).subscribe({
+      next: (files) => {
+        this.attachedFiles = files;
+      },
+      error: () => {
+        this.attachedFiles = [];
       },
     });
   }
@@ -151,16 +166,39 @@ export class TaskPageComponent implements OnInit {
     }, 60);
   }
 
-  saveEdit(field: string) {
+  saveEdit(field: keyof TaskUpdateDto) {
     if (!this.task) return;
     const id = this.task.id;
-    (this.task as any)[field] = this.editValue;
-    this.taskService
-      .updateTask(id, { [field]: this.editValue }, this.userId)
-      .subscribe();
-    this.editingField = null;
-    this.editValue = '';
-    this.hoveredField = null;
+    const userId = this.userId;
+
+    const update: TaskUpdateDto = {
+      id,
+      name: this.task.name,
+    };
+
+    if (field === 'name') {
+      update.name = this.editValue;
+    }
+
+    if (field === 'description' && this.editValue !== undefined)
+      update.description = this.editValue;
+    if (field === 'assigneeId' && this.editValue)
+      update.assigneeId = this.editValue;
+    if (field === 'storyPoints' && this.editValue !== undefined)
+      update.storyPoints = Number(this.editValue);
+    if (field === 'priority' && this.editValue !== undefined)
+      update.priority = Number(this.editValue);
+    if (field === 'severity' && this.editValue !== undefined)
+      update.severity = Number(this.editValue);
+
+    this.taskService.updateTask(id, update, userId).subscribe({
+      next: () => {
+        (this.task as any)[field] = update[field];
+        this.editingField = null;
+        this.editValue = '';
+        this.hoveredField = null;
+      },
+    });
   }
 
   cancelEdit() {
@@ -169,17 +207,54 @@ export class TaskPageComponent implements OnInit {
     this.hoveredField = null;
   }
 
-  autoSave(field: string) {
+  autoSave(field: keyof TaskUpdateDto) {
     if (!this.task) return;
     const id = this.task.id;
+    if (!id) return;
+
     if (this.editTimer) clearTimeout(this.editTimer);
     this.editTimer = setTimeout(() => {
-      (this.task as any)[field] = this.editValue;
-      this.taskService
-        .updateTask(id, { [field]: this.editValue }, this.userId)
-        .subscribe();
-      this.editingField = null;
-      this.editValue = '';
+      let newName = this.task?.name ?? '';
+      if (field === 'name') {
+        newName = this.editValue;
+      }
+
+      const update: TaskUpdateDto = { id, name: newName };
+
+      if (field === 'assigneeId') {
+        if (
+          this.editValue !== null &&
+          this.editValue !== '' &&
+          typeof this.editValue === 'string'
+        ) {
+          update.assigneeId = this.editValue;
+        }
+      } else if (
+        field === 'storyPoints' ||
+        field === 'priority' ||
+        field === 'severity'
+      ) {
+        if (this.editValue !== null && this.editValue !== '') {
+          update[field] = Number(this.editValue);
+        }
+      } else if (field !== 'name') {
+        update[field] = this.editValue;
+      }
+
+      this.taskService.updateTask(id, update, this.userId).subscribe({
+        next: () => {
+          if (update[field] !== undefined) {
+            (this.task as any)[field] = update[field];
+          } else if (field === 'assigneeId') {
+            (this.task as any).assigneeId = null;
+          }
+          if (field === 'name') {
+            this.task!.name = newName;
+          }
+          this.editingField = null;
+          this.editValue = '';
+        },
+      });
     }, 700);
   }
 }

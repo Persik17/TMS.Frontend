@@ -39,6 +39,7 @@
         (columnDragEnded)="onColumnDragEnded()"
         (deleteColumn)="deleteColumn($event)"
       ></app-board-column>
+
       <div class="board-column board-column-add">
         <ng-container *ngIf="!addingColumn; else addColForm">
           <button
@@ -55,48 +56,59 @@
             (ngSubmit)="addColumn()"
             autocomplete="off"
           >
-            <input
-              class="add-col-input"
-              type="text"
-              [(ngModel)]="newColumnTitle"
-              name="newColumnTitle"
-              maxlength="32"
-              required
-              placeholder="Название столбца"
-              autofocus
-            />
-            <textarea
-              class="add-col-desc"
-              [(ngModel)]="newColumnDescription"
-              name="newColumnDescription"
-              rows="3"
-              maxlength="256"
-              required
-              placeholder="Описание столбца"
-            ></textarea>
-            <input
-              class="add-col-color"
-              type="color"
-              [(ngModel)]="newColumnColor"
-              name="newColumnColor"
-              required
-            />
-            <button
-              class="add-btn"
-              type="submit"
-              [disabled]="
-                !newColumnTitle.trim() || !newColumnDescription.trim()
-              "
-            >
-              +
-            </button>
-            <button
-              class="cancel-btn"
-              type="button"
-              (click)="cancelAddColumn()"
-            >
-              ×
-            </button>
+            <div class="form-row">
+              <input
+                class="add-col-input"
+                type="text"
+                [(ngModel)]="newColumnTitle"
+                name="newColumnTitle"
+                maxlength="32"
+                required
+                placeholder="Название столбца"
+                autofocus
+              />
+            </div>
+            <div class="form-row">
+              <textarea
+                class="add-col-desc"
+                [(ngModel)]="newColumnDescription"
+                name="newColumnDescription"
+                rows="3"
+                maxlength="256"
+                required
+                placeholder="Описание столбца"
+              ></textarea>
+            </div>
+            <div class="form-row color-row">
+              <label class="color-label">
+                Цвет:
+                <input
+                  class="add-col-color"
+                  type="color"
+                  [(ngModel)]="newColumnColor"
+                  name="newColumnColor"
+                  required
+                />
+              </label>
+            </div>
+            <div class="form-row btn-row">
+              <button
+                class="add-btn"
+                type="submit"
+                [disabled]="
+                  !newColumnTitle.trim() || !newColumnDescription.trim()
+                "
+              >
+                +
+              </button>
+              <button
+                class="cancel-btn"
+                type="button"
+                (click)="cancelAddColumn()"
+              >
+                ×
+              </button>
+            </div>
           </form>
         </ng-template>
       </div>

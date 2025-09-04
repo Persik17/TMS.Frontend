@@ -7,9 +7,10 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 type SearchResult = {
-  type: 'user' | 'board' | 'task';
+  type: 'task';
   name: string;
   id: string;
 };
@@ -23,7 +24,6 @@ type SearchResult = {
 })
 export class GlobalSearchComponent {
   query = '';
-  results: SearchResult[] = [];
   filteredResults: SearchResult[] = [];
   showDropdown = false;
   isLoading = false;
@@ -32,7 +32,7 @@ export class GlobalSearchComponent {
 
   private debounceTimer: number | undefined;
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef, private http: HttpClient) {}
 
   onSearch() {
     if (this.debounceTimer) window.clearTimeout(this.debounceTimer);
@@ -40,7 +40,7 @@ export class GlobalSearchComponent {
     this.showDropdown = !!this.query;
     this.debounceTimer = window.setTimeout(() => {
       this.doSearch();
-    }, 2000);
+    }, 600);
   }
 
   doSearch() {
@@ -50,13 +50,33 @@ export class GlobalSearchComponent {
       this.isLoading = false;
       return;
     }
-    this.filteredResults = this.results.filter((item) =>
-      item.name.toLowerCase().includes(this.query.toLowerCase())
-    );
-    this.isLoading = false;
+    const userId = localStorage.getItem('userId');
+    const companyId = localStorage.getItem('companyId');
+    this.http
+      .get<any[]>(`/api/companies/${companyId}/boards/search-tasks`, {
+        params: {
+          query: this.query,
+          userId: userId || '',
+        },
+      })
+      .subscribe({
+        next: (data) => {
+          this.filteredResults = data.map((item) => ({
+            type: item.type,
+            name: item.name,
+            id: item.id,
+          }));
+          this.isLoading = false;
+        },
+        error: () => {
+          this.filteredResults = [];
+          this.isLoading = false;
+        },
+      });
   }
 
   selectResult(result: SearchResult) {
+    if (!result.id) return;
     this.select.emit(result);
     this.query = '';
     this.filteredResults = [];

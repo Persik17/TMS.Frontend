@@ -1,0 +1,144 @@
+$input-bg: #fff;
+$input-border: #bbb;
+$input-radius: 6px;
+$input-padding: 5px 9px;
+$btn-blue: #1976d2;
+$btn-blue-hover: #0d47a1;
+
+
+.edit-col-form,
+.edit-column-form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 0.7em 1em 0.4em 1em;
+  background: $input-bg;
+  border-radius: 10px;
+  box-shadow: 0 1.5px 8px #1976d219;
+  padding: 0.7em 0.8em 0.7em 0.8em;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.edit-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.edit-form-row.color-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.2em;
+}
+
+.color-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.97em;
+  font-weight: 500;
+}
+
+.edit-col-input {
+  font-size: 0.98em;
+  padding: $input-padding;
+  border-radius: $input-radius;
+  border: 1px solid $input-border;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  font-weight: 600;
+  min-height: 28px;
+  max-width: 100%;
+}
+
+.edit-col-desc {
+  min-height: 32px;
+  max-height: 80px;
+  resize: vertical;
+  font-size: 0.98em;
+  padding: $input-padding;
+  border-radius: $input-radius;
+  border: 1px solid $input-border;
+  box-sizing: border-box;
+  width: 100%;
+  background: #fff;
+  font-weight: 500;
+}
+
+.edit-col-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid $btn-blue;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 1px 6px #1976d249;
+  transition: border-color 0.2s, background 0.2s;
+  &:hover {
+    border-color: $btn-blue-hover;
+    background: #e3f2fd;
+  }
+}
+
+.color-label .edit-col-color {
+  margin-left: 0px;
+}
+
+.color-label .color-preview {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid $btn-blue;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: middle;
+  background: inherit;
+  box-shadow: 0 1px 2px #0002;
+}
+
+.btn-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-top: 2px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.save-btn,
+.cancel-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  font-size: 1.04em;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
+.save-btn {
+  background: $btn-blue;
+  color: #fff;
+  border: none;
+  transition: background 0.15s;
+  font-size: 1.1em;
+  &:hover {
+    background: $btn-blue-hover;
+  }
+}
+
+.cancel-btn {
+  background: none;
+  color: $btn-blue;
+  border: none;
+  font-size: 1.1em;
+  &:hover {
+    background: #e3f2fd;
+    color: $btn-blue-hover;
+  }
+}
