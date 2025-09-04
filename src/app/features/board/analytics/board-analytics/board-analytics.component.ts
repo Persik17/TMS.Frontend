@@ -1,8 +1,26 @@
-import { Component, Input } from '@angular/core';
-import { BoardChartConfig } from '../../../../core/models/chart.model';
-import { ChartData, ChartConfiguration } from 'chart.js';
+import { Component, Input, OnInit } from '@angular/core';
+import {
+  BoardChartConfig,
+  ChartType,
+} from '../../../../core/models/chart.model';
+import { ChartConfiguration, ChartData } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
+import { BoardService } from '../../../../core/services/board.service';
+
+type VelocityPoint = { sprintName: string; completedStoryPoints: number };
+type BurnDownPoint = {
+  date: string;
+  remainingTasks: number;
+  idealTasks: number;
+};
+type CfdPoint = { date: string; columnTaskCounts: Record<string, number> };
+
+interface BoardAnalyticsDto {
+  velocity: VelocityPoint[];
+  burndown: BurnDownPoint[];
+  cfd: CfdPoint[];
+}
 
 @Component({
   selector: 'app-board-analytics',
@@ -11,8 +29,9 @@ import { BaseChartDirective } from 'ng2-charts';
   templateUrl: './board-analytics.component.html',
   styleUrls: ['./board-analytics.component.scss'],
 })
-export class BoardAnalyticsComponent {
-  @Input() columns: { title: string; color: string; tasks: { id: string }[] }[] = [];
+export class BoardAnalyticsComponent implements OnInit {
+  @Input() companyId!: string;
+  @Input() boardId!: string;
 
   chartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -20,31 +39,67 @@ export class BoardAnalyticsComponent {
     scales: { x: {}, y: { beginAtZero: true } },
   };
 
-  velocityData: ChartData<'bar'> = {
-    labels: ['Спринт 1', 'Спринт 2', 'Спринт 3', 'Спринт 4'],
+  velocityData: ChartData<'bar'> = { labels: [], datasets: [] };
+  burndownData: ChartData<'line'> = { labels: [], datasets: [] };
+  cfdData: ChartData<'bar'> = { labels: [], datasets: [] };
+
+  loading = true;
+  error = '';
+
+  constructor(private boardService: BoardService) {}
+
+  ngOnInit() {
+    this.loading = true;
+    this.boardService
+      .getBoardAnalytics(this.companyId, this.boardId)
+      .subscribe({
+        next: (analytics: BoardAnalyticsDto) => {
+          this.velocityData = convertVelocityToChartData(analytics.velocity);
+          this.burndownData = convertBurnDownToChartData(analytics.burndown);
+          this.cfdData = convertCFDToChartData(analytics.cfd);
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Ошибка загрузки аналитики';
+          this.loading = false;
+        },
+      });
+  }
+}
+
+function convertVelocityToChartData(
+  velocity: VelocityPoint[]
+): ChartData<'bar'> {
+  return {
+    labels: velocity.map((v) => v.sprintName),
     datasets: [
       {
         label: 'Завершено SP',
-        data: [12, 17, 14, 20],
+        data: velocity.map((v) => v.completedStoryPoints),
         backgroundColor: '#1976d2',
       },
     ],
   };
+}
 
-  burndownData: ChartData<'line'> = {
-    labels: ['01.06', '02.06', '03.06', '04.06', '05.06', '06.06', '07.06'],
+function convertBurnDownToChartData(
+  burndown: BurnDownPoint[] | undefined
+): ChartData<'line'> {
+  const safeData = burndown ?? [];
+  return {
+    labels: safeData.map((b) => formatDate(b.date)),
     datasets: [
       {
         label: 'Оставшиеся задачи',
-        data: [15, 12, 10, 7, 4, 1, 0],
+        data: safeData.map((b) => b.remainingTasks),
         borderColor: '#1976d2',
-        backgroundColor: 'rgba(25, 118, 210, 0.05)',
+        backgroundColor: 'rgba(25, 118, 210, 0.07)',
         fill: false,
         tension: 0.3,
       },
       {
         label: 'Идеальный спуск',
-        data: [15, 13, 11, 9, 6, 3, 0],
+        data: safeData.map((b) => b.idealTasks),
         borderDash: [5, 5],
         borderColor: '#aaa',
         fill: false,
@@ -52,27 +107,36 @@ export class BoardAnalyticsComponent {
       },
     ],
   };
+}
 
-  get cfdData(): ChartData<'bar'> {
-    const days = [
-      '01.06',
-      '02.06',
-      '03.06',
-      '04.06',
-      '05.06',
-      '06.06',
-      '07.06',
-    ];
-    return {
-      labels: days,
-      datasets: this.columns.map((col) => ({
-        label: col.title,
-        data: days.map((_, i) =>
-          Math.round(col.tasks.length * (i / (days.length - 1)))
-        ),
-        backgroundColor: col.color,
-        stack: 'stack-0',
-      })),
-    };
-  }
+function convertCFDToChartData(cfd: CfdPoint[]): ChartData<'bar'> {
+  const labels = cfd.map((p) => formatDate(p.date));
+  const columnNames = Object.keys(cfd[0]?.columnTaskCounts ?? {});
+  return {
+    labels,
+    datasets: columnNames.map((colName, idx) => ({
+      label: colName,
+      data: cfd.map((point) => point.columnTaskCounts[colName] ?? 0),
+      backgroundColor: getColor(idx),
+      stack: 'stack-0',
+    })),
+  };
+}
+
+function formatDate(date: string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+}
+
+function getColor(idx: number): string {
+  const colors = [
+    '#1976d2',
+    '#00bcd4',
+    '#4caf50',
+    '#ff9800',
+    '#e91e63',
+    '#9c27b0',
+    '#795548',
+  ];
+  return colors[idx % colors.length];
 }

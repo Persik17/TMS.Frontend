@@ -5,4 +5,6 @@ export const environment = {
   companyApi: 'https://localhost:7087/api/companies',
   userApi: 'https://localhost:7087/api/user',
   registerApi: 'https://localhost:7087/api/registration',
+  companyInfoApi: 'https://localhost:7087/api/company/info',
+  notificationSettingsApi: 'https://localhost:7087/api/notificationsetting',
 };

@@ -21,7 +21,6 @@ export class LicenseComponent {
         'Нет интеграции с Telegram',
         'Базовые уведомления на email',
       ],
-      // payUrl не нужен
     },
     {
       name: 'Basic',

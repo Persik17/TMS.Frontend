@@ -19,7 +19,7 @@ export class BoardsComponent implements OnInit {
   filterPrivacy: '' | 'private' | 'public' = '';
 
   creatingBoard = false;
-  isCreatingBoard = false; // блокировка спама
+  isCreatingBoard = false;
   newBoardName = '';
   newBoardPrivacy: 'private' | 'public' = 'private';
   loading = true;

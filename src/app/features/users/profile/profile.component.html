@@ -7,39 +7,26 @@
     <button [class.active]="tab === 'system'" (click)="tab = 'system'">
       <span class="tab-icon">🖥️</span> Системные
     </button>
-    <button [class.active]="tab === 'notif'" (click)="tab = 'notif'">
-      <span class="tab-icon">🔔</span> Оповещения
-    </button>
     <button [class.active]="tab === 'security'" (click)="tab = 'security'">
       <span class="tab-icon">🔒</span> Безопасность
     </button>
   </nav>
 
   <app-profile-info-tab
-    *ngIf="tab === 'info'"
+    *ngIf="tab === 'info' && user"
     [user]="user"
     (saveProfile)="saveProfile()"
   ></app-profile-info-tab>
 
   <app-profile-system-tab
-    *ngIf="tab === 'system'"
+    *ngIf="tab === 'system' && systemSettings"
     [systemSettings]="systemSettings"
     [bgModalOpen]="bgModalOpen"
-    [bgTemplates]="bgTemplates"
-    [bgColors]="bgColors"
     (openBgModal)="openBgModal()"
     (closeBgModal)="closeBgModal()"
     (selectTemplateBg)="selectTemplateBg($event)"
-    (selectColorBg)="selectColorBg($event)"
-    (boardBgUpload)="onBoardBgUpload($event)"
+    (saveSystemSettings)="onSaveSystemSettings($event)"
   ></app-profile-system-tab>
-
-  <app-profile-notif-tab
-    *ngIf="tab === 'notif' && user.notificationSettings"
-    [userNotif]="user.notificationSettings"
-    [originalNotif]="originalNotif"
-    (saveNotificationSettings)="saveNotificationSettings()"
-  ></app-profile-notif-tab>
 
   <app-profile-security-tab
     *ngIf="tab === 'security'"

@@ -57,14 +57,12 @@ export class DashboardSettingsComponent {
     members: 'Участники',
   };
 
-  // Контекстное меню
   permissionMenuShow = false;
   permissionMenuLeft = 0;
   permissionMenuTop = 0;
   permissionMenuUser: BoardUser | null = null;
   permissionMenuField: keyof UserPermissions | null = null;
 
-  // Для отслеживания изменений
   originalPermissions: Record<number, UserPermissions> = {};
   permissionDiffs: PermissionsDiff[] = [];
   hasMatrixChanges = false;
@@ -222,9 +220,6 @@ export class DashboardSettingsComponent {
   }
 
   saveMatrixChanges() {
-    // Здесь вы отправляете permissionDiffs на сервер пачкой
-    // Пример: this.http.post('/api/permissions/update', this.permissionDiffs).subscribe(...)
-    // После успешного сохранения:
     this.saveOriginalPermissions();
   }
 

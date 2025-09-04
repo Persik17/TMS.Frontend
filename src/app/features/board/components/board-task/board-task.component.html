@@ -16,12 +16,15 @@
     </div>
     <div class="task-desc">{{ task.description }}</div>
     <div class="task-meta">
-      <span class="priority" [style.color]="getPriorityColor(task.priority ?? 0)">
+      <span
+        class="priority"
+        [style.color]="getPriorityColor(task.priority ?? 0)"
+      >
         {{ getPriorityLabel(task.priority ?? 0) }}
       </span>
       <span class="assignee">
         <span class="material-icons">person</span>
-        {{ task.assigneeId }}
+        {{ task.assigneeName }}
       </span>
     </div>
     <div class="task-dates">

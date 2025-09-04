@@ -37,12 +37,6 @@
       >
         Войти
       </button>
-      <div class="alternative">
-        <span>или</span>
-      </div>
-      <app-telegram-login-widget
-        (telegramAuth)="onTelegramAuth($event)"
-      ></app-telegram-login-widget>
     </form>
     <div class="register-link">
       Нет аккаунта? <a routerLink="/register">Регистрация</a>

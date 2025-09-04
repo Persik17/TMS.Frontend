@@ -1,7 +1,40 @@
-<div class="task-dialog-95">
+<div class="task-dialog-root">
   <div class="task-dialog-header">
     <div>
-      <div class="task-dialog-title">{{ task?.name }}</div>
+      <div
+        class="task-dialog-title"
+        [class.edit-hover]="hoveredField === 'name'"
+        (mouseenter)="hoveredField = 'name'"
+        (mouseleave)="hoveredField = null"
+      >
+        <ng-container *ngIf="editingField !== 'name'; else editName">
+          {{ task?.name }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'name'"
+            (click)="startEdit('name', task?.name)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </ng-container>
+        <ng-template #editName>
+          <input
+            type="text"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('name')"
+            (keydown.enter)="saveEdit('name')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            autofocus
+          />
+          <button class="save-btn" (click)="saveEdit('name')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-template>
+      </div>
       <div class="task-meta">
         <span class="meta-label">Создана:</span>
         <span class="meta-value">{{
@@ -42,17 +75,188 @@
     </button>
   </div>
   <div class="task-dialog-main">
-    <app-task-main-tab
-      *ngIf="activeTab === 'main'"
-      [task]="task"
-      [editingField]="editingField"
-      [editValue]="editValue"
-      [quillModules]="quillModules"
-      (startEdit)="startEdit($event.field, $event.value)"
-      (saveEdit)="saveEdit($event)"
-      (onEditValueChange)="onEditValueChange($event)"
-      (cancelEdit)="cancelEdit()"
-    ></app-task-main-tab>
+    <div *ngIf="activeTab === 'main'" class="task-dialog-info">
+      <div
+        class="info-row"
+        [class.edit-hover]="hoveredField === 'description'"
+        (mouseenter)="hoveredField = 'description'"
+        (mouseleave)="hoveredField = null"
+      >
+        <span class="info-title">Описание:</span>
+        <span class="field-value" *ngIf="editingField !== 'description'">
+          {{ task?.description || "—" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'description'"
+            (click)="startEdit('description', task?.description)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </span>
+        <ng-container *ngIf="editingField === 'description'">
+          <textarea
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('description')"
+            (keydown.enter)="saveEdit('description')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            rows="2"
+            autofocus
+          ></textarea>
+          <button class="save-btn" (click)="saveEdit('description')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-container>
+      </div>
+      <div
+        class="info-row"
+        [class.edit-hover]="hoveredField === 'assigneeId'"
+        (mouseenter)="hoveredField = 'assigneeId'"
+        (mouseleave)="hoveredField = null"
+      >
+        <span class="info-title">Исполнитель:</span>
+        <span class="field-value" *ngIf="editingField !== 'assigneeId'">
+          {{ task?.assigneeName || "—" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'assigneeId'"
+            (click)="startEdit('assigneeId', task?.assigneeId)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </span>
+        <ng-container *ngIf="editingField === 'assigneeId'">
+          <input
+            type="text"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('assigneeId')"
+            (keydown.enter)="saveEdit('assigneeId')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            autofocus
+          />
+          <button class="save-btn" (click)="saveEdit('assigneeId')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-container>
+      </div>
+      <div
+        class="info-row"
+        [class.edit-hover]="hoveredField === 'storyPoints'"
+        (mouseenter)="hoveredField = 'storyPoints'"
+        (mouseleave)="hoveredField = null"
+      >
+        <span class="info-title">Story Points:</span>
+        <span class="field-value" *ngIf="editingField !== 'storyPoints'">
+          {{ task?.storyPoints ?? "—" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'storyPoints'"
+            (click)="startEdit('storyPoints', task?.storyPoints)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </span>
+        <ng-container *ngIf="editingField === 'storyPoints'">
+          <input
+            type="number"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('storyPoints')"
+            (keydown.enter)="saveEdit('storyPoints')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            min="0"
+            autofocus
+          />
+          <button class="save-btn" (click)="saveEdit('storyPoints')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-container>
+      </div>
+      <div
+        class="info-row"
+        [class.edit-hover]="hoveredField === 'priority'"
+        (mouseenter)="hoveredField = 'priority'"
+        (mouseleave)="hoveredField = null"
+      >
+        <span class="info-title">Приоритет:</span>
+        <span class="field-value" *ngIf="editingField !== 'priority'">
+          {{ task?.priority ?? "—" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'priority'"
+            (click)="startEdit('priority', task?.priority)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </span>
+        <ng-container *ngIf="editingField === 'priority'">
+          <input
+            type="number"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('priority')"
+            (keydown.enter)="saveEdit('priority')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            min="0"
+            max="3"
+            autofocus
+          />
+          <button class="save-btn" (click)="saveEdit('priority')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-container>
+      </div>
+      <div
+        class="info-row"
+        [class.edit-hover]="hoveredField === 'severity'"
+        (mouseenter)="hoveredField = 'severity'"
+        (mouseleave)="hoveredField = null"
+      >
+        <span class="info-title">Сложность:</span>
+        <span class="field-value" *ngIf="editingField !== 'severity'">
+          {{ task?.severity ?? "—" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'severity'"
+            (click)="startEdit('severity', task?.severity)"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </span>
+        <ng-container *ngIf="editingField === 'severity'">
+          <input
+            type="number"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('severity')"
+            (keydown.enter)="saveEdit('severity')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            min="0"
+            max="10"
+            autofocus
+          />
+          <button class="save-btn" (click)="saveEdit('severity')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-container>
+      </div>
+    </div>
     <app-task-history-tab
       *ngIf="activeTab === 'history'"
       [changeHistory]="changeHistory"
@@ -61,12 +265,15 @@
       *ngIf="activeTab === 'files'"
       [attachedFiles]="attachedFiles"
     ></app-task-files-tab>
-    <app-task-comments
-      [comments]="comments"
-      [newCommentText]="newCommentText"
-      [addingComment]="addingComment"
-      (newCommentTextChange)="newCommentText = $event"
-      (addComment)="addComment()"
-    ></app-task-comments>
+    <div class="task-dialog-comments" *ngIf="activeTab === 'main'">
+      <div class="comments-title">Комментарии</div>
+      <app-task-comments
+        [comments]="comments"
+        [newCommentText]="newCommentText"
+        [addingComment]="addingComment"
+        (newCommentTextChange)="newCommentText = $event"
+        (addComment)="addComment()"
+      ></app-task-comments>
+    </div>
   </div>
 </div>

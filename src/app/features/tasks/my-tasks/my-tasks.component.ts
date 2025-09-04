@@ -3,17 +3,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-
-interface Task {
-  id: string;
-  title: string;
-  priority: 'low' | 'medium' | 'high';
-  status: 'open' | 'done';
-  sp: number;
-  boardId: string;
-  boardName: string;
-  dates?: { start: Date; end: Date };
-}
+import {
+  MyTask,
+  MyTaskPriority,
+  MyTaskStatus,
+} from '../../../core/models/my-task.model';
+import { TaskService } from '../../../core/services/task.service';
 
 @Component({
   selector: 'app-my-tasks',
@@ -22,48 +17,7 @@ interface Task {
   styleUrls: ['./my-tasks.component.scss'],
 })
 export class MyTasksComponent implements OnInit {
-  tasks: Task[] = [
-    {
-      id: 't1',
-      title: 'Сделать дизайн',
-      priority: 'medium',
-      status: 'open',
-      sp: 5,
-      boardId: 'b1',
-      boardName: 'Проект Alpha',
-      dates: { start: new Date(2025, 5, 20), end: new Date(2025, 5, 25) },
-    },
-    {
-      id: 't2',
-      title: 'Верстка',
-      priority: 'low',
-      status: 'open',
-      sp: 8,
-      boardId: 'b1',
-      boardName: 'Проект Alpha',
-      dates: { start: new Date(2025, 5, 21), end: new Date(2025, 5, 27) },
-    },
-    {
-      id: 't3',
-      title: 'Тестирование',
-      priority: 'high',
-      status: 'done',
-      sp: 3,
-      boardId: 'b1',
-      boardName: 'Проект Alpha',
-      dates: { start: new Date(2025, 5, 23), end: new Date(2025, 5, 29) },
-    },
-    {
-      id: 't4',
-      title: 'Заполнить документы',
-      priority: 'medium',
-      status: 'open',
-      sp: 2,
-      boardId: 'b2',
-      boardName: 'Маркетинг 2025',
-      dates: { start: new Date(2025, 5, 24), end: new Date(2025, 5, 28) },
-    },
-  ];
+  tasks: MyTask[] = [];
 
   filter = {
     query: '',
@@ -73,11 +27,23 @@ export class MyTasksComponent implements OnInit {
 
   openBoards: Set<string> = new Set();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private taskService: TaskService) {}
 
   ngOnInit() {
-    // Открываем все группы по умолчанию
-    this.openBoards = new Set(this.tasks.map((t) => t.boardId));
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('Вы не авторизованы!');
+      return;
+    }
+    this.taskService.getMyTasks(userId).subscribe({
+      next: (tasks) => {
+        this.tasks = tasks;
+        this.openBoards = new Set(this.tasks.map((t) => t.boardId));
+      },
+      error: () => {
+        this.tasks = [];
+      },
+    });
   }
 
   groupedTasks() {
@@ -92,7 +58,8 @@ export class MyTasksComponent implements OnInit {
       return textMatch && statusMatch && priorityMatch;
     });
 
-    const groups: { boardId: string; boardName: string; tasks: Task[] }[] = [];
+    const groups: { boardId: string; boardName: string; tasks: MyTask[] }[] =
+      [];
     for (const task of filtered) {
       let group = groups.find((g) => g.boardId === task.boardId);
       if (!group) {
@@ -116,18 +83,17 @@ export class MyTasksComponent implements OnInit {
     }
   }
 
-  goToTask(task: Task) {
-    // Переход на отдельную страницу задачи
+  goToTask(task: MyTask) {
     this.router.navigate(['/tasks', task.id]);
   }
 
-  priorityLabel(p: string) {
+  priorityLabel(p: MyTaskPriority) {
     if (p === 'high') return 'Высокий';
     if (p === 'medium') return 'Средний';
     return 'Низкий';
   }
 
-  statusLabel(s: string) {
+  statusLabel(s: MyTaskStatus) {
     if (s === 'done') return 'Выполнено';
     return 'В работе';
   }

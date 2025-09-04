@@ -1,5 +1,4 @@
 <div class="task-page-info">
-  <!-- Описание -->
   <div class="info-row">
     <span class="info-title">Описание:</span>
     <span class="info-description">
@@ -26,12 +25,11 @@
       </ng-template>
     </span>
   </div>
-  <!-- Исполнитель -->
   <div class="info-row">
     <span class="info-title">Исполнитель:</span>
     <span>
       <ng-container *ngIf="editingField !== 'assigneeId'; else editAssignee">
-        {{ task?.assigneeId }}
+        {{ task?.assigneeName }}
         <button
           class="edit-btn"
           (click)="
@@ -52,7 +50,6 @@
       </ng-template>
     </span>
   </div>
-  <!-- Даты -->
   <div class="info-row">
     <span class="info-title">Даты:</span>
     <span>
@@ -91,7 +88,6 @@
       </ng-template>
     </span>
   </div>
-  <!-- Story Points -->
   <div class="info-row">
     <span class="info-title">Story Points:</span>
     <span>
@@ -118,7 +114,6 @@
       </ng-template>
     </span>
   </div>
-  <!-- Приоритет -->
   <div class="info-row">
     <span class="info-title">Приоритет:</span>
     <span>
@@ -143,7 +138,6 @@
       </ng-template>
     </span>
   </div>
-  <!-- Серьёзность -->
   <div class="info-row">
     <span class="info-title">Серьёзность:</span>
     <span>

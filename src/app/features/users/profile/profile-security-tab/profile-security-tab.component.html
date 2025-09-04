@@ -1,81 +1,46 @@
-<section class="settings-section">
-  <h3>Смена Email и пароля</h3>
+<section class="profile-security-section">
   <form
+    class="security-form"
     (ngSubmit)="changeEmail.emit()"
-    #emailForm="ngForm"
     autocomplete="off"
-    class="security-form"
   >
-    <div class="security-fields">
-      <label>
-        Новый email:
-        <input
-          type="email"
-          [(ngModel)]="newEmail"
-          (ngModelChange)="newEmailChange.emit($event)"
-          name="newEmail"
-          required
-        />
-      </label>
-      <button class="primary-btn" type="submit" [disabled]="emailForm.invalid">
-        Изменить email
-      </button>
+    <div class="security-row">
+      <label>Новый email</label>
+      <input type="email" [(ngModel)]="newEmail" name="newEmail" required />
+      <button class="primary-btn" type="submit">Изменить email</button>
     </div>
   </form>
   <form
-    (ngSubmit)="changePassword.emit()"
-    #pwdForm="ngForm"
-    autocomplete="off"
     class="security-form"
+    (ngSubmit)="changePassword.emit()"
+    autocomplete="off"
   >
-    <div class="security-fields">
-      <label>
-        Новый пароль:
-        <input
-          type="password"
-          [(ngModel)]="newPassword"
-          (ngModelChange)="newPasswordChange.emit($event)"
-          name="newPassword"
-          required
-          minlength="6"
-        />
-      </label>
-      <label>
-        Повторите пароль:
-        <input
-          type="password"
-          [(ngModel)]="repeatPassword"
-          (ngModelChange)="repeatPasswordChange.emit($event)"
-          name="repeatPassword"
-          required
-          [pattern]="newPassword"
-        />
-      </label>
-      <button
-        class="primary-btn"
-        type="submit"
-        [disabled]="pwdForm.invalid || newPassword !== repeatPassword"
-      >
-        Сменить пароль
-      </button>
+    <div class="security-row">
+      <label>Новый пароль</label>
+      <input
+        type="password"
+        [(ngModel)]="newPassword"
+        name="newPassword"
+        required
+      />
+      <label>Повторите пароль</label>
+      <input
+        type="password"
+        [(ngModel)]="repeatPassword"
+        name="repeatPassword"
+        required
+      />
+      <button class="primary-btn" type="submit">Сменить пароль</button>
     </div>
   </form>
-  <div *ngIf="smsRequired" class="sms-confirm">
-    <label>
-      Введите код из SMS:
-      <input
-        type="text"
-        [(ngModel)]="smsCode"
-        (ngModelChange)="smsCodeChange.emit($event)"
-        name="smsCode"
-        maxlength="6"
-      />
-    </label>
+  <div *ngIf="smsRequired" class="sms-confirm-row">
+    <label>Введите код из SMS</label>
+    <input type="text" [(ngModel)]="smsCode" name="smsCode" maxlength="6" />
     <button class="primary-btn" (click)="confirmSmsCode.emit()">
       Подтвердить
     </button>
   </div>
   <div class="security-hint">
-    После смены email или пароля потребуется подтверждение через SMS код.
+    После смены email или пароля потребуется подтверждение через SMS.
   </div>
 </section>

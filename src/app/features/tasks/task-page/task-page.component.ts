@@ -35,48 +35,17 @@ export class TaskPageComponent implements OnInit {
   newCommentText = '';
   addingComment = false;
   activeTab: 'main' | 'history' | 'files' = 'main';
-
   editingField: string | null = null;
   editValue: any = '';
+  hoveredField: string | null = null;
+  editTimer?: any;
 
-  quillModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ color: [] }, { background: [] }],
-      [{ header: [1, 2, 3, false] }],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ align: [] }],
-      ['clean'],
-    ],
-  };
+  changeHistory = [];
+  attachedFiles = [];
 
-  changeHistory = [
-    {
-      date: '2025-06-21T14:30:00Z',
-      text: 'Изменён исполнитель: user2 → user3',
-      user: 'Bob',
-    },
-    {
-      date: '2025-06-22T08:00:00Z',
-      text: 'Обновлено описание задачи',
-      user: 'Alice',
-    },
-  ];
-
-  attachedFiles = [
-    {
-      name: 'specs.pdf',
-      url: '/files/specs.pdf',
-      size: '120 KB',
-      date: '2025-06-20',
-    },
-    {
-      name: 'design.png',
-      url: '/files/design.png',
-      size: '340 KB',
-      date: '2025-06-19',
-    },
-  ];
+  error: string | null = null;
+  userId: string = '';
+  taskId: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -86,29 +55,40 @@ export class TaskPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const boardId = this.route.snapshot.paramMap.get('boardId')!;
-    const taskId = this.route.snapshot.paramMap.get('taskId')!;
-    const userId = localStorage.getItem('userId') || '';
+    const idFromRoute = this.route.snapshot.paramMap.get('id');
+    const taskIdFromRoute = this.route.snapshot.paramMap.get('taskId');
+    this.taskId = taskIdFromRoute || idFromRoute || '';
 
-    this.taskService.getTask(taskId, userId).subscribe({
+    if (!this.taskId) {
+      this.error = 'Некорректная задача (нет id в роутах)';
+      this.loading = false;
+      return;
+    }
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      this.error = 'Пользователь не найден';
+      this.loading = false;
+      return;
+    }
+    this.userId = userId;
+
+    this.taskService.getTask(this.taskId, this.userId).subscribe({
       next: (task) => {
-        this.task = {
-          ...task,
-          name: task.name,
-        };
+        this.task = task;
         this.loading = false;
+        this.loadComments(this.taskId, this.userId);
       },
       error: () => {
+        this.error = 'Задача не найдена';
         this.loading = false;
       },
     });
-
-    this.loadComments(taskId, userId);
   }
 
   get taskUrl(): string {
     if (!this.task) return '';
-    return `${window.location.origin}/boards/${this.task.boardId}/tasks/${this.task.id}`;
+    return `${window.location.origin}/tasks/${this.task.id}`;
   }
 
   loadComments(taskId: string, userId: string) {
@@ -125,11 +105,10 @@ export class TaskPageComponent implements OnInit {
   addComment() {
     if (!this.newCommentText.trim() || !this.task) return;
     this.addingComment = true;
-    const userId = localStorage.getItem('userId') || '';
     this.taskService
       .addComment(this.task.id, {
         text: this.newCommentText,
-        authorId: userId,
+        authorId: this.userId,
       })
       .subscribe({
         next: (comment) => {
@@ -138,7 +117,6 @@ export class TaskPageComponent implements OnInit {
           this.addingComment = false;
         },
         error: () => {
-          // обработка ошибки
           this.addingComment = false;
         },
       });
@@ -146,13 +124,15 @@ export class TaskPageComponent implements OnInit {
 
   copyLink() {
     if (!this.task) return;
-    const link = this.taskUrl;
-    this.clipboard.copy(link);
+    this.clipboard.copy(this.taskUrl);
   }
 
   backToBoard() {
-    if (!this.task) return;
-    this.router.navigate(['/boards', this.task.boardId]);
+    if (!this.task || !this.task.boardId) {
+      this.router.navigate(['/my-tasks']);
+    } else {
+      this.router.navigate(['/boards', this.task.boardId]);
+    }
   }
 
   setTab(tab: 'main' | 'history' | 'files') {
@@ -161,32 +141,45 @@ export class TaskPageComponent implements OnInit {
 
   startEdit(field: string, value: any) {
     this.editingField = field;
-    if (field === 'dates') {
-      this.editValue = {
-        start: this.task?.startDate || '',
-        end: this.task?.endDate || '',
-      };
-    } else {
-      this.editValue = value;
-    }
+    this.editValue = value ?? '';
+    setTimeout(() => {
+      const inp = document.querySelector<HTMLInputElement>(
+        'input.editing-input, textarea.editing-input'
+      );
+      inp?.focus();
+      inp?.select();
+    }, 60);
   }
 
   saveEdit(field: string) {
     if (!this.task) return;
-    if (field === 'dates') {
-      this.task.startDate = this.editValue.start;
-      this.task.endDate = this.editValue.end;
-    } else {
-      (this.task as any)[field] = this.editValue;
-    }
+    const id = this.task.id;
+    (this.task as any)[field] = this.editValue;
+    this.taskService
+      .updateTask(id, { [field]: this.editValue }, this.userId)
+      .subscribe();
     this.editingField = null;
-  }
-
-  onEditValueChange(val: any) {
-    this.editValue = val;
+    this.editValue = '';
+    this.hoveredField = null;
   }
 
   cancelEdit() {
     this.editingField = null;
+    this.editValue = '';
+    this.hoveredField = null;
+  }
+
+  autoSave(field: string) {
+    if (!this.task) return;
+    const id = this.task.id;
+    if (this.editTimer) clearTimeout(this.editTimer);
+    this.editTimer = setTimeout(() => {
+      (this.task as any)[field] = this.editValue;
+      this.taskService
+        .updateTask(id, { [field]: this.editValue }, this.userId)
+        .subscribe();
+      this.editingField = null;
+      this.editValue = '';
+    }, 700);
   }
 }

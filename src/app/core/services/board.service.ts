@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Board } from '../models/board.model';
 import { BoardColumn } from '../models/board-column.model';
+import { BoardChartConfig } from '../models/chart.model';
 
 export type BoardTaskType = {
   id: string;
@@ -14,6 +15,28 @@ export type BoardTaskType = {
   updateDate?: string;
   deleteDate?: string;
 };
+
+interface BoardAnalyticsDto {
+  velocity: VelocityPoint[];
+  burndown: BurnDownPoint[];
+  cfd: CfdPoint[];
+}
+
+export interface VelocityPoint {
+  sprintName: string;
+  completedStoryPoints: number;
+}
+
+export interface BurnDownPoint {
+  date: string;
+  remainingTasks: number;
+  idealTasks: number;
+}
+
+export interface CfdPoint {
+  date: string;
+  columnTaskCounts: Record<string, number>;
+}
 
 export interface BoardInfoDto {
   boardId: string;
@@ -110,7 +133,7 @@ export class BoardService {
     const userId = localStorage.getItem('userId');
     const body = {
       name: title,
-      description: description,
+      description: description ?? '',
       order,
       color: color ?? '#e3f2fd',
     };
@@ -129,7 +152,7 @@ export class BoardService {
     const body = {
       id: column.id,
       name: column.title,
-      description: column.description,
+      description: column.description ?? '',
       order: column.order,
       color: column.color ?? '#e3f2fd',
       boardId: boardId,
@@ -148,6 +171,36 @@ export class BoardService {
     const userId = localStorage.getItem('userId');
     return this.http.delete<void>(
       `${this.baseUrl}/${companyId}/boards/${boardId}/columns/${columnId}?userId=${userId}`
+    );
+  }
+
+  updateColumnOrder(
+    companyId: string,
+    boardId: string,
+    columns: BoardColumn[]
+  ): Observable<BoardColumn[]> {
+    const userId = localStorage.getItem('userId');
+    const body = columns.map((col) => ({
+      id: col.id,
+      name: col.title,
+      description: col.description ?? '',
+      order: col.order,
+      color: col.color ?? '#e3f2fd',
+      boardId: boardId,
+    }));
+    return this.http.patch<BoardColumn[]>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/columns/order?userId=${userId}`,
+      body
+    );
+  }
+
+  getBoardAnalytics(
+    companyId: string,
+    boardId: string
+  ): Observable<BoardAnalyticsDto> {
+    const userId = localStorage.getItem('userId');
+    return this.http.get<BoardAnalyticsDto>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/analytics?userId=${userId}`
     );
   }
 }

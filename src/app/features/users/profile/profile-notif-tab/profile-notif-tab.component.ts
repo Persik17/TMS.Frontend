@@ -14,4 +14,15 @@ export class ProfileNotifTabComponent {
   @Input() userNotif!: NotificationSettings;
   @Input() originalNotif!: NotificationSettings;
   @Output() saveNotificationSettings = new EventEmitter<void>();
+
+  hasChanges(): boolean {
+    return (
+      this.userNotif.emailNotificationsEnabled !==
+        this.originalNotif.emailNotificationsEnabled ||
+      this.userNotif.pushNotificationsEnabled !==
+        this.originalNotif.pushNotificationsEnabled ||
+      this.userNotif.telegramNotificationsEnabled !==
+        this.originalNotif.telegramNotificationsEnabled
+    );
+  }
 }

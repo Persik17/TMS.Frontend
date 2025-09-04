@@ -73,7 +73,6 @@
     <div *ngIf="users.length === 0" class="empty-users">Нет пользователей</div>
   </div>
 
-  <!-- Контекстное меню для выбора прав -->
   <div
     *ngIf="permissionMenuShow && permissionMenuUser && permissionMenuField"
     class="perm-menu"
@@ -97,7 +96,6 @@
     </button>
   </div>
 
-  <!-- Invite User Modal -->
   <div
     class="invite-modal-backdrop"
     *ngIf="showInviteModal"

@@ -1,32 +1,39 @@
-<div class="task-page-comments">
-  <div class="comments-title">Комментарии</div>
+<ng-container *ngIf="comments && comments.length > 0; else noComments">
   <div *ngFor="let comment of comments" class="comment-card">
     <img
       *ngIf="comment.user?.avatarUrl"
       class="avatar"
       [src]="comment.user.avatarUrl"
-      [alt]="comment.user.name"
+      [alt]="comment.user.name || comment.authorId"
     />
-    <div>
+    <div class="comment-card-content">
       <div class="comment-meta">
-        <span class="author">{{ comment.user?.name || comment.userId }}</span>
+        <span class="author">
+          {{ comment.user?.name || comment.authorId }}
+        </span>
         <span class="date">{{ comment.creationDate | date : "short" }}</span>
       </div>
       <div class="text">{{ comment.text }}</div>
     </div>
   </div>
-  <div class="add-comment">
-    <textarea
-      [(ngModel)]="newCommentText"
-      (ngModelChange)="newCommentTextChange.emit($event)"
-      placeholder="Добавить комментарий..."
-      rows="2"
-    ></textarea>
-    <button
-      (click)="addComment.emit()"
-      [disabled]="addingComment || !newCommentText.trim()"
-    >
-      <span class="material-icons">send</span>
-    </button>
-  </div>
+</ng-container>
+<ng-template #noComments>
+  <div class="no-comments">Нет комментариев</div>
+</ng-template>
+<div class="add-comment">
+  <textarea
+    [(ngModel)]="newCommentText"
+    (ngModelChange)="newCommentTextChange.emit($event)"
+    placeholder="Добавить комментарий..."
+    rows="2"
+    [disabled]="addingComment"
+  ></textarea>
+  <button
+    (click)="addComment.emit()"
+    [disabled]="addingComment || !newCommentText.trim()"
+    class="add-comment-btn"
+    title="Добавить комментарий"
+  >
+    <span class="material-icons">send</span>
+  </button>
 </div>

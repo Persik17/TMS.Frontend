@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Task } from '../models/task.model';
 import { Comment } from '../models/comment.model';
+import { MyTask } from '../models/my-task.model';
 
 export type TaskCreateDto = {
   name: string;
@@ -89,6 +90,10 @@ export class TaskService {
     );
   }
 
+  getMyTasks(userId: string): Observable<MyTask[]> {
+    return this.http.get<MyTask[]>(`${this.baseUrl}/my?userId=${userId}`);
+  }
+
   deleteComment(
     taskId: string,
     commentId: string,
@@ -96,6 +101,17 @@ export class TaskService {
   ): Observable<void> {
     return this.http.delete<void>(
       `${this.baseUrl}/${taskId}/comments/${commentId}?userId=${userId}`
+    );
+  }
+
+  moveTaskToColumn(
+    taskId: string,
+    columnId: string,
+    userId: string
+  ): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}/${taskId}/move?columnId=${columnId}&userId=${userId}`,
+      null
     );
   }
 }

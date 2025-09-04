@@ -5,7 +5,6 @@
   <button [class.active]="tab === 'burn'" (click)="tab = 'burn'">График</button>
 </div>
 
-<!-- Доска -->
 <div *ngIf="tab === 'board'" class="board-main-area">
   <div class="board-columns-outer">
     <div
@@ -106,5 +105,8 @@
 </div>
 
 <div *ngIf="tab === 'burn'">
-  <app-board-analytics [columns]="columns"></app-board-analytics>
+  <app-board-analytics
+    [companyId]="companyId"
+    [boardId]="boardId"
+  ></app-board-analytics>
 </div>

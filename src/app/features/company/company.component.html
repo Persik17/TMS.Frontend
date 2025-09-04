@@ -6,9 +6,6 @@
     <button [class.active]="tab === 'ceo'" (click)="setTab('ceo')">
       CEO-сводка
     </button>
-    <button [class.active]="tab === 'tariff'" (click)="setTab('tariff')">
-      Подписка и тариф
-    </button>
   </div>
 
   <div *ngIf="tab === 'info'" class="company-info">

@@ -1,19 +1,20 @@
 import { NotificationSettings } from './notification-settings.model';
+import { SystemSettings } from './system-settings.model';
 
 export interface User {
   id: string;
   fullName: string;
   email: string;
-  telegramId?: string;
-  timezone: string;
-  language: string;
+  timezone?: string;
+  language?: string;
   phone: string;
-  status: string;
   notificationSettingsId: string;
+  notificationSettings?: NotificationSettings;
+  systemSettingsId?: string;
+  systemSettings?: SystemSettings;
   registrationDate: Date;
   lastLoginDate: Date;
   creationDate: string;
   updateDate?: string;
   deleteDate?: string;
-  notificationSettings?: NotificationSettings;
 }

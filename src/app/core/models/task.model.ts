@@ -4,7 +4,9 @@ export interface Task {
   description?: string | null;
   boardId: string;
   creatorId: string;
+  creatorName?: string | null;
   assigneeId?: string | null;
+  assigneeName?: string | null;
   startDate?: string | null;
   endDate?: string | null;
   actualClosingDate?: string | null;

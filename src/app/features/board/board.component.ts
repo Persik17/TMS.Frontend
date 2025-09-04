@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   DragDropModule,
@@ -21,6 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskDialogComponent } from './dialogs/task-dialog/task-dialog.component';
 import { TaskCreateDto, TaskService } from '../../core/services/task.service';
 import { TaskTypeService } from '../../core/services/task-type.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -35,7 +36,9 @@ import { TaskTypeService } from '../../core/services/task-type.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
+  private routeSub?: Subscription;
+
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -68,34 +71,44 @@ export class BoardComponent implements OnInit {
   companyId: string = '';
 
   ngOnInit() {
-    this.boardId = this.route.snapshot.paramMap.get('id') || '';
-    this.companyId = localStorage.getItem('companyId') || '';
-    const userId = localStorage.getItem('userId') || '';
-    if (!this.boardId || !this.companyId) {
-      this.error = 'Доска или компания не найдена';
-      this.loading = false;
-      return;
-    }
-    this.boardService.getBoardInfo(this.companyId, this.boardId).subscribe({
-      next: (info: BoardInfoDto) => {
-        this.columns = info.columns;
-        this.connectedDropListsIds = this.columns.map((col) => col.id);
+    this.routeSub = this.route.paramMap.subscribe((params) => {
+      const newBoardId = params.get('id') || '';
+      this.boardId = newBoardId;
+      this.companyId = localStorage.getItem('companyId') || '';
+      const userId = localStorage.getItem('userId') || '';
+      if (!this.boardId || !this.companyId) {
+        this.error = 'Доска или компания не найдена';
         this.loading = false;
-      },
-      error: () => {
-        this.error = 'Ошибка загрузки данных доски';
-        this.loading = false;
-      },
-    });
+        return;
+      }
+      this.loading = true;
+      this.boardService.getBoardInfo(this.companyId, this.boardId).subscribe({
+        next: (info: BoardInfoDto) => {
+          this.columns = info.columns;
+          this.connectedDropListsIds = this.columns.map((col) => col.id);
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Ошибка загрузки данных доски';
+          this.loading = false;
+        },
+      });
 
-    this.taskTypeService.getTaskTypesByBoardId(this.boardId, userId).subscribe({
-      next: (types) => {
-        this.taskTypes = types;
-      },
-      error: () => {
-        this.taskTypes = [];
-      },
+      this.taskTypeService
+        .getTaskTypesByBoardId(this.boardId, userId)
+        .subscribe({
+          next: (types) => {
+            this.taskTypes = types;
+          },
+          error: () => {
+            this.taskTypes = [];
+          },
+        });
     });
+  }
+
+  ngOnDestroy() {
+    this.routeSub?.unsubscribe();
   }
 
   get sortedColumns() {
@@ -202,7 +215,9 @@ export class BoardComponent implements OnInit {
         event.currentIndex
       );
       task.columnId = targetCol.id;
-      this.taskService.updateTask(task.id, task, userId).subscribe();
+      this.taskService
+        .moveTaskToColumn(task.id, targetCol.id, userId)
+        .subscribe();
     }
   }
 
@@ -310,6 +325,20 @@ export class BoardComponent implements OnInit {
     if (event.previousIndex === event.currentIndex) return;
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
     this.columns.forEach((col, idx) => (col.order = idx));
+    this.boardService
+      .updateColumnOrder(this.companyId, this.boardId, this.columns)
+      .subscribe({
+        next: () => {
+          this.boardService
+            .getBoardInfo(this.companyId, this.boardId)
+            .subscribe({
+              next: (info) => {
+                this.columns = info.columns;
+                this.connectedDropListsIds = this.columns.map((col) => col.id);
+              },
+            });
+        },
+      });
   }
 
   onColumnDragStarted(colId: string) {

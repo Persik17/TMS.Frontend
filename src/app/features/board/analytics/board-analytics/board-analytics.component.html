@@ -1,4 +1,6 @@
-<div class="charts-multi-wrapper">
+<div *ngIf="loading">Загрузка аналитики...</div>
+<div *ngIf="error">{{ error }}</div>
+<div class="charts-multi-wrapper" *ngIf="!loading && !error">
   <div class="chart-block">
     <h3>Скорость</h3>
     <canvas
