@@ -132,10 +132,14 @@ export class TaskPageComponent implements OnInit {
   addComment() {
     if (!this.newCommentText.trim() || !this.task) return;
     this.addingComment = true;
+    const userId = localStorage.getItem('userId') || '';
+    const authorName = localStorage.getItem('userName') || '';
+
     this.taskService
       .addComment(this.task.id, {
         text: this.newCommentText,
-        authorId: this.userId,
+        authorId: userId,
+        authorName: authorName,
       })
       .subscribe({
         next: (comment) => {
