@@ -51,6 +51,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   editColumnTitle: string = '';
   editColumnColor: string = '#e3f2fd';
   editColumnDescription: string = '';
+  boardBgUrl: string | null = null;
 
   tab: 'board' | 'burn' = 'board';
 
@@ -71,6 +72,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   companyId: string = '';
 
   ngOnInit() {
+    this.setBoardBgFromLocalStorage();
+    window.addEventListener('boardBgChanged', this.onBgChanged);
     this.routeSub = this.route.paramMap.subscribe((params) => {
       const newBoardId = params.get('id') || '';
       this.boardId = newBoardId;
@@ -105,10 +108,6 @@ export class BoardComponent implements OnInit, OnDestroy {
           },
         });
     });
-  }
-
-  ngOnDestroy() {
-    this.routeSub?.unsubscribe();
   }
 
   get sortedColumns() {
@@ -355,4 +354,17 @@ export class BoardComponent implements OnInit, OnDestroy {
   trackByColId(index: number, col: BoardColumn) {
     return col.id;
   }
+
+  ngOnDestroy() {
+    window.removeEventListener('boardBgChanged', this.onBgChanged);
+    this.routeSub?.unsubscribe();
+  }
+
+  setBoardBgFromLocalStorage() {
+    this.boardBgUrl = localStorage.getItem('boardBgUrl');
+  }
+
+  onBgChanged = () => {
+    this.setBoardBgFromLocalStorage();
+  };
 }

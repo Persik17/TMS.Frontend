@@ -11,7 +11,7 @@ import { BoardService } from '../../../../../core/services/board.service';
   templateUrl: './info-tab.component.html',
   styleUrls: ['./info-tab.component.scss'],
 })
-export class DashboardSettingsInfoTabComponent implements OnChanges {
+export class InfoTabComponent implements OnChanges {
   @Input() board!: Board;
 
   editing = false;
@@ -48,20 +48,31 @@ export class DashboardSettingsInfoTabComponent implements OnChanges {
   }
 
   saveEdit() {
+    this.error = '';
+    const companyId = this.board.companyId || localStorage.getItem('companyId');
+    if (!companyId || !this.board.id) {
+      this.error = 'Некорректные идентификаторы доски или компании!';
+      return;
+    }
     this.saving = true;
-    const companyId = this.board.companyId;
     this.boardService
       .updateBoard(companyId, {
-        ...this.board,
+        id: this.board.id,
         name: this.editName,
         description: this.editDescription,
+        companyId: companyId,
+        headFullName: this.board.headFullName ?? '',
+        boardType: this.board.boardType,
         isPrivate: this.editIsPrivate,
+        creationDate: this.board.creationDate,
+        updateDate: this.board.updateDate || undefined,
+        deleteDate: this.board.deleteDate || undefined,
       })
       .subscribe({
-        next: (updated) => {
-          this.board.name = updated.name;
-          this.board.description = updated.description;
-          this.board.isPrivate = updated.isPrivate;
+        next: () => {
+          this.board.name = this.editName;
+          this.board.description = this.editDescription;
+          this.board.isPrivate = this.editIsPrivate;
           this.editing = false;
           this.saving = false;
         },

@@ -21,7 +21,7 @@ export interface TaskUpdateDto {
   id: string;
   name: string;
   description?: string;
-  assigneeId?: string;
+  assigneeId?: string | null;
   storyPoints?: number;
   priority?: number;
   severity?: number;
@@ -105,8 +105,8 @@ export class TaskService {
     );
   }
 
-  getMyTasks(userId: string): Observable<MyTask[]> {
-    return this.http.get<MyTask[]>(`${this.baseUrl}/my?userId=${userId}`);
+  getMyTasks(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/my?userId=${userId}`);
   }
 
   deleteComment(

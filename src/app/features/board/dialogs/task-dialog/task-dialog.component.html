@@ -121,15 +121,20 @@
           </button>
         </span>
         <ng-container *ngIf="editingField === 'assigneeId'">
-          <input
-            type="text"
+          <select
             [(ngModel)]="editValue"
             (blur)="saveEdit('assigneeId')"
+            (change)="saveEdit('assigneeId')"
             (keydown.enter)="saveEdit('assigneeId')"
             (keydown.esc)="cancelEdit()"
             class="editing-input"
             autofocus
-          />
+          >
+            <option [ngValue]="null">— Не назначен —</option>
+            <option *ngFor="let user of boardUsers" [ngValue]="user.id">
+              {{ user.name || user.email }}
+            </option>
+          </select>
           <button class="save-btn" (click)="saveEdit('assigneeId')">
             <span class="material-icons">done</span>
           </button>

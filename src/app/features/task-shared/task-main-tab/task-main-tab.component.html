@@ -29,7 +29,7 @@
     <span class="info-title">Исполнитель:</span>
     <span>
       <ng-container *ngIf="editingField !== 'assigneeId'; else editAssignee">
-        {{ task?.assigneeName }}
+        {{ task?.assigneeName || "—" }}
         <button
           class="edit-btn"
           (click)="
@@ -40,13 +40,26 @@
         </button>
       </ng-container>
       <ng-template #editAssignee>
-        <input
+        <select
           [(ngModel)]="editValue"
           (blur)="saveEdit.emit('assigneeId')"
+          (change)="saveEdit.emit('assigneeId')"
           (keydown.enter)="saveEdit.emit('assigneeId')"
           (keydown.esc)="cancelEdit.emit()"
+          class="editing-input"
           autofocus
-        />
+        >
+          <option [ngValue]="null">— Не назначен —</option>
+          <option *ngFor="let user of boardUsers" [ngValue]="user.id">
+            {{ user.name || user.email }}
+          </option>
+        </select>
+        <button class="save-btn" (click)="saveEdit.emit('assigneeId')">
+          <span class="material-icons">done</span>
+        </button>
+        <button class="cancel-btn" (click)="cancelEdit.emit()">
+          <span class="material-icons">close</span>
+        </button>
       </ng-template>
     </span>
   </div>

@@ -1,7 +1,7 @@
 import { UserPermissions } from "./user-permissions.model";
 
 export interface PermissionsDiff {
-  userId: number;
+  userId: string;
   before: UserPermissions;
   after: UserPermissions;
   changedFields: (keyof UserPermissions)[];

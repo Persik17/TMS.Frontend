@@ -8,10 +8,15 @@
       <span class="tab-icon">👥</span> Пользователи
     </button>
   </nav>
+
+  <div *ngIf="boardLoading">Загрузка...</div>
+  <div *ngIf="boardError" class="error">{{ boardError }}</div>
+
   <app-dashboard-settings-info-tab
-    *ngIf="tab === 'info'"
+    *ngIf="tab === 'info' && board && !boardLoading && !boardError"
     [board]="board"
   ></app-dashboard-settings-info-tab>
+
   <app-dashboard-settings-users-tab
     *ngIf="tab === 'users'"
     [users]="users"
@@ -38,11 +43,11 @@
     [permissionMenuField]="permissionMenuField"
     [showInviteModal]="showInviteModal"
     [inviteEmail]="inviteEmail"
+    (inviteEmailChange)="inviteEmail = $event"
     [inviteError]="inviteError"
     (confirmInvite)="confirmInvite()"
     (closeModal)="closeModal()"
     (closePermissionMenu)="closePermissionMenu()"
     (selectPermission)="selectPermission($event)"
-    (isSelected)="isSelected($event)"
   ></app-dashboard-settings-users-tab>
 </div>

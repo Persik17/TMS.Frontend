@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Board } from '../models/board.model';
 import { BoardColumn } from '../models/board-column.model';
 import { BoardChartConfig } from '../models/chart.model';
+import { UserInviteDto } from '../models/user-invite.model';
 
 export type BoardTaskType = {
   id: string;
@@ -15,6 +16,8 @@ export type BoardTaskType = {
   updateDate?: string;
   deleteDate?: string;
 };
+
+export type UserDto = any;
 
 interface BoardAnalyticsDto {
   velocity: VelocityPoint[];
@@ -70,6 +73,13 @@ export class BoardService {
     const userId = localStorage.getItem('userId');
     return this.http.get<Board[]>(
       `${this.baseUrl}/${companyId}/boards?userId=${userId}`
+    );
+  }
+
+  getBoard(companyId: string, boardId: string): Observable<Board> {
+    const userId = localStorage.getItem('userId');
+    return this.http.get<Board>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}?userId=${userId}`
     );
   }
 
@@ -201,6 +211,25 @@ export class BoardService {
     const userId = localStorage.getItem('userId');
     return this.http.get<BoardAnalyticsDto>(
       `${this.baseUrl}/${companyId}/boards/${boardId}/analytics?userId=${userId}`
+    );
+  }
+
+  inviteUser(
+    companyId: string,
+    boardId: string,
+    invite: UserInviteDto
+  ): Observable<any> {
+    const userId = localStorage.getItem('userId');
+    return this.http.post(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/invite-user?userId=${userId}`,
+      invite
+    );
+  }
+
+  getBoardUsers(companyId: string, boardId: string, userId: string) {
+    return this.http.get<UserDto[]>(
+      `${this.baseUrl}/${companyId}/boards/${boardId}/users`,
+      { params: { userId } }
     );
   }
 }

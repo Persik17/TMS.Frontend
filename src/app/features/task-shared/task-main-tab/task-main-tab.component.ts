@@ -4,6 +4,12 @@ import { QuillModule } from 'ngx-quill';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../../core/models/task.model';
 
+export type BoardUserDto = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 @Component({
   selector: 'app-task-main-tab',
   standalone: true,
@@ -16,6 +22,7 @@ export class TaskMainTabComponent {
   @Input() editingField!: string | null;
   @Input() editValue: any;
   @Input() quillModules: any;
+  @Input() boardUsers: BoardUserDto[] = [];
 
   @Output() startEdit = new EventEmitter<{ field: string; value: any }>();
   @Output() saveEdit = new EventEmitter<string>();

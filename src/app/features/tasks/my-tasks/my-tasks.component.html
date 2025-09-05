@@ -32,6 +32,7 @@
           *ngFor="let task of group.tasks"
           class="task-card"
           (click)="goToTask(task)"
+          [attr.data-priority]="task.priority"
         >
           <div class="task-main">
             <span class="task-title">{{ task.title }}</span>
@@ -43,11 +44,7 @@
             <span class="task-status" [ngClass]="task.status">{{
               statusLabel(task.status)
             }}</span>
-            <span class="task-dates" *ngIf="task.dates">
-              {{ task.dates.start | date : "d.MM.yyyy" }} -
-              {{ task.dates.end | date : "d.MM.yyyy" }}
-            </span>
-            <span class="task-sp">SP: {{ task.sp }}</span>
+            <span class="task-sp" *ngIf="task.sp">SP: {{ task.sp }}</span>
           </div>
         </div>
         <div *ngIf="group.tasks.length === 0" class="no-tasks">Нет задач</div>

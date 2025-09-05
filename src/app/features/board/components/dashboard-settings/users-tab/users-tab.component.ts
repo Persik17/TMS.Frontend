@@ -1,9 +1,25 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule, NgFor, NgIf, NgClass, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserPermissions } from '../../../../../core/models/user-permissions.model';
-import { AccessLevel } from '../../../../../core/models/access-level.model';
-import { BoardUser } from '../../../../../core/models/board-user.model';
+
+export interface UserPermissions {
+  tasks: AccessLevel;
+  board: AccessLevel;
+  members: AccessLevel;
+}
+export type AccessLevel =
+  | 'Нет'
+  | 'Чтение'
+  | 'Редактирование'
+  | 'Администрирование';
+
+export interface BoardUser {
+  id: string;
+  name: string;
+  email: string;
+  status: string;
+  permissions: UserPermissions;
+}
 
 @Component({
   selector: 'app-dashboard-settings-users-tab',
@@ -12,9 +28,13 @@ import { BoardUser } from '../../../../../core/models/board-user.model';
   templateUrl: './users-tab.component.html',
   styleUrls: ['./users-tab.component.scss'],
 })
-export class DashboardSettingsUsersTabComponent {
+export class UsersTabComponent {
   @Input() users: BoardUser[] = [];
-  @Input() permissionFields: (keyof UserPermissions)[] = [];
+  @Input() permissionFields: (keyof UserPermissions)[] = [
+    'tasks',
+    'board',
+    'members',
+  ];
   @Input() permissionFieldLabels: Record<keyof UserPermissions, string> = {
     tasks: 'Задачи',
     board: 'Доска',
@@ -38,7 +58,7 @@ export class DashboardSettingsUsersTabComponent {
     Редактирование: 'Редактирование',
     Администрирование: 'Администрирование',
   };
-  @Input() originalPermissions: Record<number, UserPermissions> = {};
+  @Input() originalPermissions: Record<string, UserPermissions> = {};
   @Input() hasMatrixChanges: boolean = false;
 
   @Input() permissionMenuShow = false;
@@ -68,7 +88,7 @@ export class DashboardSettingsUsersTabComponent {
   @Output() closeModal = new EventEmitter<void>();
   @Output() closePermissionMenu = new EventEmitter<void>();
   @Output() selectPermission = new EventEmitter<AccessLevel>();
-  @Output() isSelected = new EventEmitter<AccessLevel>();
+  @Output() inviteEmailChange = new EventEmitter<string>();
 
   isPermissionChanged(user: BoardUser, field: keyof UserPermissions): boolean {
     const orig = this.originalPermissions[user.id];

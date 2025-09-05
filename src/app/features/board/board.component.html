@@ -5,7 +5,18 @@
   <button [class.active]="tab === 'burn'" (click)="tab = 'burn'">График</button>
 </div>
 
-<div *ngIf="tab === 'board'" class="board-main-area">
+<div
+  *ngIf="tab === 'board'"
+  class="board-main-area"
+  [ngStyle]="
+    boardBgUrl
+      ? {
+          'background-image': 'url(' + boardBgUrl + ')',
+          'background-size': 'cover'
+        }
+      : {}
+  "
+>
   <div class="board-columns-outer">
     <div
       class="board-columns"

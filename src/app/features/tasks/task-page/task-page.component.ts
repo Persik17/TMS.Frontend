@@ -10,11 +10,9 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
-import { TaskMainTabComponent } from '../../task-shared/task-main-tab/task-main-tab.component';
-import { TaskHistoryTabComponent } from '../../task-shared/task-history-tab/task-history-tab.component';
-import { TaskFilesTabComponent } from '../../task-shared/task-files-tab/task-files-tab.component';
-import { TaskCommentsComponent } from '../../task-shared/task-comments/task-comments.component';
 import { TaskFile } from '../../../core/models/task-file.model';
+import { BoardService, UserDto } from '../../../core/services/board.service';
+import { TaskCommentsComponent } from '../../task-shared/task-comments/task-comments.component';
 
 @Component({
   selector: 'app-task-page',
@@ -24,9 +22,6 @@ import { TaskFile } from '../../../core/models/task-file.model';
     FormsModule,
     RouterModule,
     QuillModule,
-    TaskMainTabComponent,
-    TaskHistoryTabComponent,
-    TaskFilesTabComponent,
     TaskCommentsComponent,
   ],
   templateUrl: './task-page.component.html',
@@ -44,15 +39,16 @@ export class TaskPageComponent implements OnInit {
   hoveredField: string | null = null;
   editTimer?: any;
 
-  changeHistory = [];
   attachedFiles: TaskFile[] = [];
   error: string | null = null;
   userId: string = '';
   taskId: string = '';
+  boardUsers: UserDto[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
+    private boardService: BoardService,
     private clipboard: Clipboard,
     private router: Router
   ) {}
@@ -80,6 +76,22 @@ export class TaskPageComponent implements OnInit {
       next: (task) => {
         this.task = task;
         this.loading = false;
+        if (task.boardId) {
+          console.log(task);
+          const companyId = localStorage.getItem('companyId');
+          if (companyId) {
+            this.boardService
+              .getBoardUsers(companyId, task.boardId, this.userId)
+              .subscribe({
+                next: (users) => {
+                  this.boardUsers = users;
+                },
+                error: () => {
+                  this.boardUsers = [];
+                },
+              });
+          }
+        }
         this.loadComments(this.taskId, this.userId);
         this.loadFiles(this.taskId, this.userId);
       },
@@ -158,11 +170,12 @@ export class TaskPageComponent implements OnInit {
     this.editingField = field;
     this.editValue = value ?? '';
     setTimeout(() => {
-      const inp = document.querySelector<HTMLInputElement>(
-        'input.editing-input, textarea.editing-input'
+      const inp = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+        'input.editing-input, textarea.editing-input, select.editing-input'
       );
       inp?.focus();
-      inp?.select();
+      // @ts-ignore
+      inp?.select?.();
     }, 60);
   }
 
@@ -182,8 +195,7 @@ export class TaskPageComponent implements OnInit {
 
     if (field === 'description' && this.editValue !== undefined)
       update.description = this.editValue;
-    if (field === 'assigneeId' && this.editValue)
-      update.assigneeId = this.editValue;
+    if (field === 'assigneeId') update.assigneeId = this.editValue || null;
     if (field === 'storyPoints' && this.editValue !== undefined)
       update.storyPoints = Number(this.editValue);
     if (field === 'priority' && this.editValue !== undefined)
@@ -222,12 +234,10 @@ export class TaskPageComponent implements OnInit {
       const update: TaskUpdateDto = { id, name: newName };
 
       if (field === 'assigneeId') {
-        if (
-          this.editValue !== null &&
-          this.editValue !== '' &&
-          typeof this.editValue === 'string'
-        ) {
+        if (this.editValue !== null && this.editValue !== '') {
           update.assigneeId = this.editValue;
+        } else {
+          update.assigneeId = undefined;
         }
       } else if (
         field === 'storyPoints' ||

@@ -10,6 +10,26 @@ import {
 } from '../../../core/models/my-task.model';
 import { TaskService } from '../../../core/services/task.service';
 
+type RawTask = {
+  id: string;
+  name: string;
+  description?: string;
+  boardId: string;
+  boardName: string;
+  status?: any;
+  priority: number | null;
+  storyPoints: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  assigneeId?: string;
+  assigneeName?: string;
+  taskTypeId?: string;
+  columnId?: string;
+  creationDate?: string | null;
+  updateDate?: string | null;
+  deleteDate?: string | null;
+};
+
 @Component({
   selector: 'app-my-tasks',
   imports: [CommonModule, FormsModule, MatIconModule],
@@ -25,7 +45,7 @@ export class MyTasksComponent implements OnInit {
     priority: '',
   };
 
-  openBoards: Set<string> = new Set();
+  openBoards: { [boardId: string]: boolean } = {};
 
   constructor(private router: Router, private taskService: TaskService) {}
 
@@ -36,14 +56,48 @@ export class MyTasksComponent implements OnInit {
       return;
     }
     this.taskService.getMyTasks(userId).subscribe({
-      next: (tasks) => {
-        this.tasks = tasks;
-        this.openBoards = new Set(this.tasks.map((t) => t.boardId));
+      next: (tasks: RawTask[]) => {
+        this.tasks = tasks.map(this.mapRawTaskToMyTask);
+        this.openBoards = {};
+        for (const t of this.tasks) {
+          this.openBoards[t.boardId] = true;
+        }
       },
       error: () => {
         this.tasks = [];
       },
     });
+  }
+
+  mapRawTaskToMyTask(raw: RawTask): MyTask {
+    const priorityMap: Record<number, MyTaskPriority> = {
+      1: 'high',
+      2: 'medium',
+      3: 'low',
+    };
+    const status: MyTaskStatus = 'open';
+
+    return {
+      id: raw.id,
+      title: raw.name,
+      description: raw.description ?? '',
+      boardId: raw.boardId,
+      boardName: raw.boardName,
+      status,
+      priority: raw.priority ? priorityMap[raw.priority] ?? 'low' : 'low',
+      sp: raw.storyPoints ?? '',
+      dates: {
+        start: raw.startDate ? new Date(raw.startDate) : null,
+        end: raw.endDate ? new Date(raw.endDate) : null,
+      },
+      assigneeId: raw.assigneeId,
+      assigneeName: raw.assigneeName,
+      taskTypeId: raw.taskTypeId,
+      columnId: raw.columnId,
+      creationDate: raw.creationDate ? new Date(raw.creationDate) : null,
+      updateDate: raw.updateDate ? new Date(raw.updateDate) : null,
+      deleteDate: raw.deleteDate ? new Date(raw.deleteDate) : null,
+    };
   }
 
   groupedTasks() {
@@ -72,15 +126,11 @@ export class MyTasksComponent implements OnInit {
   }
 
   isBoardOpen(boardId: string): boolean {
-    return this.openBoards.has(boardId);
+    return !!this.openBoards[boardId];
   }
 
   toggleBoard(boardId: string) {
-    if (this.openBoards.has(boardId)) {
-      this.openBoards.delete(boardId);
-    } else {
-      this.openBoards.add(boardId);
-    }
+    this.openBoards[boardId] = !this.openBoards[boardId];
   }
 
   goToTask(task: MyTask) {

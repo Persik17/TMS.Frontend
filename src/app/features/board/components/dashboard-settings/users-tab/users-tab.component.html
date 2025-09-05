@@ -83,7 +83,6 @@
   >
     <button
       *ngFor="let level of accessLevels"
-      (mousedown)="selectPermission.emit(level)"
       [ngClass]="{
         selected:
           permissionMenuUser &&
@@ -107,7 +106,9 @@
     <input
       id="inviteEmail"
       type="email"
-      [(ngModel)]="inviteEmail"
+      [ngModel]="inviteEmail"
+      (ngModelChange)="inviteEmailChange.emit($event)"
+      (input)="inviteError = ''"
       (keydown.enter)="confirmInvite.emit()"
       placeholder="user@example.com"
       autocomplete="off"

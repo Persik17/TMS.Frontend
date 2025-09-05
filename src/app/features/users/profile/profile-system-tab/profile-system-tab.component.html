@@ -1,14 +1,6 @@
 <section class="profile-system-section">
   <form class="profile-system-form" (ngSubmit)="onSaveSettings()">
     <div class="system-row">
-      <label for="theme">Тема</label>
-      <select [(ngModel)]="systemSettings.theme" name="theme" id="theme">
-        <option *ngFor="let option of themeOptions" [value]="option.value">
-          {{ option.label }}
-        </option>
-      </select>
-    </div>
-    <div class="system-row">
       <label>Фон для досок</label>
       <div class="bg-templates">
         <div
@@ -17,11 +9,29 @@
           [class.selected]="systemSettings.boardBgUrl === tpl.url"
           (click)="selectBgTemplate(tpl)"
         >
-          <img [src]="tpl.url" [alt]="tpl.name" />
+          <ng-container *ngIf="tpl.url; else noBgTpl">
+            <img [src]="tpl.url" [alt]="tpl.name" />
+          </ng-container>
+          <ng-template #noBgTpl>
+            <div class="no-bg-icon" title="Без фона">
+              <span class="material-icons" style="font-size: 40px; color: #bbb"
+                >block</span
+              >
+            </div>
+          </ng-template>
           <div class="bg-template-name">{{ tpl.name }}</div>
         </div>
       </div>
     </div>
-    <button type="submit" class="save-btn">Сохранить</button>
+    <button type="submit" class="save-btn" [disabled]="!isSettingsChanged()">
+      Сохранить
+    </button>
+    <div
+      *ngIf="saveResult?.show"
+      class="save-result"
+      [ngClass]="saveResult?.status"
+    >
+      {{ saveResult?.message }}
+    </div>
   </form>
 </section>

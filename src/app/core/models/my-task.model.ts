@@ -9,16 +9,16 @@ export interface MyTask {
   boardName: string;
   status: MyTaskStatus;
   priority: MyTaskPriority;
-  sp: number;
+  sp: number | string;
   dates?: {
-    start: Date;
-    end: Date;
+    start: Date | null;
+    end: Date | null;
   };
   assigneeId?: string;
   assigneeName?: string;
   taskTypeId?: string;
   columnId?: string;
-  creationDate?: Date;
-  updateDate?: Date;
-  deleteDate?: Date;
+  creationDate?: Date | null;
+  updateDate?: Date | null;
+  deleteDate?: Date | null;
 }

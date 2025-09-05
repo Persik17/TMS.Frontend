@@ -32,19 +32,23 @@ export class ProfileSystemTabComponent {
 
   bgTemplates: { name: string; url: string }[] = [
     {
-      name: 'Горы',
+      name: '',
+      url: '',
+    },
+    {
+      name: '',
       url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
     },
     {
-      name: 'Лес',
+      name: '',
       url: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca',
     },
     {
-      name: 'Город',
+      name: '',
       url: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308',
     },
     {
-      name: 'Море',
+      name: '',
       url: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368',
     },
   ];
@@ -57,10 +61,18 @@ export class ProfileSystemTabComponent {
   originalSettings: SystemSettings | null = null;
 
   ngOnInit() {
+    const stored = localStorage.getItem('systemSettings');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        this.systemSettings = { ...this.systemSettings, ...parsed };
+      } catch {}
+    }
     this.originalSettings = JSON.parse(JSON.stringify(this.systemSettings));
   }
 
   selectBgTemplate(tpl: { name: string; url: string }) {
+    this.systemSettings.boardBgUrl = tpl.url;
     this.selectTemplateBg.emit(tpl);
   }
 
@@ -78,6 +90,11 @@ export class ProfileSystemTabComponent {
 
     setTimeout(() => {
       localStorage.setItem('boardBgUrl', this.systemSettings.boardBgUrl || '');
+      localStorage.setItem(
+        'systemSettings',
+        JSON.stringify(this.systemSettings)
+      );
+      window.dispatchEvent(new Event('boardBgChanged'));
       this.showSaveResult('success', 'Настройки сохранены');
       this.originalSettings = JSON.parse(JSON.stringify(this.systemSettings));
     }, 600);

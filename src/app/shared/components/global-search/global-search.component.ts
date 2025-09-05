@@ -8,6 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 type SearchResult = {
   type: 'task';
@@ -53,16 +54,19 @@ export class GlobalSearchComponent {
     const userId = localStorage.getItem('userId');
     const companyId = localStorage.getItem('companyId');
     this.http
-      .get<any[]>(`/api/companies/${companyId}/boards/search-tasks`, {
-        params: {
-          query: this.query,
-          userId: userId || '',
-        },
-      })
+      .get<any[]>(
+        `${environment.apiBaseUrl}/companies/${companyId}/boards/search-tasks`,
+        {
+          params: {
+            query: this.query,
+            userId: userId || '',
+          },
+        }
+      )
       .subscribe({
         next: (data) => {
           this.filteredResults = data.map((item) => ({
-            type: item.type,
+            type: 'task',
             name: item.name,
             id: item.id,
           }));

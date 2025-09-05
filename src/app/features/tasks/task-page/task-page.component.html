@@ -2,40 +2,40 @@
   <div class="task-page-header">
     <div>
       <div
-  class="task-page-title"
-  [class.edit-hover]="hoveredField === 'name'"
-  (mouseenter)="hoveredField = 'name'"
-  (mouseleave)="hoveredField = null"
->
-  <ng-container *ngIf="editingField !== 'name'; else editName">
-    {{ task?.name || 'Без имени' }}
-    <button
-      class="edit-btn"
-      *ngIf="hoveredField === 'name'"
-      (click)="startEdit('name', task?.name || '')"
-    >
-      <span class="material-icons">edit</span>
-    </button>
-  </ng-container>
-  <ng-template #editName>
-    <input
-      type="text"
-      [(ngModel)]="editValue"
-      (blur)="saveEdit('name')"
-      (keydown.enter)="saveEdit('name')"
-      (keydown.esc)="cancelEdit()"
-      class="editing-input"
-      autofocus
-      placeholder="Введите имя задачи"
-    />
-    <button class="save-btn" (click)="saveEdit('name')">
-      <span class="material-icons">done</span>
-    </button>
-    <button class="cancel-btn" (click)="cancelEdit()">
-      <span class="material-icons">close</span>
-    </button>
-  </ng-template>
-</div>
+        class="task-page-title"
+        [class.edit-hover]="hoveredField === 'name'"
+        (mouseenter)="hoveredField = 'name'"
+        (mouseleave)="hoveredField = null"
+      >
+        <ng-container *ngIf="editingField !== 'name'; else editName">
+          {{ task?.name || "Без имени" }}
+          <button
+            class="edit-btn"
+            *ngIf="hoveredField === 'name'"
+            (click)="startEdit('name', task?.name || '')"
+          >
+            <span class="material-icons">edit</span>
+          </button>
+        </ng-container>
+        <ng-template #editName>
+          <input
+            type="text"
+            [(ngModel)]="editValue"
+            (blur)="saveEdit('name')"
+            (keydown.enter)="saveEdit('name')"
+            (keydown.esc)="cancelEdit()"
+            class="editing-input"
+            autofocus
+            placeholder="Введите имя задачи"
+          />
+          <button class="save-btn" (click)="saveEdit('name')">
+            <span class="material-icons">done</span>
+          </button>
+          <button class="cancel-btn" (click)="cancelEdit()">
+            <span class="material-icons">close</span>
+          </button>
+        </ng-template>
+      </div>
       <div class="task-meta">
         <span class="meta-label">Создана:</span>
         <span class="meta-value">{{
@@ -114,15 +114,20 @@
           </button>
         </span>
         <ng-container *ngIf="editingField === 'assigneeId'">
-          <input
-            type="text"
+          <select
             [(ngModel)]="editValue"
             (blur)="saveEdit('assigneeId')"
+            (change)="saveEdit('assigneeId')"
             (keydown.enter)="saveEdit('assigneeId')"
             (keydown.esc)="cancelEdit()"
             class="editing-input"
             autofocus
-          />
+          >
+            <option [ngValue]="null">— Не назначен —</option>
+            <option *ngFor="let user of boardUsers" [ngValue]="user.id">
+              {{ user.name || user.email }}
+            </option>
+          </select>
           <button class="save-btn" (click)="saveEdit('assigneeId')">
             <span class="material-icons">done</span>
           </button>
@@ -131,6 +136,7 @@
           </button>
         </ng-container>
       </div>
+      <!-- остальные поля как раньше -->
       <div
         class="info-row"
         [class.edit-hover]="hoveredField === 'storyPoints'"

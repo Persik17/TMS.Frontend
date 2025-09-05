@@ -11,6 +11,7 @@ import {
   TaskUpdateDto,
 } from '../../../../core/services/task.service';
 import { Task } from '../../../../core/models/task.model';
+import { BoardService, UserDto } from '../../../../core/services/board.service';
 
 @Component({
   selector: 'app-task-dialog',
@@ -36,6 +37,7 @@ export class TaskDialogComponent implements OnInit {
   newCommentText = '';
   addingComment = false;
   activeTab: 'main' | 'history' | 'files' = 'main';
+  boardUsers: UserDto[] = [];
 
   editingField: string | null = null;
   editValue: any = '';
@@ -45,13 +47,30 @@ export class TaskDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<TaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private boardService: BoardService
   ) {}
 
   ngOnInit() {
     const boardId = this.data.boardId || this.data.task?.boardId;
     const taskId = this.data.taskId || this.data.task?.id;
     this.userId = localStorage.getItem('userId') || '';
+
+    if (boardId && this.userId) {
+      const companyId = localStorage.getItem('companyId');
+      if (companyId) {
+        this.boardService
+          .getBoardUsers(companyId, boardId, this.userId)
+          .subscribe({
+            next: (users) => {
+              this.boardUsers = users;
+            },
+            error: () => {
+              this.boardUsers = [];
+            },
+          });
+      }
+    }
 
     if (taskId && this.userId) {
       this.taskService.getTask(taskId, this.userId).subscribe({
@@ -116,11 +135,13 @@ export class TaskDialogComponent implements OnInit {
     if (field === 'name') {
       update.name = this.editValue;
     }
-
     if (field === 'description' && this.editValue !== undefined)
       update.description = this.editValue;
-    if (field === 'assigneeId' && this.editValue)
-      update.assigneeId = this.editValue;
+    if (field === 'assigneeId')
+      update.assigneeId =
+        this.editValue !== null && this.editValue !== ''
+          ? this.editValue
+          : undefined;
     if (field === 'storyPoints' && this.editValue !== undefined)
       update.storyPoints = Number(this.editValue);
     if (field === 'priority' && this.editValue !== undefined)
